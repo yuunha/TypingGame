@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
 
+
     public void register(String loginId, String username ,String password) {
         userRepository.save(User.builder()
             .loginId(loginId)
@@ -16,11 +17,16 @@ public class UserService {
             .password(password)
             .build()
         );
+        //중복 체크를 existsByLoginId()로 처리.
     }
 
     public boolean login(String loginId, String password) {
         return userRepository.findByLoginId(loginId)
                  .map(user -> user.getPassword().equals(password))
                  .orElse(false);
+    }
+
+    public boolean existsByLoginId(String loginId) {
+        return userRepository.existsByLoginId(loginId);
     }
 }
