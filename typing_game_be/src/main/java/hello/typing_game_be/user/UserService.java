@@ -21,6 +21,8 @@ public class UserService {
     }
 
     public boolean login(String loginId, String password) {
+        System.out.println("loginId: " + loginId+"password"+password);
+        System.out.println("존재여부"+userRepository.existsByLoginId(loginId));
         return userRepository.findByLoginId(loginId)
                  .map(user -> user.getPassword().equals(password))
                  .orElse(false);

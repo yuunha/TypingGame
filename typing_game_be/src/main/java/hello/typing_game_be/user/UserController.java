@@ -1,6 +1,8 @@
 package hello.typing_game_be.user;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,10 +21,14 @@ public class UserController {
         userService.register(loginId, username, password);
         return "회원가입 성공!";
     }
-    @PostMapping("login")
-    public String login(@RequestParam String loginId, @RequestParam String password) {
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String loginId, @RequestParam String password) {
         boolean result = userService.login(loginId, password);
-        return result ? "로그인 성공" : "로그인 실패";
+        if (result) {
+            return ResponseEntity.ok("로그인 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
+        }
     }
 
 
