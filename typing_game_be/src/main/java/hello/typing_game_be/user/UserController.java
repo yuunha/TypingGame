@@ -17,9 +17,9 @@ public class UserController {
 
     private final UserService userService;
     @PostMapping("/signup")
-    public String register(@RequestParam String loginId, @RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<String> register(@RequestParam String loginId, @RequestParam String username, @RequestParam String password) {
         userService.register(loginId, username, password);
-        return "회원가입 성공!";
+        return ResponseEntity.ok("회원가입 성공");
     }
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String loginId, @RequestParam String password) {
