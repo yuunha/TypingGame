@@ -1,4 +1,4 @@
-package hello.typing_game_be.config;
+package hello.typing_game_be.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,15 +14,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (REST API)
+            .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 콘솔 허용
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // 회원가입/로그인 허용
-                .anyRequest().authenticated()            // 나머지는 인증 필요
+                .requestMatchers("/h2-console/**", "/auth/**").permitAll() // H2 콘솔과 인증 관련 API 허용
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())  // 폼 로그인 비활성화
-            .httpBasic(httpBasic -> httpBasic.disable()); // HTTP Basic 비활성화
-
+            .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 비활성화
+            .cors(cors -> {});
         return http.build();
     }
 
