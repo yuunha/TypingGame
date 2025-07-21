@@ -63,11 +63,11 @@ const TypingGame: React.FC<TypingGameProps>  = ({ lyrics }) => {
   }
 
   return (
-    <div className="flex flex-col items-center mt-20">
-      <h1 className="text-2xl font-bold mb-6">🇰🇷 애국가 타자 연습</h1>
-      <p className="text-xl mb-4 text-gray-400">{m1Line}</p>
-      <p className="text-xl mb-4 text-gray-400">{m2Line}</p>
-      <p className="text-xl mb-4">
+    <div className="flex flex-col items-center mt-20 max-w-full min-w-[600px]">
+      <h1 className="text-2xl font-bold mb-6 w-full">🇰🇷 애국가 타자 연습</h1>
+      <p className="text-xl mb-4 text-gray-400 w-full">{m1Line}</p>
+      <p className="text-xl mb-4 text-gray-400 w-full">{m2Line}</p>
+      <p className="text-xl mb-4 w-full">
         {currentLine.split("").map((char,i)=>{
            const typedChar = inputValue[i];
            let colorClass = "";
@@ -86,13 +86,13 @@ const TypingGame: React.FC<TypingGameProps>  = ({ lyrics }) => {
            );
         })}
       </p>
-      <p className="text-xl mb-4 text-gray-400">{p1Line}</p>
+      <p className="text-xl mb-4 text-gray-400 w-full">{p1Line}</p>
       <input
         type="text"
         value={inputValue}
         onChange={handleChange}
         placeholder="여기에 입력하세요"
-        className="border rounded-lg px-4 py-2 text-lg w-250 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="border rounded-lg px-4 py-2 text-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
       <div className="mt-4 flex gap-4 text-lg">
         <p>속도: {cpm} 타 </p>
