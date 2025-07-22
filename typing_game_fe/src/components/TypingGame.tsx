@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import TypingCat from "./TypingCat"
 
 interface TypingGameProps {
     lyrics: string[];
 }
+
+
 
 const TypingGame: React.FC<TypingGameProps>  = ({ lyrics }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
@@ -23,6 +26,26 @@ const TypingGame: React.FC<TypingGameProps>  = ({ lyrics }) => {
      * currentLine : 현재 보여주는 텍스트 (lyrics[0]...)
      * currentLineIndex : 현재 줄의 타이핑이 정답인 경우 +1
      */
+
+
+  // typing cat
+  const [isTyping, setIsTyping] = useState(false);
+
+  useEffect(() => {
+  let typingTimeout: ReturnType<typeof setTimeout>;
+  const handle = () => {
+    setIsTyping(true);
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => setIsTyping(false), 100);
+  };
+  window.addEventListener("keydown", handle);
+  return () => {
+    window.removeEventListener("keydown", handle);
+    clearTimeout(typingTimeout);
+  };
+}, []);
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!startTime) setStartTime(Date.now());
@@ -64,7 +87,9 @@ const TypingGame: React.FC<TypingGameProps>  = ({ lyrics }) => {
 
   return (
     <div className="flex flex-col items-center mt-20 max-w-full min-w-[600px]">
-      <h1 className="text-2xl font-bold mb-6 w-full">🇰🇷 애국가 타자 연습</h1>
+      {/* <TypingCat isTyping={isTyping} /> */}
+
+      {/* <h1 className="text-2xl font-bold mb-6 w-full"></h1> */}
       <p className="text-xl mb-4 text-gray-400 w-full">{m1Line}</p>
       <p className="text-xl mb-4 text-gray-400 w-full">{m2Line}</p>
       <p className="text-xl mb-4 w-full">
