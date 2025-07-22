@@ -3,6 +3,7 @@ package hello.typing_game_be.common.exception;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,6 +35,12 @@ public class GlobalExceptionHandler {
     }
 
     //데이터 무결성 등 db관련 예외
+    //TODO : db 예외 처리 로직 수정 필요
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorDetails> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+
+        return buildErrorResponse(ErrorCode.DB_CONSTRAINT_VIOLATION, ErrorCode.DB_CONSTRAINT_VIOLATION.getMessage());
+    }
 
     // 공통 응답 생성 메서드
     private ResponseEntity<ErrorDetails> buildErrorResponse(ErrorCode code, String customMessage) {
