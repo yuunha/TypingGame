@@ -2,6 +2,7 @@ package hello.typing_game_be.user;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.antlr.v4.runtime.atn.ActionTransition;
@@ -33,6 +34,8 @@ public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void clearDB() {
@@ -60,7 +63,7 @@ public class UserControllerTest {
 
         User savedUser = userRepository.findByUsername(username);
         assertThat(savedUser.getLoginId()).isEqualTo(loginId);
-        //assertThat(passwordEncoder.matches(password, savedUser.getPassword())).isTrue();
+        assertThat(passwordEncoder.matches(password, savedUser.getPassword())).isTrue();
     }
     @Test
     void 회원가입_실패_필수필드미입력() throws Exception {
@@ -98,6 +101,63 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request1)))
             .andExpect(status().isConflict());
+    }
+    @Test
+    void 로그인_성공() throws Exception {
+
+        UserRequest request = UserRequest.builder()
+            .username(username)
+            .loginId(loginId)
+            .password(password)
+            .build();
+        // given
+        userService.register(request);
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void 로그인_실패_비밀번호_틀림() throws Exception {
+        UserRequest request1 = UserRequest.builder()
+            .username(username)
+            .loginId(loginId)
+            .password(password)
+            .build();
+        UserRequest request2 = UserRequest.builder()
+            .username(username)
+            .loginId(loginId)
+            .password("0000")
+            .build();
+        //given
+        userService.register(request1); //통합테스트에서는 서비스 호출
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request2)))
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.message").value("비밀번호가 일치하지 않습니다."));
+
+        // .andDo(print()); -> 디버깅해보기
+    }
+    @Test
+    void 로그인_실패_아이디존재X() throws Exception {
+        UserRequest request = UserRequest.builder()
+            .username(username)
+            .loginId("noid")
+            .password(password)
+            .build();
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message").value("존재하지 않는 아이디입니다."));
+
     }
 
 }
