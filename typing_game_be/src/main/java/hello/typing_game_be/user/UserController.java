@@ -25,13 +25,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String loginId, @RequestParam String password) {
-        boolean result = userService.login(loginId, password);
-        if (result) {
-            return ResponseEntity.ok("로그인 성공");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
-        }
+    public ResponseEntity<String> login(@Valid @RequestBody UserRequest request) {
+        userService.login(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
