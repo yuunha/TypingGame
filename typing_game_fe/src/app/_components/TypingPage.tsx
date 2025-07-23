@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { lyricsList } from "../data/lyricsList"; // 여러 가사 목록 데이터
+import { lyricsList } from "../../data/lyricsList"; // 여러 가사 목록 데이터
 import TypingGame from "./TypingGame";
 import Sidebar from "./SideBar"
 
