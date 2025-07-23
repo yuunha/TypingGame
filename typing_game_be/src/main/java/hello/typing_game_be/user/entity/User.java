@@ -1,4 +1,4 @@
-package hello.typing_game_be.user;
+package hello.typing_game_be.user.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

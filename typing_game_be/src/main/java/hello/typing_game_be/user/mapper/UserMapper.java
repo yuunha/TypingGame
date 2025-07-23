@@ -1,4 +1,7 @@
-package hello.typing_game_be.user;
+package hello.typing_game_be.user.mapper;
+
+import hello.typing_game_be.user.entity.User;
+import hello.typing_game_be.user.dto.UserRequest;
 
 public class UserMapper {
     public static User toEntity(UserRequest userRequest) {
