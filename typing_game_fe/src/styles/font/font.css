@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'Arita';
+  src: url('../font/AritaDotumKR-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Nanum';
+  src: url('../font/NanumSquare_acEB.ttf') format('truetype');
+}
