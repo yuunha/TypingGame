@@ -32,7 +32,7 @@ export default function Home() {
           <BlankBox></BlankBox>
           
           <Link href="/word" passHref>
-            <IconBox color="#274A74">
+            <IconBox color="var(--color-point)">
               <IconText>낱</IconText>
             </IconBox>
           </Link>
@@ -40,7 +40,7 @@ export default function Home() {
           <BlankBox></BlankBox>
           
           <Link href="/rank" passHref>
-            <IconBox color="#274A74">
+            <IconBox color="var(--color-point)">
               <IconText>랭</IconText>
             </IconBox>
           </Link>

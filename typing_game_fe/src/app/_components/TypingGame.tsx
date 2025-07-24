@@ -1,51 +1,39 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import TypingCat from "./TypingCat"
+import styled from "styled-components";
+import TypingCat from "./TypingCat";
 
 interface TypingGameProps {
-    lyrics: string[];
+  lyrics: string[];
 }
 
-
-
-const TypingGame: React.FC<TypingGameProps>  = ({ lyrics }) => {
+const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
   const [completed, setCompleted] = useState(false);
 
-  const m2Line =
-    currentLineIndex > 1 ? lyrics[currentLineIndex-2] : null;
-  const m1Line =
-    currentLineIndex > 0 ? lyrics[currentLineIndex-1] : null;
-  const currentLine = lyrics[currentLineIndex]; 
-  const p1Line = 
-    currentLineIndex < lyrics.length ? lyrics[currentLineIndex+1]:null; 
-  /**
-     * currentLine : 현재 보여주는 텍스트 (lyrics[0]...)
-     * currentLineIndex : 현재 줄의 타이핑이 정답인 경우 +1
-     */
-
-
-  // typing cat
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-  let typingTimeout: ReturnType<typeof setTimeout>;
-  const handle = () => {
-    setIsTyping(true);
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => setIsTyping(false), 100);
-  };
-  window.addEventListener("keydown", handle);
-  return () => {
-    window.removeEventListener("keydown", handle);
-    clearTimeout(typingTimeout);
-  };
-}, []);
+    let typingTimeout: ReturnType<typeof setTimeout>;
+    const handle = () => {
+      setIsTyping(true);
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => setIsTyping(false), 100);
+    };
+    window.addEventListener("keydown", handle);
+    return () => {
+      window.removeEventListener("keydown", handle);
+      clearTimeout(typingTimeout);
+    };
+  }, []);
 
-
+  const m2Line = currentLineIndex > 1 ? lyrics[currentLineIndex - 2] : null;
+  const m1Line = currentLineIndex > 0 ? lyrics[currentLineIndex - 1] : null;
+  const currentLine = lyrics[currentLineIndex];
+  const p1Line = currentLineIndex < lyrics.length ? lyrics[currentLineIndex + 1] : null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!startTime) setStartTime(Date.now());
@@ -62,70 +50,146 @@ const TypingGame: React.FC<TypingGameProps>  = ({ lyrics }) => {
     }
   };
 
-  const totalTypedChars = lyrics
-    .slice(0, currentLineIndex)
-    .join("")
-    .length + inputValue.length;
-  /**
-     * lyrics.slice(0,currenLineINdex) : 현재 줄 이전의 모든 줄을 잘라서 새 배열로 만듦
-     * join -> 잘라낸 배열을 하나의 문자열로 합침 ["동해물과","백두산이"].join("")="동해물과백두산이"
-     */
-    const cpm = startTime
+  const totalTypedChars =
+    lyrics.slice(0, currentLineIndex).join("").length + inputValue.length;
+
+  const cpm = startTime
     ? Math.round(totalTypedChars / ((Date.now() - startTime) / 60000))
     : 0;
 
-
-
   if (completed) {
     return (
-      <div className="flex flex-col items-center justify-center mt-20 text-center">
-        <h2 className="text-3xl font-bold">🎉 완료!</h2>
-        <p className="mt-4 text-xl">속도: {cpm}타</p>
-      </div>
+      <ResultContainer>
+        <h2>🎉 완료!</h2>
+        <p>속도: {cpm}타</p>
+      </ResultContainer>
     );
   }
 
   return (
-    <div className="flex flex-col items-center mt-20 max-w-full min-w-[600px]">
+    <Wrapper>
       {/* <TypingCat isTyping={isTyping} /> */}
 
-      {/* <h1 className="text-2xl font-bold mb-6 w-full"></h1> */}
-      <p className="text-xl mb-4 text-gray-400 w-full">{m1Line}</p>
-      <p className="text-xl mb-4 text-gray-400 w-full">{m2Line}</p>
-      <p className="text-xl mb-4 w-full">
-        {currentLine.split("").map((char,i)=>{
-           const typedChar = inputValue[i];
-           let colorClass = "";
+      {/* {m2Line && <SubLine>{m2Line}</SubLine>} */}
 
-           if(typedChar !== undefined){
-                if (i === inputValue.length - 1) {
-                    colorClass = "text-black"; // 기본색
-                } else{
-                    colorClass = typedChar == char ? "text-blue-500": "text-red-500";
-                } 
+      <TypingLine>
+        {m1Line && <SubLine>{m1Line}</SubLine>}
+
+        <CurrentLine>
+          {currentLine.split("").map((char, i) => {
+            const typedChar = inputValue[i];
+            let color = "";
+
+            if (typedChar !== undefined) {
+              if (i === inputValue.length - 1) {
+                color = "#000000"; // 기본색
+              } else {
+                color = typedChar === char ? "#3B82F6" : "#EF4444"; // blue-500 / red-500
+              }
             }
-           return (
-            <span key={i} className={colorClass}>
+
+            return (
+              <CharSpan key={i} style={{ color: color || "inherit" }}>
                 {char}
-            </span>
-           );
-        })}
-      </p>
-      <p className="text-xl mb-4 text-gray-400 w-full">{p1Line}</p>
-      <input
+              </CharSpan>
+            );
+          })}
+        </CurrentLine>
+
+        {p1Line && <SubLine>{p1Line}</SubLine>}
+      </TypingLine>
+      <Input
         type="text"
         value={inputValue}
         onChange={handleChange}
         placeholder="여기에 입력하세요"
-        className="border rounded-lg px-4 py-2 text-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
-      <div className="mt-4 flex gap-4 text-lg">
-        <p>속도: {cpm} 타 </p>
-        <p>
-          진행률: {currentLineIndex + 1}/{lyrics.length}
-        </p>
-      </div>
-    </div>
+
+      <InfoBox>
+        <p>최고 속도: {cpm} 타</p>
+        <p>평균 속도: {cpm} 타</p>
+      </InfoBox>
+      <ProgressBarContainer>
+        <ProgressBarFill progress={(currentLineIndex ) / lyrics.length * 100} />
+      </ProgressBarContainer>
+    </Wrapper>
   );
 };
+
 export default TypingGame;
+
+const TypingLine = styled.div`
+  height: 150px;
+`;
+
+const ProgressBarContainer = styled.div`
+  width: 100%;
+  height: 12px;
+  background-color: #e5e7eb; // gray-200
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+`;
+
+const ProgressBarFill = styled.div<{ progress: number }>`
+  height: 100%;
+  background-color: var(--color-primary, #3B82F6); // 파란색 또는 CSS 변수
+  width: ${({ progress }) => progress}%;
+  transition: width 0.3s ease;
+`;
+
+
+const Wrapper = styled.div`
+  // display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5rem;
+  height : 500px;
+  min-width: 600px;
+`;
+
+const ResultContainer = styled.div`
+  margin-top: 5rem;
+  text-align: center;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  p {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+  }
+`;
+
+const SubLine = styled.p`
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #9ca3af; // Tailwind gray-400
+  width: 100%;
+`;
+
+const CurrentLine = styled.p`
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  width: 100%;
+`;
+
+const CharSpan = styled.span`
+  transition: color 0.1s;
+`;
+
+const Input = styled.input`
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  width: 100%;
+  outline: none;
+`;
+
+const InfoBox = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  font-size: 1.125rem;
+`;

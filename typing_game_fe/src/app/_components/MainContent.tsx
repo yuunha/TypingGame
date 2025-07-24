@@ -13,8 +13,12 @@ interface MainContentProps {
 const MainContent: React.FC<MainContentProps> = ({ selectedSong }) => {
   return (
     <MainWrapper>
-      <Title>{selectedSong.title}</Title>
-      <TypingGame lyrics={selectedSong.lyrics} />
+        <Header>
+            긴글연습
+            <RightInfo>로그인</RightInfo>
+        </Header>
+        <Title>{selectedSong.title}</Title>
+        <TypingGame lyrics={selectedSong.lyrics} />
     </MainWrapper>
   );
 };
@@ -22,7 +26,6 @@ const MainContent: React.FC<MainContentProps> = ({ selectedSong }) => {
 export default MainContent;
 
 const MainWrapper = styled.div`
-  padding: 3rem;
   padding-left:6rem; padding-right : 6rem; 
   width: 950px;
   color: black;
@@ -31,8 +34,26 @@ const MainWrapper = styled.div`
   border-radius : 0 20px 20px 0;
 `;
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  font-size: 0.9rem;
+`;
+
+
+const RightInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+
 const Title = styled.h1`
-  font-size: 1.5rem; /* text-2xl */
+  font-size: 2.5rem; /* text-2xl */
   font-weight: bold;
   margin-bottom: 1.5rem; /* mb-6 */
+  margin-top : 70px;
 `;

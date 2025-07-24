@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --color-point: #274A74;
+  --color-white: #FFFFFF;
+  /* --color-blur:  */
 }
 
 @theme inline {

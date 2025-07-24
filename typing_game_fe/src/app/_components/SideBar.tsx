@@ -220,11 +220,10 @@ const ListItem = styled.li<{ selected: boolean }>`
   border-radius: 0.375rem;
   cursor: pointer;
   margin-bottom: 0.5rem;
-  background-color: ${({ selected }) => (selected ? '#3b82f6' : 'transparent')};
   color: ${({ selected }) => (selected ? 'white' : 'inherit')};
 
   &:hover {
-    background-color: ${({ selected }) => (selected ? '#2563eb' : '#e5e7eb')};
+    color: ${({ selected }) => (selected ? 'var(--color-point)' : '#e5e7eb')};
   }
 `;
 
