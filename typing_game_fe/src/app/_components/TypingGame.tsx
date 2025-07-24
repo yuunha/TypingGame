@@ -84,7 +84,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
               if (i === inputValue.length - 1) {
                 color = "#000000"; // 기본색
               } else {
-                color = typedChar === char ? "#3B82F6" : "#EF4444"; // blue-500 / red-500
+                color = typedChar === char ? "#3B82F6" : "#EF4444";
               }
             }
 

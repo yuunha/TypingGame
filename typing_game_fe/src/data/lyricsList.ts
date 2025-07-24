@@ -30,4 +30,20 @@ export const lyricsList = [
  ] 
     },
     { title: "노래3", lyrics: ["줄1", "줄2", "줄3"] },
+    {title: "BLUE", lyrics: ["I wanna run, 빛 파란 네 세상으로",
+        "Whoa-oh-oh-oh, touch the clouds",
+        "별이 빛나는 밤의 색으로 와 줘",
+        "(Go) 예뻐, 우리잖아",
+        "모든 건 단순해, 난 네가 필요해",
+        "혼자인 공간에 바래가는 듯해, oh",
+        "왜 그런 걸까? 봐도 보고 싶어",
+        "나만 봐줘, 내 곁에 있어 줘",
+        "Can you remember days?",
+        "서로를 찾아낸, when the sky so blue",
+        "계절이 지나, 모든 게 변해 사라지려 할 때에",
+        "I wanna run, 빛 파란 네 세상으로",
+        "Whoa-oh-oh-oh, touch the clouds",
+        "별이 빛나는 밤의 색으로 와 줘",
+        "(Go) 예뻐, 우리잖아",
+        ]}
   ];

@@ -10,11 +10,11 @@ interface MainContentProps {
   };
 }
 
-const MainContent: React.FC<MainContentProps> = ({ selectedSong }) => {
+const MainContent: React.FC<MainContentProps> = ({ header, selectedSong }) => {
   return (
     <MainWrapper>
         <Header>
-            긴글연습
+            {header}
             <RightInfo>로그인</RightInfo>
         </Header>
         <Title>{selectedSong.title}</Title>

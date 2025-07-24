@@ -113,6 +113,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <Aside>
+      <ContentWrapper>
       <Widget
         userName=""
       />
@@ -146,10 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </List>
         </>
       )}
-
-      <UploadToggleBtn onClick={() => setShowUpload(s => !s)}>
-        {showUpload ? '닫기' : '+ 파일 업로드'}
-      </UploadToggleBtn>
+      </ContentWrapper>
 
       {showUpload && (
         <UploadBox>
@@ -177,6 +175,9 @@ const Sidebar: React.FC<SidebarProps> = ({
           </ButtonRow>
         </UploadBox>
       )}
+      <UploadToggleBtn onClick={() => setShowUpload(s => !s)}>
+        {showUpload ? '-' : '+'}
+      </UploadToggleBtn>
     </Aside>
   );
 };
@@ -188,15 +189,22 @@ export default Sidebar;
 
 const Aside = styled.aside`
   width: 16rem;
-  height : 43rem;
+  height: 43rem;
   min-width: 16rem;
   padding: 1.7rem;
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(2px);
-  border-radius : 20px 0 0 20px;
-  color : white;
+  border-radius: 20px 0 0 20px;
+  color: white;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; // 추가됨
+`;
 
+const ContentWrapper = styled.div`
+  flex: 1;
+  overflow-y: auto;
 `;
 
 const Heading = styled.h2`
@@ -228,13 +236,22 @@ const ListItem = styled.li<{ selected: boolean }>`
 `;
 
 const UploadToggleBtn = styled.button`
-  margin-top: 1rem;
-  width: 100%;
-  background-color: #22c55e;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
   color: white;
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  margin: 10px auto 0.5rem auto; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0px 4px 0 rgba(0, 0, 0, 0.2);
+
   &:hover {
     background-color: #16a34a;
   }

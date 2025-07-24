@@ -28,8 +28,7 @@ const TypingPage: React.FC = () => {
             onSelectSong={setSelectedSong}
             onUploadFile={handleUploadFile}
           />
-        <MainContent header="긴글연습" selectedSong={selectedSong} />
-
+        <MainContent header="짧은 글 연습" selectedSong={selectedSong} />
       </Box>
     </Container>
   );
