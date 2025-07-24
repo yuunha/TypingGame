@@ -1,6 +1,10 @@
 "use client";
 
+import styled from "styled-components";
 import React, { useState, useRef } from "react";
+
+
+import Widget from "../_components/WIdget"
 
 interface SongLike {
   title: string;
@@ -108,103 +112,184 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-64 min-w-[16rem] flex-shrink-0 bg-gray-100 border-r p-4 overflow-y-auto">
-      <h2 className="text-xl font-bold mb-4">가사 목록</h2>
+    <Aside>
+      <Widget
+        userName=""
+      />
+      <Heading>가사 목록</Heading>
 
-      {/* 기본 제공 글 */}
-      <ul>
+      <List>
         {lyricsList.map((song, index) => (
-          <li
+          <ListItem
             key={`default-${index}`}
+            selected={selectedSong.title === song.title}
             onClick={() => onSelectSong(song)}
-            className={`p-2 rounded cursor-pointer mb-2 ${
-              selectedSong.title === song.title
-                ? "bg-blue-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
           >
             {song.title}
-          </li>
+          </ListItem>
         ))}
-      </ul>
+      </List>
 
-      {/* 내 파일 목록 */}
       {uploadedFiles.length > 0 && (
         <>
-          <h3 className="text-lg font-semibold mt-6 mb-2">내 파일</h3>
-          <ul>
+          <SubHeading>내 파일</SubHeading>
+          <List>
             {uploadedFiles.map((file, index) => (
-              <li
+              <ListItem
                 key={`uploaded-${index}`}
+                selected={selectedSong.title === file.title}
                 onClick={() => onSelectSong(file)}
-                className={`p-2 rounded cursor-pointer mb-2 ${
-                  selectedSong.title === file.title
-                    ? "bg-blue-500 text-white"
-                    : "hover:bg-gray-200"
-                }`}
               >
                 {file.title}
-              </li>
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </>
       )}
 
-      {/* 플러스 버튼 */}
-      <button
-        type="button"
-        onClick={() => setShowUpload(s => !s)}
-        className="mt-4 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
-      >
-        {showUpload ? "닫기" : "+ 파일 업로드"}
-      </button>
+      <UploadToggleBtn onClick={() => setShowUpload(s => !s)}>
+        {showUpload ? '닫기' : '+ 파일 업로드'}
+      </UploadToggleBtn>
 
-      {/* 업로드 UI */}
       {showUpload && (
-        <div className="mt-4 p-3 border rounded bg-white text-sm">
-          <label
-            htmlFor="sidebar-file-input"
-            className="block w-full text-center cursor-pointer bg-gray-200 hover:bg-gray-300 py-1 rounded mb-2"
-          >
-            {fileName ? `선택됨: ${fileName}` : "TXT 파일 선택"}
-          </label>
+        <UploadBox>
+          <FileLabel htmlFor="sidebar-file-input">
+            {fileName ? `선택됨: ${fileName}` : 'TXT 파일 선택'}
+          </FileLabel>
           <input
             id="sidebar-file-input"
             ref={fileInputRef}
             type="file"
             accept=".txt"
             onChange={handleFileChange}
-            className="hidden"
+            style={{ display: 'none' }}
           />
 
           {fileContent && (
-            <p className="text-xs text-gray-600 mb-2">
-              줄 수: {fileContent.split(/\r?\n/).length}
-            </p>
+            <LineCount>줄 수: {fileContent.split(/\r?\n/).length}</LineCount>
           )}
 
-          {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleUpload}
-              className="flex-1 bg-blue-500 text-white py-1 rounded hover:bg-blue-600"
-            >
-              업로드
-            </button>
-            <button
-              type="button"
-              onClick={handleCancelUpload}
-              className="flex-1 bg-gray-300 text-gray-800 py-1 rounded hover:bg-gray-400"
-            >
-              취소
-            </button>
-          </div>
-        </div>
+          <ButtonRow>
+            <UploadBtn onClick={handleUpload}>업로드</UploadBtn>
+            {/* <CancelBtn onClick={handleCancelUpload}>취소</CancelBtn> */}
+          </ButtonRow>
+        </UploadBox>
       )}
-    </aside>
+    </Aside>
   );
 };
 
+
 export default Sidebar;
+
+
+
+const Aside = styled.aside`
+  width: 16rem;
+  height : 43rem;
+  min-width: 16rem;
+  padding: 1.7rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);
+  border-radius : 20px 0 0 20px;
+  color : white;
+
+
+`;
+
+const Heading = styled.h2`
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+`;
+
+const SubHeading = styled.h3`
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+`;
+
+const List = styled.ul`
+  margin-bottom: 1rem;
+`;
+
+const ListItem = styled.li<{ selected: boolean }>`
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  background-color: ${({ selected }) => (selected ? '#3b82f6' : 'transparent')};
+  color: ${({ selected }) => (selected ? 'white' : 'inherit')};
+
+  &:hover {
+    background-color: ${({ selected }) => (selected ? '#2563eb' : '#e5e7eb')};
+  }
+`;
+
+const UploadToggleBtn = styled.button`
+  margin-top: 1rem;
+  width: 100%;
+  background-color: #22c55e;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  &:hover {
+    background-color: #16a34a;
+  }
+`;
+
+const UploadBox = styled.div`
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  background-color: white;
+  font-size: 0.875rem;
+`;
+
+const FileLabel = styled.label`
+  display: block;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  background-color: #e5e7eb;
+  padding: 0.25rem 0;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+
+  &:hover {
+    background-color: #d1d5db;
+  }
+`;
+
+const LineCount = styled.p`
+  font-size: 0.75rem;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const UploadBtn = styled.button`
+  flex: 1;
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.25rem 0;
+  border-radius: 0.375rem;
+
+  &:hover {
+    background-color: #2563eb;
+  }
+  `;

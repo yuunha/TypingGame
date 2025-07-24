@@ -1,36 +1,50 @@
 'use client';
 
-import Image from "next/image";
 import styled from "styled-components";
-import TypingGame from "../app/_components/TypingGame";
-import TypingPage from "./(typing)/long/TypingPage";
-import NavigationBar from "../app/_components/NavigationBar";
-import '@/styles/font/font.css';
+import Link from 'next/link';
+
+import '../app/globals.css';
 
 export default function Home() {
   return (
     <Container>
       <Background />
-
       <SideBox>
         <IconGrid>
-          <IconBox>
-            <IconText>긴</IconText>
-          </IconBox>
-          <IconBox width="12rem">
-            <IconText>게임</IconText>
-          </IconBox>
+          <Link href="/long" passHref>
+            <IconBox>
+              <IconText>긴</IconText>
+            </IconBox>
+          </Link>
+
+          <Link href="/short" passHref>
+            <IconBox width="12rem">
+              <IconText>게임</IconText>
+            </IconBox>
+          </Link>
+
+          <Link href="/short" passHref>
           <IconBox>
             <IconText>짧</IconText>
           </IconBox>
+          </Link>
+
           <BlankBox></BlankBox>
-          <IconBox color="#274A74">
-            <IconText>낱</IconText>
-          </IconBox>
+          
+          <Link href="/word" passHref>
+            <IconBox color="#274A74">
+              <IconText>낱</IconText>
+            </IconBox>
+          </Link>
+
           <BlankBox></BlankBox>
-          <IconBox color="#274A74">
-            <IconText>랭</IconText>
-          </IconBox>
+          
+          <Link href="/rank" passHref>
+            <IconBox color="#274A74">
+              <IconText>랭</IconText>
+            </IconBox>
+          </Link>
+
         </IconGrid>
       </SideBox>
       <CenterBox></CenterBox>
@@ -82,7 +96,7 @@ const BlankBox = styled.div`
   height: 8rem;
 `;
 
-const IconBox = styled.div<{ width?: string; color?: string }>`
+const IconBox = styled.a<{ width?: string; color?: string }>`
   width: ${({ width }) => width || '8rem'};
   height: 8rem;
   display: flex;

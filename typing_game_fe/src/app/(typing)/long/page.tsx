@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { lyricsList } from "../../../data/lyricsList"; // 여러 가사 목록 데이터
 import TypingGame from "../../_components/TypingGame";
 import Sidebar from "../../_components/SideBar"
+import MainContent from "../../_components/MainContent"
 
+import styled from "styled-components";
 
 const TypingPage: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState(lyricsList[0]);
@@ -16,9 +18,9 @@ const TypingPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      {/* 왼쪽 탭 */}
-      <aside className="w-64 min-w-[16rem]">
+    <Container>
+      <Background />
+      <Box>
         <Sidebar 
             lyricsList={lyricsList}
             uploadedFiles={uploadedFiles}
@@ -26,15 +28,36 @@ const TypingPage: React.FC = () => {
             onSelectSong={setSelectedSong}
             onUploadFile={handleUploadFile}
           />
-      </aside>
-        
+        <MainContent selectedSong={selectedSong} />
 
-      {/* 오른쪽 메인 */}
-      <main className="flex-1 p-6 overflow-auto">
-        <h1 className="text-2xl font-bold mb-6">{selectedSong.title}</h1>
-         <TypingGame lyrics={selectedSong.lyrics} />
-      </main>
-    </div>
+      </Box>
+    </Container>
   );
 }
 export default TypingPage;
+
+const Container = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100vh;
+`;
+
+const Background = styled.div`
+  position: absolute;
+  inset: 0;
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-color: white;
+`;
+
+const Box = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+`;
+
+

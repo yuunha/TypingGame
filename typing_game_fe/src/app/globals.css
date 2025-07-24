@@ -19,14 +19,6 @@
   }
 }
 
-@font-face {
-  font-family: "ff";
-  src: url("/font/AritaDotumKR-Bold") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -34,3 +26,12 @@ body {
 }
 
 
+@font-face {
+  font-family: 'Arita';
+  src: url('../styles/font/AritaDotumKR-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Nanum';
+  src: url('../styles/font/NanumSquare_acEB.ttf') format('truetype');
+}
