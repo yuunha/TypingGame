@@ -58,7 +58,7 @@ public class UserControllerTest {
             .build();
 
         // when & then
-        mockMvc.perform(post("/auth")
+        mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated());
@@ -78,7 +78,7 @@ public class UserControllerTest {
             .build();
 
         // when & then
-        mockMvc.perform(post("/auth")
+        mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -100,7 +100,7 @@ public class UserControllerTest {
         //given
         userService.register(request); //통합테스트에서는 서비스 호출
         // when & then
-        mockMvc.perform(post("/auth")
+        mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request1)))
             .andExpect(status().isConflict());
@@ -115,7 +115,7 @@ public class UserControllerTest {
         //given
         userService.register(request);
 
-        mockMvc.perform(get("/auth")
+        mockMvc.perform(get("/user")
                 .with(httpBasic(loginId, password))) // Basic 인증 시뮬레이션
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.loginId").value(loginId))
@@ -132,7 +132,7 @@ public class UserControllerTest {
         //given
         userService.register(request);
 
-        mockMvc.perform(delete("/auth")
+        mockMvc.perform(delete("/user")
                 .with(httpBasic(loginId, password))) // Basic 인증 시뮬레이션
             .andExpect(status().isOk());
 
