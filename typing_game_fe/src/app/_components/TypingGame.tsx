@@ -31,21 +31,18 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
     const currentInputChars = Hangul
       .disassemble(inputValue, true)
       .flat().length;
-
     return pastChars + currentInputChars;
   };
 
   // 입력 이벤트
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
     if (startTime === null) {
       setStartTime(Date.now());
     }
 
-    setInputValue(value);
-
-    if (value === currentLine) {
+    if (e.key === "Enter") {
+    if (inputValue.length === currentLine.length) {
       if (startTime !== null) {
         const timeTaken = Date.now() - startTime;
         setElapsedTime(prev => prev + timeTaken);
@@ -59,6 +56,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
         setCompleted(true);
       }
     }
+  }
   };
 
   // 실시간 CPM 계산
@@ -76,6 +74,14 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
     return () => clearInterval(interval);
   }, [startTime, inputValue, currentLineIndex, elapsedTime, completed]);
 
+  useEffect(() => {
+    setCurrentLineIndex(0);
+    setInputValue("");
+    setStartTime(null);
+    setElapsedTime(0);
+    setCompleted(false);
+    setCpm(0);
+  }, [lyrics]);
 
   if (completed) {
     return (
@@ -88,10 +94,6 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
 
   return (
     <Wrapper>
-      {/* <TypingCat isTyping={isTyping} /> */}
-
-      {/* {m2Line && <SubLine>{m2Line}</SubLine>} */}
-
       <TypingLine>
         {m1Line && <SubLine>{m1Line}</SubLine>}
 
@@ -121,12 +123,12 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
       <Input
         type="text"
         value={inputValue}
-        onChange={handleChange}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="여기에 입력하세요"
       />
 
       <InfoBox>
-        {/* <p>최고 속도: {cpm} 타</p> */}
         <p>평균 속도: {cpm} 타</p>
         <p>정확도: {cpm} 타</p>
       </InfoBox>
