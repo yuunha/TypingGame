@@ -5,6 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import hello.typing_game_be.common.exception.BusinessException;
+import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         //loadUserByUsername메서드는 강제 구현해야함
         //username은 단순히 식별자를 의미함. -> loginId를 식별자로 지정
         User user = userRepository.findByLoginId(loginId)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         return org.springframework.security.core.userdetails.User.builder()
             .username(user.getLoginId())

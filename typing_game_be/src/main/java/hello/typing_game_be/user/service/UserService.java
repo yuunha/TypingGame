@@ -2,6 +2,7 @@ package hello.typing_game_be.user.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
@@ -56,7 +57,16 @@ public class UserService {
 
     public UserResponse getUserByLoginId(String loginId) {
         User user = userRepository.findByLoginId(loginId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         return new UserResponse(user.getLoginId(), user.getUsername());
+    }
+
+    @Transactional
+    public void deleteUserByLoginId(String loginId) {
+        if(!userRepository.existsByLoginId(loginId)){
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
+        }else{
+            userRepository.deleteByLoginId(loginId);
+        }
     }
 }
