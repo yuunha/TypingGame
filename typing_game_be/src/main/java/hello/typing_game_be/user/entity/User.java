@@ -1,10 +1,16 @@
 package hello.typing_game_be.user.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import hello.typing_game_be.longScore.entity.LongScore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,5 +37,11 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    // 유저가 작성한 긴 글 점수들
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LongScore> longScores = new ArrayList<>();
+    //유저가 longscore를 조회해야 한다면 여기서 연결해야함.
 
 }

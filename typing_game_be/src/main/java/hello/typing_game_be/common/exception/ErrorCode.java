@@ -12,7 +12,10 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"USER-003", "비밀번호가 일치하지 않습니다."),
 
     //DB
-    DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반");
+    DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반"),
+
+    //기타
+    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND,"COMMON-002","요청하신 리소스를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;

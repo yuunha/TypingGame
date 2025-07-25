@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.user.dto.UserResponse;
@@ -68,5 +69,12 @@ public class UserService {
         }else{
             userRepository.deleteByLoginId(loginId);
         }
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            System.out.println("해당 userId " + userId+ "가 존재하지 않습니다.");
+            return new BusinessException(ErrorCode.RESOURCE_NOT_FOUND);
+        });
     }
 }

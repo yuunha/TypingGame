@@ -29,7 +29,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (REST API)
             .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 콘솔 허용
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**", "/user").permitAll() // H2 콘솔과 인증 관련 API는 인증 없이 허용
+                .requestMatchers("/h2-console/**", "/user/**").permitAll() // H2 콘솔과 인증 관련 API는 인증 없이 허용
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())  // 폼 로그인 비활성화
