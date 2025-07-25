@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TypingCat from "./TypingCat";
+import * as Hangul from "hangul-js";
 
 interface TypingGameProps {
   lyrics: string[];
@@ -12,37 +13,47 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0); // 누적 시간
   const [completed, setCompleted] = useState(false);
+  const [cpm, setCpm] = useState(0);
 
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    let typingTimeout: ReturnType<typeof setTimeout>;
-    const handle = () => {
-      setIsTyping(true);
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => setIsTyping(false), 100);
-    };
-    window.addEventListener("keydown", handle);
-    return () => {
-      window.removeEventListener("keydown", handle);
-      clearTimeout(typingTimeout);
-    };
-  }, []);
-
-  const m2Line = currentLineIndex > 1 ? lyrics[currentLineIndex - 2] : null;
   const m1Line = currentLineIndex > 0 ? lyrics[currentLineIndex - 1] : null;
   const currentLine = lyrics[currentLineIndex];
   const p1Line = currentLineIndex < lyrics.length ? lyrics[currentLineIndex + 1] : null;
 
+  const totalTypedChars = () => {
+    // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기
+    const pastChars = Hangul
+      .disassemble(lyrics.slice(0, currentLineIndex).join(""), true)
+      .flat().length;
+
+    // 현재 입력값 자모 분리 후 길이
+    const currentInputChars = Hangul
+      .disassemble(inputValue, true)
+      .flat().length;
+
+    return pastChars + currentInputChars;
+  };
+
+  // 입력 이벤트
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!startTime) setStartTime(Date.now());
     const value = e.target.value;
+
+    if (startTime === null) {
+      setStartTime(Date.now());
+    }
+
     setInputValue(value);
 
     if (value === currentLine) {
+      if (startTime !== null) {
+        const timeTaken = Date.now() - startTime;
+        setElapsedTime(prev => prev + timeTaken);
+        setStartTime(null); // 다음 줄부터 다시 시작
+      }
+
       if (currentLineIndex < lyrics.length - 1) {
-        setCurrentLineIndex(currentLineIndex + 1);
+        setCurrentLineIndex(prev => prev + 1);
         setInputValue("");
       } else {
         setCompleted(true);
@@ -50,12 +61,21 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
     }
   };
 
-  const totalTypedChars =
-    lyrics.slice(0, currentLineIndex).join("").length + inputValue.length;
+  // 실시간 CPM 계산
+  useEffect(() => {
+    if (startTime === null || completed) return;
 
-  const cpm = startTime
-    ? Math.round(totalTypedChars / ((Date.now() - startTime) / 60000))
-    : 0;
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const elapsed = elapsedTime + (now - startTime);
+      const chars = totalTypedChars();
+      const currentCpm = elapsed > 0 ? Math.round(chars / (elapsed / 60000)) : 0;
+      setCpm(currentCpm);
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [startTime, inputValue, currentLineIndex, elapsedTime, completed]);
+
 
   if (completed) {
     return (
@@ -106,8 +126,9 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
       />
 
       <InfoBox>
-        <p>최고 속도: {cpm} 타</p>
+        {/* <p>최고 속도: {cpm} 타</p> */}
         <p>평균 속도: {cpm} 타</p>
+        <p>정확도: {cpm} 타</p>
       </InfoBox>
       <ProgressBarContainer>
         <ProgressBarFill progress={(currentLineIndex ) / lyrics.length * 100} />
