@@ -4,6 +4,7 @@ package hello.typing_game_be.user.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
-    @PostMapping("/signup")
+    @PostMapping
     public ResponseEntity<String> register(@Valid @RequestBody UserRequest request) {
         userService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -33,11 +34,18 @@ public class UserController {
     //     return ResponseEntity.status(HttpStatus.OK).build();
     // }
 
-    @GetMapping("/me")
+    @GetMapping
     public ResponseEntity<UserResponse> getUser(Authentication authentication) {
         String loginId = authentication.getName(); // 현재 로그인 사용자 ID
-        UserResponse user = userService.getUserByLoginId(loginId);
-        return ResponseEntity.ok(user);
+        UserResponse userResponse = userService.getUserByLoginId(loginId);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteUser(Authentication authentication) {
+        String loginId = authentication.getName();
+        userService.deleteUserByLoginId(loginId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
