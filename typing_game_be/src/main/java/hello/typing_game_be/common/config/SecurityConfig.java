@@ -39,11 +39,10 @@ public class SecurityConfig {
     }
     @Bean //인증관리자를 Bean으로 등록
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder())
-            .and()
-            .build();
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.userDetailsService(userDetailsService)
+            .passwordEncoder(passwordEncoder());
+        return builder.build();
     }
     //사용자 정보를 로드하는 서비스 지정, 비밀번호 비교 시 사용할 인코더 지정
 
