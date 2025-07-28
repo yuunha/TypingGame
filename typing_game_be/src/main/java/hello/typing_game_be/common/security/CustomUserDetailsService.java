@@ -1,4 +1,4 @@
-package hello.typing_game_be.user.service;
+package hello.typing_game_be.common.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,10 +24,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        return org.springframework.security.core.userdetails.User.builder()
-            .username(user.getLoginId())
-            .password(user.getPassword())  // 암호화된 비밀번호
-                                       // 필요한 경우 역할 추가
-            .build();
+        return new CustomUserDetails(user);
     }
 }
