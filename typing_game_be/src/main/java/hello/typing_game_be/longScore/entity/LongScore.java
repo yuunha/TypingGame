@@ -35,6 +35,6 @@ public class LongScore {
     @Column(nullable = false)
     private String title;
 
-    private int score;
+    private Integer score;
 
 }

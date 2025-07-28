@@ -2,6 +2,7 @@ package hello.typing_game_be.longScore.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,9 @@ import lombok.Setter;
 public class LongScoreRequest {
 
     @Min(0)
-    private int score;
+    @NotNull
+    private Integer score; // score가 안들어오면 400에러
+                        //Integer 자료형이라면 null이 입력됨
 
     @NotBlank
     private String title;

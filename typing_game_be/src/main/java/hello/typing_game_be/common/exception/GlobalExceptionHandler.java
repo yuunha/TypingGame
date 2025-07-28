@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ErrorDetails.of(e));
     }
 
-    // 입력값 Validation 위반 처리
+    // 입력값 @Valid 유효성 검사 예외 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(
         MethodArgumentNotValidException ex

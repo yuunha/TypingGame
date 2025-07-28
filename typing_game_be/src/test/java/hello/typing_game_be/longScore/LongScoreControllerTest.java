@@ -84,4 +84,45 @@ public class LongScoreControllerTest {
         assertThat(savedScore.get().getTitle()).isEqualTo(title);
         assertThat(savedScore.get().getScore()).isEqualTo(score);
     }
+    @Test
+    void 점수저장_실패_유효성문제() throws Exception {
+        LongScoreRequest request = LongScoreRequest.builder()
+            .title(title)
+            .build();
+        //when&then
+        mockMvc.perform(post("/user/1/long-score")
+                .with(httpBasic(loginId, password))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.score").value("must not be null"));
+
+        LongScoreRequest request1 = LongScoreRequest.builder()
+            .score(score)
+            .build();
+
+        //when&then
+        mockMvc.perform(post("/user/1/long-score")
+                .with(httpBasic(loginId, password))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request1)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("must not be blank"));
+
+    }
+
+    @Test //로그인안됨 -> 401
+    void 점수저장_실패_인증문제() throws Exception {
+        LongScoreRequest request = LongScoreRequest.builder()
+            .title(title)
+            .score(score)
+            .build();
+        //when&then
+        mockMvc.perform(post("/user/1/long-score")
+                .with(httpBasic(loginId, "wrong"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized());
+    }
+
 }
