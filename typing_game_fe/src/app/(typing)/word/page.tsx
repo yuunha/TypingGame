@@ -18,8 +18,7 @@ const TypingPage: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Background />
+    <>
       <Box>
         <Sidebar 
             lyricsList={lyricsList}
@@ -31,25 +30,12 @@ const TypingPage: React.FC = () => {
         <MainContent header="낱말 연습" selectedSong={selectedSong} />
 
       </Box>
-    </Container>
+    </>
   );
 }
 export default TypingPage;
 
-const Container = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100vh;
-`;
 
-const Background = styled.div`
-  position: absolute;
-  inset: 0;
-  background-image: url('/background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-color: white;
-`;
 
 const Box = styled.div`
   display: flex;

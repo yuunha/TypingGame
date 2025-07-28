@@ -106,7 +106,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
               if (i === inputValue.length - 1) {
                 color = "#000000"; // 기본색
               } else {
-                color = typedChar === char ? "#3B82F6" : "#EF4444";
+                color = typedChar === char ? "var(--color-point)" : "#a70021ff";
               }
             }
 
@@ -156,7 +156,7 @@ const ProgressBarContainer = styled.div`
 
 const ProgressBarFill = styled.div<{ progress: number }>`
   height: 100%;
-  background-color: var(--color-primary, #3B82F6); // 파란색 또는 CSS 변수
+  background-color: var(--color-point); // 파란색 또는 CSS 변수
   width: ${({ progress }) => progress}%;
   transition: width 0.3s ease;
 `;

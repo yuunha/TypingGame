@@ -7,8 +7,7 @@ import '../app/globals.css';
 
 export default function Home() {
   return (
-    <Container>
-      <Background />
+    <>
       <SideBox>
         <IconGrid>
           <Link href="/long" passHref>
@@ -48,25 +47,11 @@ export default function Home() {
         </IconGrid>
       </SideBox>
       <CenterBox></CenterBox>
-    </Container>
+      </>
   );
 }
 
 
-const Container = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100vh;
-`;
-
-const Background = styled.div`
-  position: absolute;
-  inset: 0;
-  background-image: url('/background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-color: white;
-`;
 
 const SideBox = styled.div`
   position: absolute;

@@ -30,7 +30,7 @@ const MainWrapper = styled.div`
   width: 950px;
   color: black;
   height : 43rem;
-  background-color: rgba(255, 255, 255, 0.99);
+  background-color: rgba(255, 255, 255, 0.96);
   border-radius : 0 20px 20px 0;
 `;
 

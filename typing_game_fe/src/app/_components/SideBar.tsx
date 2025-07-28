@@ -30,7 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState("");
   const [error, setError] = useState<string | null>(null);
-
   // 파일 input을 다시 선택할 수 있게 ref 사용 (같은 파일 재업로드 대비)
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -47,14 +46,21 @@ const Sidebar: React.FC<SidebarProps> = ({
     setFileName(file.name);
 
     const reader = new FileReader();
-    reader.onload = ev => {
-      const raw = (ev.target?.result as string) ?? "";
-      setFileContent(raw);
+    reader.onload = () => {
+      try {
+        const buffer = reader.result as ArrayBuffer;
+        let text = "";
+
+        text = new TextDecoder("utf-8").decode(buffer);
+
+        setFileContent(text);
+      } catch {
+        setError("텍스트 디코딩에 실패했습니다.");
+      }
     };
-    reader.onerror = () => {
-      setError("파일을 읽는 중 오류가 발생했습니다.");
-    };
-    reader.readAsText(file, "EUC-KR");
+
+    reader.onerror = () => setError("파일을 읽는 중 오류가 발생했습니다.");
+    reader.readAsArrayBuffer(file);
   };
 
   /** 업로드 확정 */
@@ -162,16 +168,24 @@ const Sidebar: React.FC<SidebarProps> = ({
             onChange={handleFileChange}
             style={{ display: 'none' }}
           />
-
+          
+          <FileLabel htmlFor="paste-area">텍스트 붙여넣기</FileLabel>
+          <textarea
+            id="paste-area"
+            value={fileContent}
+            onChange={e => setFileContent(e.target.value)}
+            rows={10}
+            style={{ width: "100%" , color: "black", height : "40px"}}
+            placeholder="여기에 텍스트를 붙여넣으세요"
+          />
+          
           {fileContent && (
             <LineCount>줄 수: {fileContent.split(/\r?\n/).length}</LineCount>
           )}
-
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <ButtonRow>
             <UploadBtn onClick={handleUpload}>업로드</UploadBtn>
-            {/* <CancelBtn onClick={handleCancelUpload}>취소</CancelBtn> */}
           </ButtonRow>
         </UploadBox>
       )}
