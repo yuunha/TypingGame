@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import styled from "styled-components";
+
 
 const LoginPage: React.FC = () => {
     const [loginId, setLoginId] = useState("");
@@ -11,7 +13,7 @@ const LoginPage: React.FC = () => {
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
-      e.preventDefault(); // ✅ 기본 새로고침 방지
+      e.preventDefault();
       console.log("로그인 요청 시작..."); 
       try{
         const res = await fetch("http://localhost:8080/auth/login", {
@@ -42,36 +44,85 @@ const LoginPage: React.FC = () => {
 
     }
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <h1 className="text-2xl font-bold mb-6">로그인</h1>
-          <form
-            onSubmit={handleLogin}
-            className="flex flex-col gap-4 bg-white p-6 rounded shadow-md w-80"
-          >
-            <input
-              type="text"
-              placeholder="아이디"
-              value={loginId}
-              onChange={(e) => setLoginId(e.target.value)}
-              className="border rounded px-3 py-2"
-            />
-            <input
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border rounded px-3 py-2"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              로그인
-            </button>
-          </form>
-          {message && <p className="mt-4 text-lg">{message}</p>}
-        </div>
+        <>
+            <Box>
+                <MainWrapper>
+                    <Title>로그인</Title>
+                    <form onSubmit={handleLogin}>
+                    <InputBox>
+                    <Input placeholder="아이디" value={loginId} onChange={e => setLoginId(e.target.value)}/>
+                    <Input placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)} type="password"/>
+                    </InputBox>
+                    <button type="submit"/>
+                    </form>
+                    
+                  {message && <Error>{message}</Error>}
+                </MainWrapper>
+
+            </Box>
+        </>
+        
+        
       );
     };
     
 export default LoginPage;
+
+
+const Box = styled.div`
+  flex-direction: column;  // 수직 정렬 추가
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+`;
+
+const MainWrapper = styled.div`
+  width: 280px;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position:relative;
+  top:-20px;
+`;
+
+
+const Title = styled.h1`
+  font-size: 2.1rem;
+  font-weight: bold;
+  color:white;
+  margin-bottom:20px;
+`;
+
+const InputBox = styled.div`
+  border: 1px solid #ccc;
+  border-radius: 15px;
+    padding: 10px;
+    background-color:white;
+    font-size: 14px;
+  ::placeholder {
+    color: #6b6b6bd0;
+    font-size: 14px;
+  }
+`
+
+const Input = styled.input`
+    padding: 6px;
+    width:100%;
+    border:none;
+    outline:none;
+    &:not(:last-child) {
+        border-bottom: 0.1rem solid #dadada7a;
+    }
+    &:hover {
+    // background: rgba(255, 255, 255, 0.1);
+
+    }    
+`
+const Error = styled.p`
+    color: white;
+`
+
