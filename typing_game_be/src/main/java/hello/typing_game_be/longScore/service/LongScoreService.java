@@ -1,11 +1,15 @@
 package hello.typing_game_be.longScore.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import hello.typing_game_be.longScore.dto.LongScoreRankingResponse;
 import hello.typing_game_be.longScore.dto.LongScoreRequest;
 import hello.typing_game_be.longScore.dto.LongScoreResponse;
+import hello.typing_game_be.longScore.dto.UserScoreProjection;
 import hello.typing_game_be.longScore.entity.LongScore;
 import hello.typing_game_be.longScore.mapper.LongScoreMapper;
 import hello.typing_game_be.longScore.repository.LongScoreRepository;
@@ -34,5 +38,14 @@ public class LongScoreService {
         List<LongScore> scores = longScoreRepository.getLongScoreByUser_UserId(userId);
 
         return LongScoreMapper.toResponseList(scores);
+    }
+
+    public List<LongScoreRankingResponse> getLongScoreByTitle(String title) {
+        PageRequest pageRequest = PageRequest.of(0, 50); // 첫 페이지, 50개 가져오기
+        List<UserScoreProjection> projections = longScoreRepository.findRankingByTitleOrderByScoreDesc(title,pageRequest);
+
+        return projections.stream()
+            .map(p -> new LongScoreRankingResponse( p.getUsername(), p.getScore()))
+            .collect(Collectors.toList());
     }
 }

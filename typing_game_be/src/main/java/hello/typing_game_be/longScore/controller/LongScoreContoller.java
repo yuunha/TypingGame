@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hello.typing_game_be.longScore.dto.LongScoreRankingResponse;
 import hello.typing_game_be.longScore.dto.LongScoreRequest;
 import hello.typing_game_be.longScore.dto.LongScoreResponse;
-import hello.typing_game_be.longScore.entity.LongScore;
 import hello.typing_game_be.longScore.service.LongScoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,12 @@ public class LongScoreContoller {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/ranking/long-score")
+    public ResponseEntity<List<LongScoreRankingResponse>> getLongScoreRankByTitle(@RequestParam String title) {
+
+        List<LongScoreRankingResponse> ranking = longScoreService.getLongScoreByTitle(title);
+        return ResponseEntity.ok(ranking);
+    }
 
 
 }
