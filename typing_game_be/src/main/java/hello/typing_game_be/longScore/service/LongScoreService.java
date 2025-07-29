@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import hello.typing_game_be.common.exception.BusinessException;
+import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.longScore.dto.LongScoreRankingResponse;
 import hello.typing_game_be.longScore.dto.LongScoreRequest;
 import hello.typing_game_be.longScore.dto.LongScoreResponse;
@@ -43,6 +45,10 @@ public class LongScoreService {
     public List<LongScoreRankingResponse> getLongScoreByTitle(String title) {
         PageRequest pageRequest = PageRequest.of(0, 50); // 첫 페이지, 50개 가져오기
         List<UserScoreProjection> projections = longScoreRepository.findRankingByTitleOrderByScoreDesc(title,pageRequest);
+
+        if (projections.isEmpty()) {
+            throw new BusinessException(ErrorCode.LONG_SCORE_TITLE_NOT_FOUND);
+        }
 
         return projections.stream()
             .map(p -> new LongScoreRankingResponse( p.getUsername(), p.getScore()))

@@ -11,6 +11,8 @@ public enum ErrorCode {
     DUPLICATE_LOGINID(HttpStatus.CONFLICT, "USER-002", "이미 존재하는 아아디입니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"USER-003", "비밀번호가 일치하지 않습니다."),
 
+    //Long-score
+    LONG_SCORE_TITLE_NOT_FOUND(HttpStatus.NOT_FOUND,"LONG-SCORE-001","존재하지 않는 title입니다."),
     //DB
     DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반"),
 

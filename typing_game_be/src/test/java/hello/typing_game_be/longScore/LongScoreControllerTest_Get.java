@@ -175,4 +175,12 @@ public class LongScoreControllerTest_Get {
             .andDo(print())
             .andExpect(status().isBadRequest());
     }
+    @Test
+    void 긴글점수_랭킹_조회_존재하지않는_title() throws Exception {
+        mockMvc.perform(get("/ranking/long-score")
+                .param("title", "wrong")
+                .with(httpBasic(loginId1, password1)))
+            .andExpect(status().isNotFound());
+    }
+
 }
