@@ -12,5 +12,5 @@ import hello.typing_game_be.longScore.entity.LongScore;
 public interface LongScoreRepository extends JpaRepository<LongScore, Long> {
     List<LongScore> getLongScoreByUser_LoginId(String userLoginId);
 
-    Optional<LongScore> getLongScoreByUser_UserId(Long user_userId);
+    List<LongScore> getLongScoreByUser_UserId(Long user_userId);
 }

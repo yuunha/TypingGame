@@ -1,18 +1,20 @@
 package hello.typing_game_be.longScore.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import hello.typing_game_be.longScore.dto.LongScoreRequest;
-import hello.typing_game_be.longScore.repository.LongScoreRepository;
+import hello.typing_game_be.longScore.dto.LongScoreResponse;
+import hello.typing_game_be.longScore.entity.LongScore;
 import hello.typing_game_be.longScore.service.LongScoreService;
-import hello.typing_game_be.user.dto.UserRequest;
-import hello.typing_game_be.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -28,5 +30,15 @@ public class LongScoreContoller {
         longScoreService.register(userId,request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PreAuthorize("#userId == authentication.principal.userId")
+    @GetMapping("/user/{userId}/long-score")
+    public ResponseEntity<List<LongScoreResponse>> getLongScore(@PathVariable Long userId) {
+
+        List<LongScoreResponse> response = longScoreService.getLongScoreByUserId(userId);
+        return ResponseEntity.ok(response);
+    }
+
+
 
 }
