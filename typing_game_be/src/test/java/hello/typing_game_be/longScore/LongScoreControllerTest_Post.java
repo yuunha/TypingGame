@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +27,7 @@ import hello.typing_game_be.user.service.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LongScoreControllerTest {
+public class LongScoreControllerTest_Post {
     @Autowired
     private MockMvc mockMvc;
 
@@ -92,10 +91,10 @@ public class LongScoreControllerTest {
             .andExpect(status().isCreated());
 
         //then
-        Optional<LongScore> savedScore = longScoreRepository.getLongScoreByUser_UserId(userId);
-        assertThat(savedScore).isPresent();
-        assertThat(savedScore.get().getTitle()).isEqualTo(title);
-        assertThat(savedScore.get().getScore()).isEqualTo(score);
+        List<LongScore> savedScores = longScoreRepository.getLongScoreByUser_UserId(userId);
+        LongScore savedScore = savedScores.get(0);
+        assertThat(savedScore.getTitle()).isEqualTo(title);
+        assertThat(savedScore.getScore()).isEqualTo(score);
     }
     @Test
     void 점수저장_실패_유효성문제() throws Exception {
