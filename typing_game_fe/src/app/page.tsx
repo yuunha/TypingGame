@@ -28,15 +28,24 @@ export default function Home() {
           </IconBox>
           </Link>
 
-          <BlankBox></BlankBox>
+          <Link href="/lib" passHref>
+          <IconBox>
+            <IconText>📚</IconText>
+          </IconBox>
+          </Link>
           
           <Link href="/word" passHref>
-            <IconBox color="var(--color-point)">
+            <IconBox >
               <IconText>낱</IconText>
             </IconBox>
           </Link>
 
-          <BlankBox></BlankBox>
+          
+          <Link href="/signup" passHref>
+          <IconBox>
+            <IconText>👋</IconText>
+          </IconBox>
+          </Link>
           
           <Link href="/rank" passHref>
             <IconBox color="var(--color-point)">

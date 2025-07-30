@@ -124,6 +124,8 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
+        onPaste={(e) => {e.preventDefault()}}
+        onDrop={(e) => e.preventDefault()}
         onKeyDown={handleKeyDown}
         placeholder="여기에 입력하세요"
       />

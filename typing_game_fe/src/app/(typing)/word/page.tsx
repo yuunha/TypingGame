@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { lyricsList } from "../../../data/lyricsList"; // 여러 가사 목록 데이터
+import { wordList } from "../../../data/word"; // 여러 가사 목록 데이터
 import TypingGame from "../../_components/TypingGame";
 import Sidebar from "../../_components/SideBar"
 import MainContent from "../../_components/MainContent"
@@ -8,7 +8,7 @@ import MainContent from "../../_components/MainContent"
 import styled from "styled-components";
 
 const TypingPage: React.FC = () => {
-  const [selectedSong, setSelectedSong] = useState(lyricsList[0]);
+  const [selectedSong, setSelectedSong] = useState(wordList[0]);
   const [uploadedFiles, setUploadedFiles] = useState<
     { title: string; lyrics: string[] }[]
   >([]);
@@ -21,7 +21,7 @@ const TypingPage: React.FC = () => {
     <>
       <Box>
         <Sidebar 
-            lyricsList={lyricsList}
+            lyricsList={wordList}
             uploadedFiles={uploadedFiles}
             selectedSong={selectedSong}
             onSelectSong={setSelectedSong}
