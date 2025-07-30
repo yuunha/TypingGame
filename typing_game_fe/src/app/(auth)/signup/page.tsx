@@ -34,9 +34,9 @@ const SignupPage: React.FC = () => {
   
         const text = await res.text();
         setMessage(text);
-        if (res.status === 200) {
+        if (res.status === 201) {
           router.push("/"); // 메인 페이지로 이동
-        }else if (res.status === 401) {
+        }else if (res.status === 409) {
           setMessage("회원가입 실패: 아이디 또는 비밀번호가 올바르지 않습니다.");
         }
       }catch(error){

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import React, { useState, useRef } from "react";
 
 
-import Widget from "../_components/WIdget"
+import Widget from "../_components/Widget"
 
 interface SongLike {
   title: string;
