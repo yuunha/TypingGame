@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
+import Link from 'next/link';
 
 
 const LoginPage: React.FC = () => {
@@ -16,27 +17,18 @@ const LoginPage: React.FC = () => {
       e.preventDefault();
       console.log("로그인 요청 시작..."); 
       try{
-        const res = await fetch("http://localhost:8080/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            loginId,
-            password,
-          }),
+        const res = await fetch("http://localhost:8080/user", {
+          method: "GET",
         });
 
         console.log("응답 상태:", res.status);
         console.log("응답 OK?", res.ok);
   
-        const text = await res.text();
-        setMessage(text);
-        if (res.status === 200) {
-          router.push("/"); // 메인 페이지로 이동
-        }else if (res.status === 401) {
-          setMessage("로그인 실패: 아이디 또는 비밀번호가 올바르지 않습니다.");
-        }
+        // if (res.status === 200) {
+        //   router.push("/"); // 메인 페이지로 이동
+        // }else if (res.status === 401) {
+        //   setMessage("로그인 실패: 아이디 또는 비밀번호가 올바르지 않습니다.");
+        // }
       }catch(error){
         setMessage("로그인 요청 실패")
       }
@@ -55,8 +47,10 @@ const LoginPage: React.FC = () => {
                     </InputBox>
                     <button type="submit"/>
                     </form>
-                    
-                  {message && <Error>{message}</Error>}
+                    <Link href="/signup" passHref>
+                      <White>회원가입</White>
+                    </Link>
+                  {message && <White>{message}</White>}
                 </MainWrapper>
 
             </Box>
@@ -122,7 +116,7 @@ const Input = styled.input`
 
     }    
 `
-const Error = styled.p`
+const White = styled.p`
     color: white;
 `
 

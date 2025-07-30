@@ -1,28 +1,58 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
 const SignupPage: React.FC = () => {
     
   const [username, setUsername] = useState("");
-  const [id, setId] = useState("");
+  const [loginId, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault(); 
-        console.log({ username, id, password });
-    };
+  const handleSignup = async (e: React.FormEvent) => {
+      e.preventDefault(); 
+      console.log("회원가입 요청 시작..."); 
+      console.log({ username, loginId, password });
+      try{
+        const res = await fetch("http://localhost:8080/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // JSON 타입 지정
+          },
+          body: JSON.stringify({
+            username,
+            loginId, 
+            password,
+          }),
+        });
+
+        console.log("응답 상태:", res.status);
+        console.log("응답 OK?", res.ok);
+  
+        const text = await res.text();
+        setMessage(text);
+        if (res.status === 200) {
+          router.push("/"); // 메인 페이지로 이동
+        }else if (res.status === 401) {
+          setMessage("회원가입 실패: 아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+      }catch(error){
+        setMessage("회원가입 요청 실패")
+      }
+    }
 
     return (
         <>
             <Box>
                 <MainWrapper>
                     <Title>회원가입</Title>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSignup}>
                     <InputBox>
                     <Input placeholder="닉네임" value={username} onChange={e => setUsername(e.target.value)}/>
-                    <Input placeholder="아이디" value={id} onChange={e => setId(e.target.value)}/>
+                    <Input placeholder="아이디" value={loginId} onChange={e => setId(e.target.value)}/>
                     <Input placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)} type="password"/>
                     </InputBox>
                     <button type="submit"/>

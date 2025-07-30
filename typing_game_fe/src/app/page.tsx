@@ -41,7 +41,7 @@ export default function Home() {
           </Link>
 
           
-          <Link href="/signup" passHref>
+          <Link href="/login" passHref>
           <IconBox>
             <IconText>👋</IconText>
           </IconBox>
