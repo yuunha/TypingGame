@@ -1,4 +1,4 @@
-package hello.typing_game_be.longScore;
+package hello.typing_game_be.longTextScore;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -14,9 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hello.typing_game_be.longScore.dto.LongScoreRequest;
-import hello.typing_game_be.longScore.repository.LongScoreRepository;
-import hello.typing_game_be.longScore.service.LongScoreService;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
+import hello.typing_game_be.longTextScore.repository.LongTextScoreRepository;
+import hello.typing_game_be.longTextScore.service.LongTextScoreService;
 import hello.typing_game_be.user.dto.UserRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
@@ -24,13 +24,13 @@ import hello.typing_game_be.user.service.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LongScoreControllerTest_Get {
+public class LongTextScoreControllerTest_Get {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private LongScoreRepository longScoreRepository;
+    private LongTextScoreRepository longTextScoreRepository;
 
     @Autowired
     private UserService userService;
@@ -42,7 +42,7 @@ public class LongScoreControllerTest_Get {
     private UserRepository userRepository;
 
     @Autowired
-    private LongScoreService longScoreService;
+    private LongTextScoreService longTextScoreService;
 
     String title1 = "별 헤는 밤";
     int score1 = 500;
@@ -65,7 +65,7 @@ public class LongScoreControllerTest_Get {
 
     @BeforeEach
     void beforeEach() {
-        longScoreRepository.deleteAll();
+        longTextScoreRepository.deleteAll();
         userRepository.deleteAll();
 
         //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
@@ -82,14 +82,14 @@ public class LongScoreControllerTest_Get {
         userId1 = user1.getUserId();
 
         //두개의 글에 대한 점수 등록
-        longScoreService.register(userId1,
-            LongScoreRequest.builder()
+        longTextScoreService.register(userId1,
+            LongTextScoreRequest.builder()
                 .title(title1)
                 .score(score1)
                 .build()
         );
-        longScoreService.register(userId1,
-            LongScoreRequest.builder()
+        longTextScoreService.register(userId1,
+            LongTextScoreRequest.builder()
                 .title(title2)
                 .score(score2)
                 .build()
@@ -109,8 +109,8 @@ public class LongScoreControllerTest_Get {
         userId2 = user2.getUserId();
 
         //첫번째 글에 대한 더 높은 점수
-        longScoreService.register(userId2,
-            LongScoreRequest.builder()
+        longTextScoreService.register(userId2,
+            LongTextScoreRequest.builder()
                 .title(title1)
                 .score(600)
                 .build()

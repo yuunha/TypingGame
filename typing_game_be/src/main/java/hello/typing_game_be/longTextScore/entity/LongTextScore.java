@@ -1,4 +1,4 @@
-package hello.typing_game_be.longScore.entity;
+package hello.typing_game_be.longTextScore.entity;
 
 import hello.typing_game_be.user.entity.User;
 import jakarta.persistence.Column;
@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //외부에서 기본 생성자 막기
 @AllArgsConstructor
-@Table(name = "long_score")
-public class LongScore {
+@Table(name = "long_text_score")
+public class LongTextScore {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long longScoreId;

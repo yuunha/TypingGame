@@ -1,4 +1,4 @@
-package hello.typing_game_be.longScore.dto;
+package hello.typing_game_be.longTextScore.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LongScoreRequest {
+public class LongTextScoreRequest {
 
     @Min(0)
     @NotNull
