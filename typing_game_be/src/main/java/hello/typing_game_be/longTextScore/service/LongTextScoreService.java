@@ -42,18 +42,17 @@ public class LongTextScoreService {
         longTextScoreRepository.save(longTextScore);
     }
 
-    // public List<LongTextScoreResponse> getLongScoreByUserId(Long userId) {
-    //     List<LongTextScore> scores = longTextScoreRepository.getLongScoreByUser_UserId(userId);
-    //
-    //     return LongTextScoreMapper.toResponseList(scores);
-    // }
-    //
-    // public List<LongTextScoreRankingResponse> getLongScoreByTitle(String title) {
+    public List<LongTextScoreResponse> getLongScoresByUserId(Long userId) {
+
+        return  longTextScoreRepository.findScoreAndTitleByUserId(userId);
+    }
+
+    // public List<LongTextScoreRankingResponse> getLongScoreByLongTextId(String title) {
     //     PageRequest pageRequest = PageRequest.of(0, 50); // 첫 페이지, 50개 가져오기
     //     List<UserTextScoreProjection> projections = longTextScoreRepository.findRankingByTitleOrderByScoreDesc(title,pageRequest);
     //
     //     if (projections.isEmpty()) {
-    //         throw new BusinessException(ErrorCode.LONG_SCORE_TITLE_NOT_FOUND);
+    //         throw new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND);
     //     }
     //
     //     return projections.stream()

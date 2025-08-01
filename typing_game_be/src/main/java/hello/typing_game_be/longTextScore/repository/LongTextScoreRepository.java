@@ -8,14 +8,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import hello.typing_game_be.longTextScore.dto.LongTextScoreResponse;
 import hello.typing_game_be.longTextScore.dto.UserTextScoreProjection;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 
 @Repository
 public interface LongTextScoreRepository extends JpaRepository<LongTextScore, Long> {
-    List<LongTextScore> getLongScoreByUser_LoginId(String userLoginId);
-
     List<LongTextScore> getLongScoreByUser_UserId(Long user_userId);
+
+    @Query("SELECT new hello.typing_game_be.longTextScore.dto.LongTextScoreResponse(s.score, t.title) " +
+        "FROM LongTextScore s JOIN s.longText t WHERE s.user.userId = :userId")
+    List<LongTextScoreResponse> findScoreAndTitleByUserId(@Param("userId") Long userId);
+    //지연로딩 문제 해결
+
 
     // @Query("SELECT ls.user.userId AS userId, ls.user.username AS username, ls.score AS score " +
     //     "FROM LongTextScore ls " +

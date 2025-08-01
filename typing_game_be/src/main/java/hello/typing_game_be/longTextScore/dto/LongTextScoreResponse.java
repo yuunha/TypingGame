@@ -17,5 +17,5 @@ public class LongTextScoreResponse {
     private Integer score; // score가 안들어오면 400에러
     //Integer 자료형이라면 null이 입력됨
 
-    private LongText longText;
+    private String title;
 }
