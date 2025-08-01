@@ -59,7 +59,7 @@ public class UserService {
     public UserResponse getUserByLoginId(String loginId) {
         User user = userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        return new UserResponse(user.getLoginId(), user.getUsername());
+        return new UserResponse(user.getUserId(),user.getLoginId(), user.getUsername());
     }
 
     @Transactional

@@ -21,7 +21,4 @@ public class LongTextScoreRequest {
     @NotNull
     private Integer score; // score가 안들어오면 400에러
                         //Integer 자료형이라면 null이 입력됨
-
-    @NotNull
-    private Long longTextId;
 }

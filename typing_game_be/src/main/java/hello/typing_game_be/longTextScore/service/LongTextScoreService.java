@@ -29,10 +29,10 @@ public class LongTextScoreService {
     private final UserService userService;
     private final LongTextRepository longTextRepository;
 
-    public void register(Long userId, LongTextScoreRequest request) {
+    public void register(Long longTextId, LongTextScoreRequest request, Long userId) {
         User user = userService.getUserById(userId);
-        LongText longText = longTextRepository.findById(request.getLongTextId())
-            .orElse(null);
+        LongText longText = longTextRepository.findById(longTextId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND));
 
         LongTextScore longTextScore = LongTextScore.builder()
             .user(user)

@@ -33,7 +33,7 @@ public class LongTextScore {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    LongText longText;
+    private LongText longText;
 
     @Column(nullable = false)
     private Integer score;
