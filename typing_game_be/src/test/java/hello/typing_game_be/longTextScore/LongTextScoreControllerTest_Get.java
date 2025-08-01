@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreWithUsernameResponse;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.longTextScore.repository.LongTextScoreRepository;
 import hello.typing_game_be.longTextScore.service.LongTextScoreService;
@@ -50,6 +53,7 @@ public class LongTextScoreControllerTest_Get {
     @Autowired
     private LongTextRepository longTextRepository;
 
+    private Long longTextId;
 
     @BeforeEach
     void beforeEach() {
@@ -76,6 +80,7 @@ public class LongTextScoreControllerTest_Get {
             .build()
         );
         LongText longText = longTextRepository.findByTitle("애국가").orElseThrow();
+        longTextId = longText.getLongTextId();
 
         //4.긴글 점수 저장
         longTextScoreRepository.save(
@@ -117,35 +122,28 @@ public class LongTextScoreControllerTest_Get {
             .andExpect(status().isUnauthorized());
     }
 
-    // @Test
-    // void 긴글점수_순위_조회_성공() throws Exception {
-    //     //given
-    //     addUser_Score();
-    //     //첫번째 글에 대한 2개의 점수와 유저이름 조회
-    //     mockMvc.perform(get("/ranking/long-score")
-    //             .param("title", title1)
-    //             .with(httpBasic(loginId1, password1)))
-    //         .andDo(print())
-    //         .andExpect(status().isOk())
-    //         .andExpect(jsonPath("$[0].score").value(600))
-    //         .andExpect(jsonPath("$[0].username").value(username2))
-    //         .andExpect(jsonPath("$[1].score").value(score1))
-    //         .andExpect(jsonPath("$[1].username").value(username1));
-    //
-    // }
-    // @Test
-    // void 긴글점수_순위_조회_title누락() throws Exception {
-    //     mockMvc.perform(get("/ranking/long-score")
-    //         .with(httpBasic(loginId1, password1)))
-    //         .andDo(print())
-    //         .andExpect(status().isBadRequest());
-    // }
-    // @Test
-    // void 긴글점수_랭킹_조회_존재하지않는_title() throws Exception {
-    //     mockMvc.perform(get("/ranking/long-score")
-    //             .param("title", "wrong")
-    //             .with(httpBasic(loginId1, password1)))
-    //         .andExpect(status().isNotFound());
-    // }
+    @Test
+    void 특정_글의_점수목록조회_성공() throws Exception {
+        // given
+
+        // when & then
+        mockMvc.perform(get("/long-text/{longTextId}/score", longTextId)
+                .with(httpBasic("testid", "1111")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].score").value(500))
+            .andExpect(jsonPath("$[0].username").value("admin"))
+            .andExpect(jsonPath("$[1].score").value(400))
+            .andExpect(jsonPath("$[1].username").value("admin"));
+    }
+
+    @Test
+    void 특정_글의_점수목록조회_실패_존재하지않는_longTextId() throws Exception {
+        // when & then
+        mockMvc.perform(get("/long-text/{longTextId}/score", 1000)
+                .with(httpBasic("testid", "1111")))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message").value("존재하지 않는 긴글입니다."));
+    }
 
 }

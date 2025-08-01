@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hello.typing_game_be.common.security.CustomUserDetails;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreWithUsernameResponse;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
-import hello.typing_game_be.longTextScore.dto.LongTextScoreResponse;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreWithTitleResponse;
 import hello.typing_game_be.longTextScore.service.LongTextScoreService;
 import hello.typing_game_be.user.service.UserService;
 import jakarta.validation.Valid;
@@ -36,18 +38,17 @@ public class LongTextScoreContoller {
 
 
     @GetMapping("/long-text/score") // 유저의 긴글점수 목록 조회
-    public ResponseEntity<List<LongTextScoreResponse>> getLongScore(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<List<LongTextScoreWithTitleResponse>> getLongScore(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserId();
 
         return ResponseEntity.ok(longTextScoreService.getLongScoresByUserId(userId));
     }
 
-    // @GetMapping("/ranking/long-score")
-    // public ResponseEntity<List<LongTextScoreRankingResponse>> getLongScoreRankByTitle(@RequestParam String title) {
-    //
-    //     List<LongTextScoreRankingResponse> ranking = longTextScoreService.getLongScoreByTitle(title);
-    //     return ResponseEntity.ok(ranking);
-    // }
+    @GetMapping("/long-text/{longTextId}/score")
+    public ResponseEntity<List<LongTextScoreWithUsernameResponse>> getLongScoreRankByLongText(@PathVariable Long longTextId) {
+
+        return ResponseEntity.ok(longTextScoreService.getScoresWithUsernamesByLongTextId(longTextId));
+    }
 
 
 }

@@ -10,12 +10,11 @@ import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
-import hello.typing_game_be.longTextScore.dto.LongTextScoreRankingResponse;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
-import hello.typing_game_be.longTextScore.dto.LongTextScoreResponse;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreWithTitleResponse;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreWithUsernameResponse;
 import hello.typing_game_be.longTextScore.dto.UserTextScoreProjection;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
-import hello.typing_game_be.longTextScore.mapper.LongTextScoreMapper;
 import hello.typing_game_be.longTextScore.repository.LongTextScoreRepository;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.service.UserService;
@@ -42,21 +41,16 @@ public class LongTextScoreService {
         longTextScoreRepository.save(longTextScore);
     }
 
-    public List<LongTextScoreResponse> getLongScoresByUserId(Long userId) {
+    public List<LongTextScoreWithTitleResponse> getLongScoresByUserId(Long userId) {
 
-        return  longTextScoreRepository.findScoreAndTitleByUserId(userId);
+        return  longTextScoreRepository.findScoresWithTitleByUserId(userId);
     }
 
-    // public List<LongTextScoreRankingResponse> getLongScoreByLongTextId(String title) {
-    //     PageRequest pageRequest = PageRequest.of(0, 50); // 첫 페이지, 50개 가져오기
-    //     List<UserTextScoreProjection> projections = longTextScoreRepository.findRankingByTitleOrderByScoreDesc(title,pageRequest);
-    //
-    //     if (projections.isEmpty()) {
-    //         throw new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND);
-    //     }
-    //
-    //     return projections.stream()
-    //         .map(p -> new LongTextScoreRankingResponse( p.getUsername(), p.getScore()))
-    //         .collect(Collectors.toList());
-    // }
+    public List<LongTextScoreWithUsernameResponse> getScoresWithUsernamesByLongTextId(Long longTextId) {
+        if (!longTextRepository.existsById(longTextId)) {
+            throw new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND);
+        }
+        return longTextScoreRepository.findScoresWithUsernameByLongTextId(longTextId);
+    }
+
 }

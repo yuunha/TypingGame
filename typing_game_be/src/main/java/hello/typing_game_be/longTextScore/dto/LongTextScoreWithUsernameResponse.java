@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class LongTextScoreRankingResponse {
+public class LongTextScoreWithUsernameResponse {
+    private int score;
     private String username;
-    private Integer score;
+
 }
