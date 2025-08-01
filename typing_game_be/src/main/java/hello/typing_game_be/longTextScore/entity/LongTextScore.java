@@ -1,5 +1,6 @@
 package hello.typing_game_be.longTextScore.entity;
 
+import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,9 +32,10 @@ public class LongTextScore {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
-    private String title;
+    @ManyToOne(fetch = FetchType.LAZY)
+    LongText longText;
 
+    @Column(nullable = false)
     private Integer score;
 
 }

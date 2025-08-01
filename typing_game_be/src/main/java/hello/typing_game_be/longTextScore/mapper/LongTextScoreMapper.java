@@ -11,7 +11,7 @@ public class LongTextScoreMapper {
     public static LongTextScoreResponse toResponse(LongTextScore score) {
         return LongTextScoreResponse.builder()
             .score(score.getScore())
-            .title(score.getTitle())
+            .longText(score.getLongText())
             .build();
     }
 

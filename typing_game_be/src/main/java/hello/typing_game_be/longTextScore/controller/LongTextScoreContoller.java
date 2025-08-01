@@ -32,20 +32,20 @@ public class LongTextScoreContoller {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PreAuthorize("#userId == authentication.principal.userId")
-    @GetMapping("/user/{userId}/long-score")
-    public ResponseEntity<List<LongTextScoreResponse>> getLongScore(@PathVariable Long userId) {
+    // @PreAuthorize("#userId == authentication.principal.userId")
+    // @GetMapping("/user/{userId}/long-score")
+    // public ResponseEntity<List<LongTextScoreResponse>> getLongScore(@PathVariable Long userId) {
+    //
+    //     List<LongTextScoreResponse> response = longTextScoreService.getLongScoreByUserId(userId);
+    //     return ResponseEntity.ok(response);
+    // }
 
-        List<LongTextScoreResponse> response = longTextScoreService.getLongScoreByUserId(userId);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/ranking/long-score")
-    public ResponseEntity<List<LongTextScoreRankingResponse>> getLongScoreRankByTitle(@RequestParam String title) {
-
-        List<LongTextScoreRankingResponse> ranking = longTextScoreService.getLongScoreByTitle(title);
-        return ResponseEntity.ok(ranking);
-    }
+    // @GetMapping("/ranking/long-score")
+    // public ResponseEntity<List<LongTextScoreRankingResponse>> getLongScoreRankByTitle(@RequestParam String title) {
+    //
+    //     List<LongTextScoreRankingResponse> ranking = longTextScoreService.getLongScoreByTitle(title);
+    //     return ResponseEntity.ok(ranking);
+    // }
 
 
 }

@@ -17,9 +17,9 @@ public interface LongTextScoreRepository extends JpaRepository<LongTextScore, Lo
 
     List<LongTextScore> getLongScoreByUser_UserId(Long user_userId);
 
-    @Query("SELECT ls.user.userId AS userId, ls.user.username AS username, ls.score AS score " +
-        "FROM LongTextScore ls " +
-        "WHERE ls.title = :title " +
-        "ORDER BY ls.score DESC")
-    List<UserTextScoreProjection> findRankingByTitleOrderByScoreDesc(@Param("title") String title, Pageable pageable);
+    // @Query("SELECT ls.user.userId AS userId, ls.user.username AS username, ls.score AS score " +
+    //     "FROM LongTextScore ls " +
+    //     "WHERE ls.title = :title " +
+    //     "ORDER BY ls.score DESC")
+    // List<UserTextScoreProjection> findRankingByTitleOrderByScoreDesc(@Param("title") String title, Pageable pageable);
 }
