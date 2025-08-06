@@ -8,6 +8,12 @@
   /* --color-blur:  */
 }
 
+* {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

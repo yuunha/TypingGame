@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { lyricsList } from "../../../data/lyricsList"; // 여러 가사 목록 데이터
-import TypingGame from "../../_components/TypingGame";
 import Sidebar from "../../_components/SideBar"
 import MainContent from "../../_components/MainContent"
+import Keyboard from "../../_components/Keyboard"
 
 import styled from "styled-components";
 
@@ -20,13 +20,13 @@ const TypingPage: React.FC = () => {
   return (
     <>
       <Box>
-        <Sidebar 
+        {/* <Sidebar 
             lyricsList={lyricsList}
             uploadedFiles={uploadedFiles}
             selectedSong={selectedSong}
             onSelectSong={setSelectedSong}
             onUploadFile={handleUploadFile}
-          />
+          /> */}
         <MainContent header="긴글연습" selectedSong={selectedSong} />
 
       </Box>
@@ -38,11 +38,10 @@ export default TypingPage;
 
 const Box = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  position: relative;
-  z-index: 1;
+  flex-direction: column;
+  justify-content: center; /* 수직 중앙 */
+  align-items: center;     /* 수평 중앙 */
+  // height: 100vh;
 `;
 
 

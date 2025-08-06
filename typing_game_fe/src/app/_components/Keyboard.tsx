@@ -2,11 +2,8 @@
 
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import Link from 'next/link';
 
-import '../app/globals.css';
-
-export default function Home() {
+export default function KeyBoard() {
   useEffect(() => {
   const handleKeyDown = (e) => {
   const key = document.querySelector(`.key--${e.keyCode}`);
@@ -46,18 +43,10 @@ export default function Home() {
         </KeyboardWrapper>
         <KeyboardWrapper>
           <Key className="key--20" $isColor $width2><KeyCap $isColor>Caps</KeyCap></Key>
-          <Link href="/long" passHref>
             <Key className="key--65"><KeyCap>긴</KeyCap></Key>
-          </Link>
-          <Link href="/short" passHref>
             <Key className="key--83"><KeyCap>짧</KeyCap></Key>
-          </Link>
-          <Link href="/word" passHref>
             <Key className="key--68"><KeyCap>낱</KeyCap></Key>
-          </Link>
-          <Link href="/rank" passHref>
             <Key className="key--70"><KeyCap>랭✧</KeyCap></Key>
-          </Link>
           <Key className="key--74"><KeyCap>🜸</KeyCap></Key>
           <Key className="key--75"><KeyCap>𐂂</KeyCap></Key>
           <Key className="key--76"><KeyCap>㋛</KeyCap></Key>
@@ -69,9 +58,7 @@ export default function Home() {
           <Key className="key--88"><KeyCap></KeyCap></Key>
           <Key className="key--67"><KeyCap></KeyCap></Key>
           <Key className="key--86"><KeyCap>☾</KeyCap></Key>
-          <Link href="/login" passHref>
-            <Key className="key--66"><KeyCap>❤︎</KeyCap></Key>
-          </Link>
+          <Key className="key--86"><KeyCap>❤︎</KeyCap></Key>
           <Key className="key--78"><KeyCap>?</KeyCap></Key>
           <Key className="key--13" $isRed $width0><KeyCap $isRed>⏎ Enter</KeyCap>
           </Key>
@@ -97,6 +84,7 @@ const Keyboard = styled.div`
   box-shadow: 0 0 10px rgb(0,0,0);
   border-radius : 10px;
 `;
+
 const KeyboardWrapper = styled.div`
   display:flex;
   background-color : #493823ff;

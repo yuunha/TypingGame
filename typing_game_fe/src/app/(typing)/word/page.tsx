@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { wordList } from "../../../data/word"; // 여러 가사 목록 데이터
-import TypingGame from "../../_components/TypingGame";
 import Sidebar from "../../_components/SideBar"
 import MainContent from "../../_components/MainContent"
 

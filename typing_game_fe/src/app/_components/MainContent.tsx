@@ -2,8 +2,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import TypingGame from './TypingGame';
+import Keyboard from './Keyboard';
 
 interface MainContentProps {
+  header: string;
   selectedSong: {
     title: string;
     lyrics: string;
@@ -11,27 +13,29 @@ interface MainContentProps {
 }
 
 const MainContent: React.FC<MainContentProps> = ({ header, selectedSong }) => {
+  console.log(header)
   return (
+    <>
+    <Header>
+      {header}
+      <RightInfo>로그인</RightInfo>
+    </Header>
+    <Title>{selectedSong.title}</Title>
+    <Keyboard/>
     <MainWrapper>
-        <Header>
-            {header}
-            <RightInfo>로그인</RightInfo>
-        </Header>
-        <Title>{selectedSong.title}</Title>
-        <TypingGame lyrics={selectedSong.lyrics} />
+      <TypingGame lyrics={selectedSong.lyrics} />
     </MainWrapper>
+    </>
   );
 };
 
 export default MainContent;
 
 const MainWrapper = styled.div`
-  padding-left:6rem; padding-right : 6rem; 
-  width: 950px;
+  width: 600px;
   color: black;
-  height : 43rem;
-  background-color: rgba(255, 255, 255, 0.96);
-  border-radius : 0 20px 20px 0;
+  // background-color: rgba(255, 255, 255, 0.96);
+  border-radius: 0 20px 20px 0;
 `;
 
 const Header = styled.div`
@@ -39,8 +43,9 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 70px;
-  font-size: 0.9rem;
+  height: 100px;
+  color: black;
+  font-size: 0.8rem;
 `;
 
 
@@ -48,12 +53,14 @@ const RightInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  z-index:1;
 `;
 
-
 const Title = styled.h1`
-  font-size: 2.5rem; /* text-2xl */
+  font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem; /* mb-6 */
-  margin-top : 70px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  width: 100%;
+  font-weight:bold;
 `;

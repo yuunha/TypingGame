@@ -27,7 +27,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
       <Container>
-        <Background />
+        {/* <Background /> */}
         {children}
       </Container>
       </body>
@@ -37,16 +37,18 @@ export default function RootLayout({
 
 
 const Container = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100vh;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  min-height:100vh;
+  background-color : #d6d4d2ff;
 `;
 
-const Background = styled.div`
-  position: absolute;
-  inset: 0;
-  background-image: url('/b3.jpg');
-  background-size: cover;
-  background-position: center;
-  background-color: white;
-`;
+// const Background = styled.div`
+//   position: absolute;
+//   inset: 0;
+//   background-image: url('/b3.jpg');
+//   background-size: cover;
+//   background-position: center;
+//   background-color: white;
+// `;
