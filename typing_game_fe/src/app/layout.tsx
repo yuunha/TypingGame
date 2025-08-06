@@ -27,7 +27,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
       <Container>
-        {/* <Background /> */}
         {children}
       </Container>
       </body>
@@ -43,12 +42,3 @@ const Container = styled.div`
   min-height:100vh;
   background-color : #d6d4d2ff;
 `;
-
-// const Background = styled.div`
-//   position: absolute;
-//   inset: 0;
-//   background-image: url('/b3.jpg');
-//   background-size: cover;
-//   background-position: center;
-//   background-color: white;
-// `;

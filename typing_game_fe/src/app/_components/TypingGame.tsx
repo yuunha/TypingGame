@@ -154,6 +154,9 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
       </ResultContainer>
     ) : (
       <Wrapper>
+        <ProgressBarContainer>
+          <ProgressBarFill progress={(currentLineIndex ) / lyrics.length * 100} />
+        </ProgressBarContainer>
       <TypingLine>
         {m1Line && <SubLine>{m1Line}</SubLine>}
 
@@ -195,9 +198,6 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
           <p>평균 속도: {cpm} 타</p>
           <p>정확도: {cpm} 타</p>
         </InfoBox>
-        <ProgressBarContainer>
-          <ProgressBarFill progress={(currentLineIndex ) / lyrics.length * 100} />
-        </ProgressBarContainer>
       </Wrapper>
     )}
     </>
@@ -212,8 +212,8 @@ const TypingLine = styled.div`
 
 const ProgressBarContainer = styled.div`
   width: 100%;
-  height: 12px;
-  background-color: #e5e7eb; // gray-200
+  height: 8px;
+  background-color: #a1a1a1ff;
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -231,7 +231,7 @@ const Wrapper = styled.div`
   // display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 5rem;
+  margin-top: 2rem;
   height : 500px;
   min-width: 600px;
 `;

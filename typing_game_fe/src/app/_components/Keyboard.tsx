@@ -2,9 +2,25 @@
 
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import keys from './keyboard/typingKeys'
+import keys from './keyboard/typingKeys';
+import Link from 'next/link';
 
-export default function KeyBoard() {
+
+interface KeyItem {
+  code: string;
+  label: string;
+  color?: string;
+  widthLevel?: number;
+  href?: string;
+}
+
+type Keys = KeyItem[][];
+
+interface KeyboardProps {
+  keys: Keys;
+}
+
+const Keyboard: React.FC<KeyboardProps> = ({ keys }) => {
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = document.querySelector(`.key--${e.code}`);
@@ -26,39 +42,44 @@ export default function KeyBoard() {
     };
   }, []);
   return (
-    <>
-       <Keyboard>
-        {keys.map((row, rowIndex) => (
+    <KeyboardFrame>
+      {keys.map((row, rowIndex) => (
         <KeyboardWrapper key={rowIndex}>
-          {row.map(({ code, label, color, red, width }) => (
+          {row.map(({ code, label, color, widthLevel, href }) => {
+          const keyElement = (
             <Key
               key={code}
               className={`key--${code}`}
-              $isColor={color}
-              $isRed={red}
-              $width0={width === 0}
-              $width1={width === 1}
-              $width2={width === 2}
-              $width3={width === 3}
+              $color={color}
+              $widthLevel={widthLevel}
             >
-              <KeyCap $isColor={color} $isRed={red}>{label}</KeyCap>
+              <KeyCap $color={color}>{label}</KeyCap>
             </Key>
-          ))}
+          );
+
+          return href ? (
+            <Link href={href} passHref key={code}>
+              {keyElement}
+            </Link>
+          ) : (
+            keyElement
+          );
+        })}
         </KeyboardWrapper>
       ))}
-      </Keyboard>
-    </>
+    </KeyboardFrame>
   );
-}
+};
 
-const Keyboard = styled.div`
+export default Keyboard;
+
+const KeyboardFrame = styled.div`
   display: inline-block;
   padding : 20px 10px;
   background-color : #eeece8ff;
   box-shadow: 0 0 10px rgb(0,0,0);
   border-radius : 10px;
 `;
-
 const KeyboardWrapper = styled.div`
   display:flex;
   background-color : #493823ff;
@@ -67,27 +88,27 @@ const KeyboardWrapper = styled.div`
 
 
 
-const Key = styled.div`
-  width: ${(props) => 
-    props.$width3 ? "120px" : 
-    props.$width2 ? "90px" : 
-    props.$width1 ? "70px" :
-    props.$width0 ? "auto" :
-    "50px"
-  };
-  flex-grow: ${(props) => (props.$width0 ? 1 : 0)};
+const Key = styled.div<{
+  $widthLevel?: number;
+  $color?: 'blue' | 'red';
+}>`
+  width: ${({ $widthLevel }) =>
+    $widthLevel === 3 ? '120px' :
+    $widthLevel === 2 ? '90px' :
+    $widthLevel === 1 ? '70px' : '50px'};
+  flex-grow: ${({ $widthLevel }) => ($widthLevel === 0 ? 1 : 0)};
   height: 55px;
   margin: 2px;
   border: 7px solid;
-  border-color: ${(props) => (
-    props.$isColor ? "#648da7ff #3a6986ff" : 
-    props.$isRed ? "#f29288  #af594fff" :
-    "#e4e2dbff #ccc4b5ff")};
-  background-color: ${(props) => (
-    props.$isColor ? "#7ea8c2ff" : 
-    props.$isRed ? "#E2675A":
-    "#eeebe1ff")};
-  color: ${(props) => (props.$isColor || props.$isRed ? "white" : "")};
+  border-color: ${({ $color }) =>
+    $color === 'blue' ? '#648da7ff #3a6986ff' :
+    $color === 'red' ? '#f29288  #af594fff' :
+    '#e4e2dbff #ccc4b5ff'};
+  background-color: ${({ $color }) =>
+    $color === 'blue' ? '#7ea8c2ff' :
+    $color === 'red' ? '#E2675A' :
+    '#eeebe1ff'};
+  color: ${({ $color }) => ($color ? 'white' : 'black')};
   &:hover{
     transform: scale(0.95);
   }
@@ -100,16 +121,18 @@ const Key = styled.div`
   }
 `;
 
-const KeyCap = styled.div`
-  width : 100%;
+const KeyCap = styled.div<{
+  $color?: 'blue' | 'red';
+}>`
+  width: 100%;
   height: 41px;
-  font-size : 13px;
+  font-size: 13px;
   padding: 5px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  border-radius : 5px;
+  border-radius: 5px;
   line-height: 1;
-  background-color: ${(props) => (
-    props.$isColor ? "#7ea8c2ff" :
-    props.$isRed ? "#E2675A":
-    "#eeebe1ff")};
+  background-color: ${({ $color }) =>
+    $color === 'blue' ? '#7ea8c2ff' :
+    $color === 'red' ? '#E2675A' :
+    '#eeebe1ff'};
 `;

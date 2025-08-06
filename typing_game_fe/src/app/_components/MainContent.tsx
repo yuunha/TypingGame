@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import TypingGame from './TypingGame';
 import Keyboard from './Keyboard';
+import typingKeys from './keyboard/typingKeys';
 
 interface MainContentProps {
   header: string;
@@ -21,7 +22,7 @@ const MainContent: React.FC<MainContentProps> = ({ header, selectedSong }) => {
       <RightInfo>로그인</RightInfo>
     </Header>
     <Title>{selectedSong.title}</Title>
-    <Keyboard/>
+    <Keyboard keys = {typingKeys}/>
     <MainWrapper>
       <TypingGame lyrics={selectedSong.lyrics} />
     </MainWrapper>
@@ -34,7 +35,6 @@ export default MainContent;
 const MainWrapper = styled.div`
   width: 600px;
   color: black;
-  // background-color: rgba(255, 255, 255, 0.96);
   border-radius: 0 20px 20px 0;
 `;
 
