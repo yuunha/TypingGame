@@ -10,7 +10,7 @@ const keys = [
     { code: "KeyI", label: "☂" },
     { code: "KeyO", label: "☃" },
     { code: "KeyP", label: "♧" },
-    { code: "Home", label: "Home", color: 'blue', widthLevel: 2 },
+    { code: "Home", label: "Home", color: 'blue', widthLevel: 2, href: '/'},
   ],
   [
     { code: "CapsLock", label: "Caps", color: 'blue', widthLevel: 2 },

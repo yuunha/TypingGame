@@ -5,7 +5,25 @@
   --foreground: #171717;
   --color-point: #0033a1ff;
   --color-white: #FFFFFF;
-  /* --color-blur:  */
+  /* keyboard:  */
+  --keyboard-bg: #eeece8ff;
+  --keyboard-row-bg: #493823ff;
+  
+  --key-border-default: #e4e2dbff #ccc4b5ff;
+  --key-fill-default: #eeebe1ff;
+
+  --key-border-blue: #648da7ff #3a6986ff;
+  --key-fill-blue: #7ea8c2ff;
+
+  --key-border-red: #f29288  #af594fff;
+  --key-fill-red: #E2675A;
+
+  /* typing */
+  --color-correct: #3a6986ff;
+  --color-wrong: #af594fff;
+
+  --progress-bg:#a1a1a1ff;
+  --progress-fill: #7ea8c2ff;
 }
 
 * {

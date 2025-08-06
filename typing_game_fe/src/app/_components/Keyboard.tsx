@@ -2,9 +2,8 @@
 
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import keys from './keyboard/typingKeys';
 import Link from 'next/link';
-
+import '../globals.css';
 
 interface KeyItem {
   code: string;
@@ -76,14 +75,14 @@ export default Keyboard;
 const KeyboardFrame = styled.div`
   display: inline-block;
   padding : 20px 10px;
-  background-color : #eeece8ff;
-  box-shadow: 0 0 10px rgb(0,0,0);
+  background-color: var(--keyboard-bg);
+  box-shadow: 0 0 10px;
   border-radius : 10px;
 `;
 const KeyboardWrapper = styled.div`
   display:flex;
-  background-color : #493823ff;
-  box-shadow: 0 0 2px rgb(0,0,0);
+  background-color: var(--keyboard-row-bg);
+  box-shadow: 0 0 2px;
 `;
 
 
@@ -101,13 +100,13 @@ const Key = styled.div<{
   margin: 2px;
   border: 7px solid;
   border-color: ${({ $color }) =>
-    $color === 'blue' ? '#648da7ff #3a6986ff' :
-    $color === 'red' ? '#f29288  #af594fff' :
-    '#e4e2dbff #ccc4b5ff'};
+    $color === 'blue' ? 'var(--key-border-blue)' :
+    $color === 'red' ? 'var(--key-border-red)' :
+    'var(--key-border-default)'};
   background-color: ${({ $color }) =>
-    $color === 'blue' ? '#7ea8c2ff' :
-    $color === 'red' ? '#E2675A' :
-    '#eeebe1ff'};
+    $color === 'blue' ? 'var(--key-fill-blue)' :
+    $color === 'red' ? 'var(--key-fill-red)' :
+    'var(--key-fill-default)'};
   color: ${({ $color }) => ($color ? 'white' : 'black')};
   &:hover{
     transform: scale(0.95);
@@ -132,7 +131,7 @@ const KeyCap = styled.div<{
   border-radius: 5px;
   line-height: 1;
   background-color: ${({ $color }) =>
-    $color === 'blue' ? '#7ea8c2ff' :
-    $color === 'red' ? '#E2675A' :
-    '#eeebe1ff'};
+    $color === 'blue' ? 'var(--key-fill-blue)' :
+    $color === 'red' ? 'var(--key-fill-red)' :
+    'var(--key-fill-default)'};
 `;

@@ -9,10 +9,10 @@ const typingKeys = [
       { code: "KeyI", label: "ㅑ" },
       { code: "KeyO", label: "ㅐ" },
       { code: "KeyP", label: "ㅔ" },
-      { code: "Home", label: "Home", color: 'blue', widthLevel: 2 },
+      { code: "Home", label: "Home", color: 'blue', widthLevel: 2, href: '/' },
     ],
     [
-      { code: "CapsLock", label: "Caps", color: 'blue', widthLevel: 2 },
+      { code: "CapsLock", label: "List", color: 'blue', widthLevel: 2 },
       { code: "KeyA", label: "ㅁ" },
       { code: "KeyS", label: "ㄴ" },
       { code: "KeyD", label: "ㅇ" },

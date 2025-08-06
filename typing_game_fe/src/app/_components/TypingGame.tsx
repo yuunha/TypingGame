@@ -167,9 +167,9 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
 
             if (typedChar !== undefined) {
               if (i === inputValue.length - 1) {
-                color = "#000000"; // 기본색
+                color = 'black';
               } else {
-                color = typedChar === char ? "var(--color-point)" : "#a70021ff";
+                color = typedChar === char ? "var(--color-correct)" : "var(--color-wrong)";
               }
             }
 
@@ -213,7 +213,7 @@ const TypingLine = styled.div`
 const ProgressBarContainer = styled.div`
   width: 100%;
   height: 8px;
-  background-color: #a1a1a1ff;
+  background-color: var(--progress-bg);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -221,14 +221,13 @@ const ProgressBarContainer = styled.div`
 
 const ProgressBarFill = styled.div<{ progress: number }>`
   height: 100%;
-  background-color: var(--color-point); // 파란색 또는 CSS 변수
+  background-color: var(--progress-fill);
   width: ${({ progress }) => progress}%;
   transition: width 0.3s ease;
 `;
 
 
 const Wrapper = styled.div`
-  // display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 2rem;
@@ -249,7 +248,7 @@ const ResultContainer = styled.div`
 const SubLine = styled.p`
   font-size: 1.25rem;
   margin-bottom: 1rem;
-  color: #9ca3af; // Tailwind gray-400
+  color: #9ca3af;
   width: 100%;
 `;
 
