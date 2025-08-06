@@ -1,0 +1,46 @@
+const typingKeys = [
+    [
+      { code: "Escape", label: "Esc", red: true },
+      { code: "KeyQ", label: "ㅂ" },
+      { code: "KeyW", label: "ㅈ" },
+      { code: "KeyE", label: "ㅈ" },
+      { code: "KeyR", label: "ㄷ" },
+      { code: "KeyU", label: "ㅕ" },
+      { code: "KeyI", label: "ㅑ" },
+      { code: "KeyO", label: "ㅐ" },
+      { code: "KeyP", label: "ㅔ" },
+      { code: "Home", label: "Home", color: true, width: 2 },
+    ],
+    [
+      { code: "CapsLock", label: "Caps", color: true, width: 2 },
+      { code: "KeyA", label: "ㅁ" },
+      { code: "KeyS", label: "ㄴ" },
+      { code: "KeyD", label: "ㅇ" },
+      { code: "KeyF", label: "ㄹ✧" },
+      { code: "KeyJ", label: "ㅓ" },
+      { code: "KeyK", label: "ㅏ" },
+      { code: "KeyL", label: "ㅣ" },
+      { code: "Backspace", label: "Backspace⌫", width: 0 },
+    ],
+    [
+      { code: "ShiftLeft", label: "⇧ Shift", color: true, width: 3 },
+      { code: "KeyZ", label: "ㅋ" },
+      { code: "KeyX", label: "ㅌ" },
+      { code: "KeyC", label: "ㅊ" },
+      { code: "KeyV", label: "ㅍ" },
+      { code: "Period", label: "." },
+      { code: "Slash", label: "?" },
+      { code: "Enter", label: "⏎ Enter", red: true, width: 0 },
+    ],
+    [
+      { code: "ControlLeft", label: "Ctrl", color: true, width: 1 },
+      { code: "MetaLeft", label: "🪟", color: true },
+      { code: "AltLeft", label: "Alt", color: true },
+      { code: "Space", label: "", width: 0 },
+      { code: "Lang1", label: "한/영", color: true, width: 1 },
+      { code: "ArrowLeft", label: "<", color: true },
+      { code: "ArrowRight", label: ">", color: true },
+    ],
+  ];
+
+  export default typingKeys;

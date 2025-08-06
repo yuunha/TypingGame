@@ -19,13 +19,13 @@ const TypingPage: React.FC = () => {
   return (
     <>
       <Box>
-        <Sidebar 
+        {/* <Sidebar 
             lyricsList={wordList}
             uploadedFiles={uploadedFiles}
             selectedSong={selectedSong}
             onSelectSong={setSelectedSong}
             onUploadFile={handleUploadFile}
-          />
+          /> */}
         <MainContent header="낱말 연습" selectedSong={selectedSong} />
 
       </Box>
@@ -38,11 +38,8 @@ export default TypingPage;
 
 const Box = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  position: relative;
-  z-index: 1;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;     
 `;
-
 

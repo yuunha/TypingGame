@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { buckwheatFlower } from "../../../data/buckwheatFlower"; // 여러 가사 목록 데이터
-import TypingGame from "../../_components/TypingGame";
 import Sidebar from "../../_components/SideBar"
 import MainContent from "../../_components/MainContent"
 
@@ -20,13 +19,13 @@ const TypingPage: React.FC = () => {
   return (
     <>
       <Box>
-        <Sidebar 
+        {/* <Sidebar 
             lyricsList={buckwheatFlower}
             uploadedFiles={uploadedFiles}
             selectedSong={selectedSong}
             onSelectSong={setSelectedSong}
             onUploadFile={handleUploadFile}
-          />
+          /> */}
         <MainContent header="짧은 글 연습" selectedSong={selectedSong} />
       </Box>    
     </>
@@ -38,11 +37,8 @@ export default TypingPage;
 
 const Box = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  position: relative;
-  z-index: 1;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;     
 `;
-
 
