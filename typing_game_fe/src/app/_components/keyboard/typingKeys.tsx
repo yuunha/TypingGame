@@ -12,7 +12,7 @@ const typingKeys = [
       { code: "Home", label: "Home", color: 'blue', widthLevel: 2, href: '/' },
     ],
     [
-      { code: "CapsLock", label: "List", color: 'blue', widthLevel: 2 },
+      { code: "CapsLock", label: "글 목록", color: 'blue', widthLevel: 2 },
       { code: "KeyA", label: "ㅁ" },
       { code: "KeyS", label: "ㄴ" },
       { code: "KeyD", label: "ㅇ" },

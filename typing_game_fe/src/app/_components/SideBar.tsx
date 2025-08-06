@@ -118,44 +118,36 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <Aside>
-      <ContentWrapper>
-      <Widget
-        userName=""
-      />
-      <Heading>가사 목록</Heading>
-
-      <List>
-        {lyricsList.map((song, index) => (
-          <ListItem
-            key={`default-${index}`}
-            selected={selectedSong.title === song.title}
-            onClick={() => onSelectSong(song)}
+  <Aside>
+    <ContentWrapper>
+      <div className="list">
+      {lyricsList.map((song, index) => (
+          <a
+              key={`default-${index}`}
+              data-active={selectedSong.title === song.title}
+              onClick={() => onSelectSong(song)}
           >
-            {song.title}
-          </ListItem>
-        ))}
-      </List>
-
+              {song.title}
+          </a>
+          ))}
+      </div>
       {uploadedFiles.length > 0 && (
-        <>
-          <SubHeading>내 파일</SubHeading>
-          <List>
-            {uploadedFiles.map((file, index) => (
-              <ListItem
-                key={`uploaded-${index}`}
-                selected={selectedSong.title === file.title}
-                onClick={() => onSelectSong(file)}
-              >
-                {file.title}
-              </ListItem>
-            ))}
-          </List>
-        </>
+      <>
+        <SubHeading>내 파일</SubHeading>
+        <List>
+          {uploadedFiles.map((file, index) => (
+            <ListItem
+              key={`uploaded-${index}`}
+              selected={selectedSong.title === file.title}
+              onClick={() => onSelectSong(file)}
+            >
+              {file.title}
+            </ListItem>
+          ))}
+        </List>
+      </>
       )}
-      </ContentWrapper>
-
-      {showUpload && (
+      {/* {showUpload && (
         <UploadBox>
           <FileLabel htmlFor="sidebar-file-input">
             {fileName ? `선택됨: ${fileName}` : 'TXT 파일 선택'}
@@ -191,8 +183,9 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
       <UploadToggleBtn onClick={() => setShowUpload(s => !s)}>
         {showUpload ? '-' : '+'}
-      </UploadToggleBtn>
-    </Aside>
+      </UploadToggleBtn> */}
+    </ContentWrapper>
+  </Aside>
   );
 };
 
@@ -200,26 +193,59 @@ const Sidebar: React.FC<SidebarProps> = ({
 export default Sidebar;
 
 
-
 const Aside = styled.aside`
-  width: 16rem;
-  height: 43rem;
-  min-width: 16rem;
-  padding: 1.7rem;
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(2px);
-  border-radius: 20px 0 0 20px;
-  color: white;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; // 추가됨
+  width: 13rem;
+  min-width: 13rem;
+  left :440px;
+  top: 177px;
+  position:relative;
+  height :100px;
 `;
 
 const ContentWrapper = styled.div`
-  flex: 1;
-  overflow-y: auto;
-`;
+  .list {
+    display: flex;
+    overflow: scroll;
+    height:300px;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    @media (min-width: 1024px) {
+      display: block;
+    }
+
+    a {
+      display: block;
+      padding: 0.45rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+      border-radius: 0.3rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      color: grey;
+      flex-shrink: 0;
+      cursor: pointer;
+
+      &:hover {
+        // background-color: #ededed;
+        color: var(--color-correct);
+      }
+      &[data-active="true"] {
+        color: black;
+        // background-color: #ededed;
+
+        :hover {
+          background-color: #ededed;
+        }
+      }
+    }
+  }
+`
+
+
 
 const Heading = styled.h2`
   font-size: 1.25rem;

@@ -231,7 +231,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 2rem;
-  height : 500px;
+  height : 400px;
   min-width: 600px;
 `;
 

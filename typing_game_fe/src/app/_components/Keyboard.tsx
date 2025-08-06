@@ -17,9 +17,10 @@ type Keys = KeyItem[][];
 
 interface KeyboardProps {
   keys: Keys;
+  onToggleSidebar?: () => void;
 }
 
-const Keyboard: React.FC<KeyboardProps> = ({ keys }) => {
+const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = document.querySelector(`.key--${e.code}`);
@@ -45,12 +46,18 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys }) => {
       {keys.map((row, rowIndex) => (
         <KeyboardWrapper key={rowIndex}>
           {row.map(({ code, label, color, widthLevel, href }) => {
+            const handleClick = () => {
+                if (code === "CapsLock") {
+                onToggleSidebar?.();
+                }
+            };
           const keyElement = (
             <Key
               key={code}
               className={`key--${code}`}
               $color={color}
               $widthLevel={widthLevel}
+              onClick={handleClick}
             >
               <KeyCap $color={color}>{label}</KeyCap>
             </Key>

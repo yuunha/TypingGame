@@ -1,45 +1,45 @@
-"use client";
-import React, { useState } from "react";
-import { wordList } from "../../../data/word"; // 여러 가사 목록 데이터
-import Sidebar from "../../_components/SideBar"
-import MainContent from "../../_components/MainContent"
+// "use client";
+// import React, { useState } from "react";
+// import { wordList } from "../../../data/word"; // 여러 가사 목록 데이터
+// import Sidebar from "../../_components/SideBar"
+// import MainContent from "../../_components/MainContent"
 
-import styled from "styled-components";
+// import styled from "styled-components";
 
-const TypingPage: React.FC = () => {
-  const [selectedSong, setSelectedSong] = useState(wordList[0]);
-  const [uploadedFiles, setUploadedFiles] = useState<
-    { title: string; lyrics: string[] }[]
-  >([]);
+// const TypingPage: React.FC = () => {
+//   const [selectedSong, setSelectedSong] = useState(wordList[0]);
+//   const [uploadedFiles, setUploadedFiles] = useState<
+//     { title: string; lyrics: string[] }[]
+//   >([]);
 
-  const handleUploadFile = (file: { title: string; lyrics: string[] }) => {
-    setUploadedFiles((prev) => [...prev, file]);
-  };
+//   const handleUploadFile = (file: { title: string; lyrics: string[] }) => {
+//     setUploadedFiles((prev) => [...prev, file]);
+//   };
 
-  return (
-    <>
-      <Box>
-        {/* <Sidebar 
-            lyricsList={wordList}
-            uploadedFiles={uploadedFiles}
-            selectedSong={selectedSong}
-            onSelectSong={setSelectedSong}
-            onUploadFile={handleUploadFile}
-          /> */}
-        <MainContent header="낱말 연습" selectedSong={selectedSong} />
+//   return (
+//     <>
+//       <Box>
+//         {/* <Sidebar 
+//             lyricsList={wordList}
+//             uploadedFiles={uploadedFiles}
+//             selectedSong={selectedSong}
+//             onSelectSong={setSelectedSong}
+//             onUploadFile={handleUploadFile}
+//           /> */}
+//         <MainContent header="낱말 연습" selectedSong={selectedSong} />
 
-      </Box>
-    </>
-  );
-}
-export default TypingPage;
+//       </Box>
+//     </>
+//   );
+// }
+// export default TypingPage;
 
 
 
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center; 
-  align-items: center;     
-`;
+// const Box = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center; 
+//   align-items: center;     
+// `;
 

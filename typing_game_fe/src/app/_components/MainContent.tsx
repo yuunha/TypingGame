@@ -9,11 +9,12 @@ interface MainContentProps {
   header: string;
   selectedSong: {
     title: string;
-    lyrics: string;
+    lyrics: string | string[];
   };
+  onToggleSidebar: () => void;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ header, selectedSong }) => {
+const MainContent: React.FC<MainContentProps> = ({ header, selectedSong, onToggleSidebar}) => {
   console.log(header)
   return (
     <>
@@ -22,7 +23,7 @@ const MainContent: React.FC<MainContentProps> = ({ header, selectedSong }) => {
       <RightInfo>로그인</RightInfo>
     </Header>
     <Title>{selectedSong.title}</Title>
-    <Keyboard keys = {typingKeys}/>
+    <Keyboard keys = {typingKeys} onToggleSidebar={onToggleSidebar}/>
     <MainWrapper>
       <TypingGame lyrics={selectedSong.lyrics} />
     </MainWrapper>
