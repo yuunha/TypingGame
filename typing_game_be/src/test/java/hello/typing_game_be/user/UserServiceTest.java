@@ -25,6 +25,6 @@ public class UserServiceTest {
         // when & then
         assertThatThrownBy(() -> userService.deleteUserByLoginId(nonExistentLoginId))
             .isInstanceOf(BusinessException.class)
-            .hasMessageContaining("존재하지 않는 아이디입니다");
+            .hasMessageContaining("존재하지 않는 유저입니다");
     }
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
     //user
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER-001", "존재하지 않는 아이디입니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER-001", "존재하지 않는 유저입니다."),
     DUPLICATE_LOGINID(HttpStatus.CONFLICT, "USER-002", "이미 존재하는 아아디입니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"USER-003", "비밀번호가 일치하지 않습니다."),
 

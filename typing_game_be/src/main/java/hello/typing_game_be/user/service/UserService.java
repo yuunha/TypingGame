@@ -53,6 +53,12 @@ public class UserService {
     //         throw new BusinessException(ErrorCode.INVALID_PASSWORD);
     //     }
     // }
+    @Transactional
+    public void update(Long userId, String name) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        user.setUsername(name);
+    }
 
     public UserResponse getUserByLoginId(String loginId) {
         User user = userRepository.findByLoginId(loginId)
