@@ -26,8 +26,11 @@ public class LongTextScoreService {
     private final UserService userService;
     private final LongTextRepository longTextRepository;
 
-    public void register(Long longTextId, LongTextScoreRequest request, Long userId) {
+    @Transactional
+    public Long register(Long longTextId, LongTextScoreRequest request, Long userId) {
         User user = userService.getUserById(userId);
+
+        // 긴글 존재하지 않으면 예외 발생
         LongText longText = longTextRepository.findById(longTextId)
             .orElseThrow(() -> new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND));
 
@@ -37,6 +40,8 @@ public class LongTextScoreService {
             .score(request.getScore())
             .build();
         longTextScoreRepository.save(longTextScore);
+
+        return longTextScore.getLongScoreId();
     }
 
     @Transactional
