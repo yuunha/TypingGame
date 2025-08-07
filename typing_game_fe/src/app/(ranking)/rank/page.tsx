@@ -80,20 +80,6 @@ const Box = styled.div`
 
 
 
-const Aside = styled.aside`
-  width: 16rem;
-  height: 43rem;
-  min-width: 16rem;
-  padding: 1.7rem;
-  background-color: rgba(255, 255, 255);
-  backdrop-filter: blur(2px);
-  border-radius: 20px 0 0 20px;
-  color: white;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; // 추가됨
-`;
 
 
 
@@ -116,6 +102,20 @@ const Title = styled.h1`
 `;
 
 
+const Aside = styled.aside`
+  width: 16rem;
+  height: 43rem;
+  min-width: 16rem;
+  padding: 1.7rem;
+  background-color: rgba(255, 255, 255);
+  backdrop-filter: blur(2px);
+  border-radius: 20px 0 0 20px;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; // 추가됨
+`;
 
 const ContentWrapper = styled.div`
 

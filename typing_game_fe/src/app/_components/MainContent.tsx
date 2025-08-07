@@ -20,9 +20,9 @@ const MainContent: React.FC<MainContentProps> = ({ header, selectedSong, onToggl
     <>
     <Header>
       {header}
+      <Title>{selectedSong.title}</Title>
       <RightInfo>로그인</RightInfo>
     </Header>
-    <Title>{selectedSong.title}</Title>
     <Keyboard keys = {typingKeys} onToggleSidebar={onToggleSidebar}/>
     <MainWrapper>
       <TypingGame lyrics={selectedSong.lyrics} />
@@ -44,9 +44,10 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 100px;
+  // height: 100px;
   color: black;
   font-size: 0.8rem;
+  margin-top:3rem;
 `;
 
 
@@ -60,8 +61,7 @@ const RightInfo = styled.div`
 const Title = styled.h1`
   font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
-  width: 100%;
   font-weight:bold;
 `;

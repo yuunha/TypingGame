@@ -200,6 +200,19 @@ const Aside = styled.aside`
   top: 177px;
   position:relative;
   height :100px;
+
+    @media (max-width: 1500px) {
+    position: fixed;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    z-index: 5;
+    padding : 10px;
+  }
+
+  @media (max-width: 1100px) {
+    display:none;
+  }
 `;
 
 const ContentWrapper = styled.div`

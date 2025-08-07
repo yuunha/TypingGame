@@ -24,6 +24,10 @@
 
   --progress-bg:#a1a1a1ff;
   --progress-fill: #7ea8c2ff;
+
+  --typing-line-sub: #6d6d6d;
+
+  --typing-size : 19px;
 }
 
 * {
