@@ -23,7 +23,7 @@ import hello.typing_game_be.longText.repository.LongTextRepository;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.longTextScore.repository.LongTextScoreRepository;
-import hello.typing_game_be.user.dto.UserRequest;
+import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
@@ -62,7 +62,7 @@ public class LongTextScoreControllerTest_Post {
 
         //2. 테스트용 유저 저장 및 ID 저장
         userService.register(   //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
-            UserRequest.builder()
+            UserCreateRequest.builder()
                 .username("admin")
                 .loginId("testid")
                 .password("1111")

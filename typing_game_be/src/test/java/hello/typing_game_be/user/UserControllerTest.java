@@ -13,11 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hello.typing_game_be.user.dto.UserRequest;
-import hello.typing_game_be.user.dto.UserResponse;
+import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
@@ -51,7 +50,7 @@ public class UserControllerTest {
 
     @Test
     void 회원가입_성공() throws Exception {
-        UserRequest request = UserRequest.builder()
+        UserCreateRequest request = UserCreateRequest.builder()
             .username(username)
             .loginId(loginId)
             .password(password)
@@ -71,7 +70,7 @@ public class UserControllerTest {
     @Test
     void 회원가입_실패_필수필드미입력() throws Exception {
 
-        UserRequest request = UserRequest.builder()
+        UserCreateRequest request = UserCreateRequest.builder()
             .username(username)
             .loginId("")
             .password(password)
@@ -87,12 +86,12 @@ public class UserControllerTest {
     @Test
     void 회원가입_실패_아이디중복() throws Exception {
 
-        UserRequest request = UserRequest.builder()
+        UserCreateRequest request = UserCreateRequest.builder()
             .username(username)
             .loginId(loginId)
             .password(password)
             .build();
-        UserRequest request1= UserRequest.builder()
+        UserCreateRequest request1= UserCreateRequest.builder()
             .username("aaa")
             .loginId(loginId)
             .password("111")
@@ -107,7 +106,7 @@ public class UserControllerTest {
     }
     @Test
     void 회원조회_성공() throws Exception {
-        UserRequest request = UserRequest.builder()
+        UserCreateRequest request = UserCreateRequest.builder()
             .username(username)
             .loginId(loginId)
             .password(password)
@@ -124,7 +123,7 @@ public class UserControllerTest {
 
     @Test
     void 회원삭제_성공() throws Exception {
-        UserRequest request = UserRequest.builder()
+        UserCreateRequest request = UserCreateRequest.builder()
             .username(username)
             .loginId(loginId)
             .password(password)

@@ -10,7 +10,7 @@ import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.user.dto.UserResponse;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
-import hello.typing_game_be.user.dto.UserRequest;
+import hello.typing_game_be.user.dto.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,12 +19,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void register(UserRequest request) {
-        if (userRepository.existsByLoginId(request.getLoginId())) {
+    //회원가입
+    @Transactional
+    public Long register(UserCreateRequest request) {
+
+        if (userRepository.existsByLoginId(request.getLoginId())) { //중복 유저 검증
             throw new BusinessException(ErrorCode.DUPLICATE_LOGINID);
         }
-        System.out.println(request.getLoginId());
-
         User user = User.builder()
             .username(request.getUsername())
             .loginId(request.getLoginId())
@@ -32,6 +33,7 @@ public class UserService {
             .build();
         userRepository.save(user);
 
+        return user.getUserId();
     }
 
     // public void login(UserRequest request) {
@@ -51,10 +53,6 @@ public class UserService {
     //         throw new BusinessException(ErrorCode.INVALID_PASSWORD);
     //     }
     // }
-
-    public boolean existsByLoginId(String loginId) {
-        return userRepository.existsByLoginId(loginId);
-    }
 
     public UserResponse getUserByLoginId(String loginId) {
         User user = userRepository.findByLoginId(loginId)
