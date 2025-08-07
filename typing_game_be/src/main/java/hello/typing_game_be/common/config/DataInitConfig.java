@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
-import hello.typing_game_be.user.dto.UserRequest;
+import hello.typing_game_be.user.dto.UserCreateRequest;
+import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ public class DataInitConfig {
 
     private final UserService userService;
     private final LongTextRepository longTextRepository;
+    private final UserRepository userRepository;
     String content1="동해물과 백두산이 마르고 닳도록\n"
         + "하느님이 보우하사 우리나라 만세\n"
         + "무궁화 삼천리 화려 강산\n"
@@ -57,8 +59,8 @@ public class DataInitConfig {
     }
 
     private void createUserIfNotExists(String username, String loginId, String password) {
-        if (!userService.existsByLoginId(loginId)) {
-            UserRequest request = UserRequest.builder()
+        if (!userRepository.existsByLoginId(loginId)) {
+            UserCreateRequest request = UserCreateRequest.builder()
                 .username(username)
                 .loginId(loginId)
                 .password(password)

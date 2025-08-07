@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserRequest {
+public class UserCreateRequest {
     @NotBlank(message = "이름은 필수입니다.")
     @Size(max = 9, message = "이름은 최대 9자까지 가능합니다.")
     private String username;
@@ -25,6 +25,5 @@ public class UserRequest {
     @Size(max = 20, message = "비밀번호는 최대 20자까지 가능합니다.")
     @NotBlank(message = "비밀번호는 필수입니다.")
     private String password;
-
 
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hello.typing_game_be.user.dto.UserRequest;
+import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.dto.UserResponse;
 import hello.typing_game_be.user.service.UserService;
 import jakarta.validation.Valid;
@@ -24,9 +24,10 @@ public class UserController {
 
     private final UserService userService;
     @PostMapping
-    public ResponseEntity<String> register(@Valid @RequestBody UserRequest request) {
-        userService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Long> register(@Valid @RequestBody UserCreateRequest request) {
+        Long userId = userService.register(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
     // @PostMapping("/login")
     // public ResponseEntity<String> login(@Valid @RequestBody UserRequest request) {
