@@ -20,7 +20,7 @@ const keys = [
     { code: "KeyF", label: "랭✧" , href: '/rank'},
     { code: "KeyJ", label: "🜸" },
     { code: "KeyK", label: "𐂂" },
-    { code: "KeyL", label: "㋛" },
+    { code: "KeyL", label: "❤︎" },
     { code: "Backspace", label: "Backspace⌫", widthLevel: 0 },
   ],
   [
@@ -29,8 +29,8 @@ const keys = [
     { code: "KeyX", label: "" },
     { code: "KeyC", label: "" },
     { code: "KeyV", label: "☾" },
-    { code: "KeyB", label: "❤︎" },
-    { code: "KeyN", label: "?" },
+    { code: "Period", label: "로그인㋛", href: '/login'},
+    { code: "Slash", label: "가입㋛",href: '/signup' },
     { code: "Enter", label: "⏎ Enter", color: 'red', widthLevel: 0 },
   ],
   [

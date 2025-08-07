@@ -5,6 +5,9 @@
   --foreground: #171717;
   --color-point: #0033a1ff;
   --color-white: #FFFFFF;
+  /* auth */
+  
+  --auth-beigie-title: rgb(117, 117, 115);
   /* keyboard:  */
   --keyboard-bg: #eeece8ff;
   --keyboard-row-bg: #493823ff;
@@ -18,6 +21,8 @@
   --key-border-red: #f29288  #af594fff;
   --key-fill-red: #E2675A;
 
+  --key-pressed-text: #ffffff44;
+  --key-pressed-border: #00000010;
   /* typing */
   --color-correct: #3a6986ff;
   --color-wrong: #af594fff;

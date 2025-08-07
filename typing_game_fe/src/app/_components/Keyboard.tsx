@@ -117,6 +117,8 @@ const Key = styled.div<{
   color: ${({ $color }) => ($color ? 'white' : 'black')};
   &:hover{
     transform: scale(0.95);
+    border-color: var(--key-pressed-border);
+    color: var(--key-pressed-text);
   }
   transition: transform 0.05s ease, box-shadow 0.05s ease;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
@@ -124,6 +126,8 @@ const Key = styled.div<{
     transform: scale(0.95) translateY(1px);
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     animation: press 0.15s ease;
+    border-color: var(--key-pressed-border);
+    color: var(--key-pressed-text);
   }
 `;
 

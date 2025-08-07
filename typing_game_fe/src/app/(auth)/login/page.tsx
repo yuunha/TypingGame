@@ -47,9 +47,6 @@ const LoginPage: React.FC = () => {
                     </InputBox>
                     <button type="submit"/>
                     </form>
-                    <Link href="/signup" passHref>
-                      <White>회원가입</White>
-                    </Link>
                   {message && <White>{message}</White>}
                 </MainWrapper>
 
@@ -87,7 +84,7 @@ const MainWrapper = styled.div`
 const Title = styled.h1`
   font-size: 2.1rem;
   font-weight: bold;
-  color:white;
+  color:var(--auth-beigie-title);
   margin-bottom:20px;
 `;
 
@@ -95,7 +92,7 @@ const InputBox = styled.div`
   border: 1px solid #ccc;
   border-radius: 15px;
     padding: 10px;
-    background-color:white;
+    background-color:var(--keyboard-bg);
     font-size: 14px;
   ::placeholder {
     color: #6b6b6bd0;
@@ -117,6 +114,6 @@ const Input = styled.input`
     }    
 `
 const White = styled.p`
-    color: white;
+    color: var(--auth-beigie-title);
 `
 

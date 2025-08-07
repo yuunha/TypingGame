@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
+import ResultModal from "./ResultModal";
 
 interface TypingGameProps {
   lyrics: string[];
@@ -136,25 +137,18 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
     .flat().length;
   return (
     <>
-      {completed ? (
       <Wrapper>
-        <ResultStats>
-          <StatBox>정확도 {accuracy}%</StatBox>
-          <StatBox>평균 {cpm}타</StatBox>
-          <StatBox>시간 {(elapsedTime / 1000).toFixed(1)}초</StatBox>
-        </ResultStats>
-        <h2>🎉 타자 연습 완료!</h2>
-        <h2>📍 내 타수 기록하기 (로그인)</h2>
-        {/* <h2>🥳 최고기록을 갱신하였습니다</h2>
-        <h2>🥳 이전기록: 112타 → 이번기록 : {cpm}타</h2>
-        <h2>🥳 나의 최고기록 154</h2><br></br> */}<br/>
-        <p>줄 수: {lyrics.length}줄</p>
-        <p>글자 수: {correctChars} / {totalChars}자</p>
-        <RetryButton onClick={handleRetry}>다시 하기</RetryButton>
-
-      </Wrapper>
-    ) : (
-      <Wrapper>
+        {completed && (
+          <ResultModal
+            accuracy={accuracy}
+            cpm={cpm}
+            elapsedTime={elapsedTime}
+            totalChars={totalChars}
+            correctChars={correctChars}
+            lineCount={lyrics.length}
+            onRetry={handleRetry}
+          />
+        )}
         <ProgressBarContainer>
           <ProgressBarFill progress={totalTypedChars() / totalLyricsChars * 100} />
         </ProgressBarContainer>
@@ -200,7 +194,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
           <p>정확도 {cpm} 타</p>
         </InfoBox>
       </Wrapper>
-    )}
+    
     </>
   );
 };

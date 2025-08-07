@@ -3,9 +3,6 @@
 import styled from "styled-components";
 import React, { useState, useRef } from "react";
 
-
-import Widget from "../_components/Widget"
-
 interface SongLike {
   title: string;
   lyrics: string[];
@@ -106,48 +103,33 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
-  /** 업로드 취소 */
-  const handleCancelUpload = () => {
-    setShowUpload(false);
-    setFileName(null);
-    setFileContent("");
-    setError(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
 
   return (
   <Aside>
     <ContentWrapper>
       <div className="list">
-      {lyricsList.map((song, index) => (
-          <a
-              key={`default-${index}`}
-              data-active={selectedSong.title === song.title}
-              onClick={() => onSelectSong(song)}
-          >
-              {song.title}
-          </a>
-          ))}
+        {[...lyricsList, ...uploadedFiles].map((song, index) => {
+          const isUploaded = index >= lyricsList.length;
+          const title = song.title;
+          const isSelected = selectedSong.title === title;
+
+          return (
+            <React.Fragment key={`${isUploaded ? "uploaded" : "default"}-${index}`}>
+              {index === lyricsList.length && uploadedFiles.length > 0 && <SubHeading>내 파일</SubHeading>}
+              <a
+                data-active={isSelected}
+                onClick={() => onSelectSong(song)}
+              >
+                {title}
+              </a>
+            </React.Fragment>
+          );
+        })}
       </div>
-      {uploadedFiles.length > 0 && (
-      <>
-        <SubHeading>내 파일</SubHeading>
-        <List>
-          {uploadedFiles.map((file, index) => (
-            <ListItem
-              key={`uploaded-${index}`}
-              selected={selectedSong.title === file.title}
-              onClick={() => onSelectSong(file)}
-            >
-              {file.title}
-            </ListItem>
-          ))}
-        </List>
-      </>
-      )}
-      {/* {showUpload && (
+      <UploadToggleBtn onClick={() => setShowUpload(s => !s)}>
+        {showUpload ? 'x' : '+++++'}
+      </UploadToggleBtn>
+      {showUpload && (
         <UploadBox>
           <FileLabel htmlFor="sidebar-file-input">
             {fileName ? `선택됨: ${fileName}` : 'TXT 파일 선택'}
@@ -160,8 +142,9 @@ const Sidebar: React.FC<SidebarProps> = ({
             onChange={handleFileChange}
             style={{ display: 'none' }}
           />
-          
-          <FileLabel htmlFor="paste-area">텍스트 붙여넣기</FileLabel>
+                    <ButtonRow>
+            <UploadBtn onClick={handleUpload}>업로드</UploadBtn>
+          </ButtonRow>
           <textarea
             id="paste-area"
             value={fileContent}
@@ -176,14 +159,8 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <ButtonRow>
-            <UploadBtn onClick={handleUpload}>업로드</UploadBtn>
-          </ButtonRow>
         </UploadBox>
       )}
-      <UploadToggleBtn onClick={() => setShowUpload(s => !s)}>
-        {showUpload ? '-' : '+'}
-      </UploadToggleBtn> */}
     </ContentWrapper>
   </Aside>
   );
@@ -220,7 +197,7 @@ const ContentWrapper = styled.div`
     display: flex;
     overflow: scroll;
     height:300px;
-
+    
     scrollbar-width: none;
     -ms-overflow-style: none;
 
@@ -243,13 +220,10 @@ const ContentWrapper = styled.div`
       cursor: pointer;
 
       &:hover {
-        // background-color: #ededed;
         color: var(--color-correct);
       }
       &[data-active="true"] {
         color: black;
-        // background-color: #ededed;
-
         :hover {
           background-color: #ededed;
         }
@@ -259,64 +233,37 @@ const ContentWrapper = styled.div`
 `
 
 
-
-const Heading = styled.h2`
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-`;
-
 const SubHeading = styled.h3`
+  padding-top : 10px;
   font-size: 1.125rem;
-  font-weight: 600;
-  margin: 1.5rem 0 0.5rem;
-`;
-
-const List = styled.ul`
-  margin-bottom: 1rem;
-`;
-
-const ListItem = styled.li<{ selected: boolean }>`
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  margin-bottom: 0.5rem;
-  color: ${({ selected }) => (selected ? 'white' : 'inherit')};
-
-  &:hover {
-    color: ${({ selected }) => (selected ? 'var(--color-point)' : '#e5e7eb')};
-  }
+  margin: 1.5rem 1rem 0.5rem;
 `;
 
 const UploadToggleBtn = styled.button`
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.6);
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-  border: none;
+  color: #000000ff;
   margin: 10px auto 0.5rem auto; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0px 4px 0 rgba(0, 0, 0, 0.2);
-
+  cursor:pointer;
+  padding-left: 1rem;
+  cursor: pointer;
   &:hover {
-    background-color: #16a34a;
+   color: var(--progress-fill);
   }
 `;
 
 const UploadBox = styled.div`
-  margin-top: 1rem;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 0.375rem;
-  background-color: white;
+  width : 80%;
+  margin: 0 1rem;
+  padding : 1rem;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
+  border : 1px solid grey;
+  textarea{
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 const FileLabel = styled.label`
@@ -324,13 +271,12 @@ const FileLabel = styled.label`
   width: 100%;
   text-align: center;
   cursor: pointer;
-  background-color: #e5e7eb;
   padding: 0.25rem 0;
-  border-radius: 0.375rem;
+  border-radius: 1rem;
   margin-bottom: 0.5rem;
 
   &:hover {
-    background-color: #d1d5db;
+    background-color: var(--progress-fill);
   }
 `;
 
@@ -349,16 +295,17 @@ const ErrorMessage = styled.p`
 const ButtonRow = styled.div`
   display: flex;
   gap: 0.5rem;
+  margin-bottom : 10px;
 `;
 
 const UploadBtn = styled.button`
   flex: 1;
-  background-color: #3b82f6;
+  background-color: var(--progress-fill);
   color: white;
   padding: 0.25rem 0;
   border-radius: 0.375rem;
 
   &:hover {
-    background-color: #2563eb;
+    background-color: var(--color-correct);
   }
   `;
