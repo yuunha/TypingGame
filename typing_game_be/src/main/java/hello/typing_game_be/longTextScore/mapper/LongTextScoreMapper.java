@@ -14,6 +14,7 @@ public class LongTextScoreMapper {
         }
 
         return new LongTextScoreWithTitleResponse(
+            entity.getLongScoreId(),
             entity.getScore(),
             entity.getLongText().getTitle()
         );
@@ -26,6 +27,7 @@ public class LongTextScoreMapper {
 
     public static LongTextScoreWithUsernameResponse toUsernameResponse(LongTextScore entity) {
         return new LongTextScoreWithUsernameResponse(
+            entity.getLongScoreId(),
             entity.getScore(),
             entity.getUser().getUsername()
         );
