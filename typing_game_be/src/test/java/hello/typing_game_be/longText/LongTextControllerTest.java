@@ -45,8 +45,8 @@ public class LongTextControllerTest {
                 .with(httpBasic("admin", "12345")))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].title").value(title))
-            .andExpect(jsonPath("$[0].content").value(content));
+            .andExpect(jsonPath("$.data[0].title").value(title))
+            .andExpect(jsonPath("$.data[0].content").value(content));
     }
 
 }
