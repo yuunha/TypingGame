@@ -6,13 +6,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.dto.UserResponse;
+import hello.typing_game_be.user.dto.UserUpdateRequest;
+import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +38,14 @@ public class UserController {
     //     userService.login(request);
     //     return ResponseEntity.status(HttpStatus.OK).build();
     // }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> update(@PathVariable("id") Long id,@Valid @RequestBody UserUpdateRequest request) {
+        userService.update(id,request.getUsername());
+        User user = userService.getUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            new UserResponse(user.getUserId(),user.getLoginId(),user.getUsername()));
+    }
 
     @GetMapping
     public ResponseEntity<UserResponse> getUser(Authentication authentication) {

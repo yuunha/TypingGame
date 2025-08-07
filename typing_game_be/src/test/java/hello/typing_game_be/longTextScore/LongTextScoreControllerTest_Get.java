@@ -101,11 +101,10 @@ public class LongTextScoreControllerTest_Get {
         mockMvc.perform(get("/long-text/score")
                 .with(httpBasic("testid", "1111" )))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.length()").value(2))
-            .andExpect(jsonPath("$[0].title").value("애국가"))
-            .andExpect(jsonPath("$[0].score").value(500))
-            .andExpect(jsonPath("$[1].title").value("애국가"))
-            .andExpect(jsonPath("$[1].score").value(400));
+            .andExpect(jsonPath("$.data[0].title").value("애국가"))
+            .andExpect(jsonPath("$.data[0].score").value(500))
+            .andExpect(jsonPath("$.data[1].title").value("애국가"))
+            .andExpect(jsonPath("$.data[1].score").value(400));
 
     }
 
@@ -125,11 +124,10 @@ public class LongTextScoreControllerTest_Get {
         mockMvc.perform(get("/long-text/{longTextId}/score", longTextId)
                 .with(httpBasic("testid", "1111")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.length()").value(2))
-            .andExpect(jsonPath("$[0].score").value(500))
-            .andExpect(jsonPath("$[0].username").value("admin"))
-            .andExpect(jsonPath("$[1].score").value(400))
-            .andExpect(jsonPath("$[1].username").value("admin"));
+            .andExpect(jsonPath("$.data[0].score").value(500))
+            .andExpect(jsonPath("$.data[0].username").value("admin"))
+            .andExpect(jsonPath("$.data[1].score").value(400))
+            .andExpect(jsonPath("$.data[1].username").value("admin"));
     }
 
     @Test

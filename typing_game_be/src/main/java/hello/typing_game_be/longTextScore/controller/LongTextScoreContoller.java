@@ -16,9 +16,12 @@ import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreWithUsernameResponse;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreWithTitleResponse;
+import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.longTextScore.service.LongTextScoreService;
 import hello.typing_game_be.user.service.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,27 +31,32 @@ public class LongTextScoreContoller {
     private final UserService userService;
 
     @PostMapping("/long-text/{longTextId}/score")
-    public ResponseEntity<Void> register(@PathVariable Long longTextId,@Valid @RequestBody LongTextScoreRequest request,
+    public ResponseEntity<Long> register(@PathVariable Long longTextId,@Valid @RequestBody LongTextScoreRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        longTextScoreService.register(longTextId,request,userDetails.getUserId());
+        Long id = longTextScoreService.register(longTextId,request,userDetails.getUserId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
 
     @GetMapping("/long-text/score") // 유저의 긴글점수 목록 조회
-    public ResponseEntity<List<LongTextScoreWithTitleResponse>> getLongScore(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<Result> getLongScore(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserId();
-
-        return ResponseEntity.ok(longTextScoreService.getLongScoresByUserId(userId));
+        List<LongTextScoreWithTitleResponse> list = longTextScoreService.getLongScoresByUserId(userId);
+        return ResponseEntity.ok(new Result(list));
     }
 
     @GetMapping("/long-text/{longTextId}/score")
-    public ResponseEntity<List<LongTextScoreWithUsernameResponse>> getLongScoreRankByLongText(@PathVariable Long longTextId) {
-
-        return ResponseEntity.ok(longTextScoreService.getScoresWithUsernamesByLongTextId(longTextId));
+    public ResponseEntity<Result> getLongScoreRankByLongText(@PathVariable Long longTextId) {
+        List<LongTextScoreWithUsernameResponse> list = longTextScoreService.getScoresWithUsernamesByLongTextId(longTextId);
+        return ResponseEntity.ok(new Result(list));
     }
 
-
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        //private int count; //필드 추가 가능
+        private T data;
+    }
 }

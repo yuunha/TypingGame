@@ -17,10 +17,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder //allArgsConstructor 필요
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //외부에서 기본 생성자 막기
 @AllArgsConstructor
 @Table(name = "users")

@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class LongTextScoreWithUsernameResponse {
+    private Long longScoreId;
     private int score;
     private String username;
 
