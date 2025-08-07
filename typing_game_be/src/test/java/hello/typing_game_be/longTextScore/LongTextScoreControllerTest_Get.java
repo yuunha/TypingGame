@@ -2,10 +2,7 @@ package hello.typing_game_be.longTextScore;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
-import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
-import hello.typing_game_be.longTextScore.dto.LongTextScoreWithUsernameResponse;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.longTextScore.repository.LongTextScoreRepository;
 import hello.typing_game_be.longTextScore.service.LongTextScoreService;

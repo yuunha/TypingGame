@@ -97,7 +97,7 @@ public class LongTextScoreControllerTest_Post {
             .andExpect(status().isCreated());
 
         //then
-        List<LongTextScore> savedScores = longTextScoreRepository.getLongScoreByUser_UserId(userId);
+        List<LongTextScore> savedScores = longTextScoreRepository.findByUser_UserId(userId);
         LongTextScore savedScore = savedScores.get(0);
         assertThat(savedScore.getLongText().getTitle()).isEqualTo("애국가");
         assertThat(savedScore.getScore()).isEqualTo(500);
