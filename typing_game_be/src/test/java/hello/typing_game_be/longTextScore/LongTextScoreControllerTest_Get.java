@@ -98,7 +98,7 @@ public class LongTextScoreControllerTest_Get {
     @Test
     void 유저의_점수목록조회_성공() throws Exception {
         //when
-        mockMvc.perform(get("/long-text/score")
+        mockMvc.perform(get("/user/long-text/scores")
                 .with(httpBasic("testid", "1111" )))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[0].title").value("애국가"))
@@ -111,7 +111,7 @@ public class LongTextScoreControllerTest_Get {
     @Test//로그인안됨 -> 401
     void 유저의_점수목록조회_실패_인증문제() throws Exception {
         //when&then
-        mockMvc.perform(get("/long-text/score")
+        mockMvc.perform(get("/user/long-text/scores")
                 .with(httpBasic("testid", "1112" )))
             .andExpect(status().isUnauthorized());
     }
@@ -121,7 +121,7 @@ public class LongTextScoreControllerTest_Get {
         // given
 
         // when & then
-        mockMvc.perform(get("/long-text/{longTextId}/score", longTextId)
+        mockMvc.perform(get("/long-text/{longTextId}/scores", longTextId)
                 .with(httpBasic("testid", "1111")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[0].score").value(500))
@@ -133,7 +133,7 @@ public class LongTextScoreControllerTest_Get {
     @Test
     void 특정_글의_점수목록조회_실패_존재하지않는_longTextId() throws Exception {
         // when & then
-        mockMvc.perform(get("/long-text/{longTextId}/score", 1000)
+        mockMvc.perform(get("/long-text/{longTextId}/scores", 1000)
                 .with(httpBasic("testid", "1111")))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value("존재하지 않는 긴글입니다."));

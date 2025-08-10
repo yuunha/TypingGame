@@ -40,14 +40,14 @@ public class LongTextScoreContoller {
     }
 
 
-    @GetMapping("/long-text/score") // 유저의 긴글점수 목록 조회
+    @GetMapping("/user/long-text/scores") // 특정 유저의 긴글점수 목록 조회
     public ResponseEntity<Result> getLongScore(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserId();
         List<LongTextScoreWithTitleResponse> list = longTextScoreService.getLongScoresByUserId(userId);
         return ResponseEntity.ok(new Result(list));
     }
 
-    @GetMapping("/long-text/{longTextId}/score")
+    @GetMapping("/long-text/{longTextId}/scores") // 특정 긴글의 긴글점수 목록 조회
     public ResponseEntity<Result> getLongScoreRankByLongText(@PathVariable Long longTextId) {
         List<LongTextScoreWithUsernameResponse> list = longTextScoreService.getScoresWithUsernamesByLongTextId(longTextId);
         return ResponseEntity.ok(new Result(list));

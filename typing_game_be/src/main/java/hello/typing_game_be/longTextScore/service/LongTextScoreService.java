@@ -46,7 +46,7 @@ public class LongTextScoreService {
 
     @Transactional
     public List<LongTextScoreWithTitleResponse> getLongScoresByUserId(Long userId) {
-        List<LongTextScore> scores = longTextScoreRepository.findByUser_UserId(userId);
+        List<LongTextScore> scores = longTextScoreRepository.findByUserId(userId);
 
         return LongTextScoreMapper.toTitleResponseList(scores);
     }
@@ -55,7 +55,7 @@ public class LongTextScoreService {
         if (!longTextRepository.existsById(longTextId)) {
             throw new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND);
         }
-        List<LongTextScore> scores = longTextScoreRepository.findByLongText_LongTextId(longTextId);
+        List<LongTextScore> scores = longTextScoreRepository.findByLongTextId(longTextId);
         return  LongTextScoreMapper.toUsernameResponseList(scores);
     }
 
