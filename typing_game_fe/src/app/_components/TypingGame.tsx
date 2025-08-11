@@ -9,7 +9,7 @@ interface TypingGameProps {
   lyrics: string[];
 }
 
-const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
+const TypingGame: React.FC<TypingGameProps> = ({ longTextId, lyrics }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
@@ -147,6 +147,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ lyrics }) => {
             correctChars={correctChars}
             lineCount={lyrics.length}
             onRetry={handleRetry}
+            longTextId = {longTextId}
           />
         )}
         <ProgressBarContainer>

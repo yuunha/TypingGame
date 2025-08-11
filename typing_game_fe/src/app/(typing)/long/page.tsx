@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { lyricsList } from "../../../data/lyricsList"; // 여러 가사 목록 데이터
 import Sidebar from "../../_components/SideBar";
 import TypingGame from "../../_components/TypingGame";
 import Keyboard from "../../_components/Keyboard";
@@ -17,6 +16,7 @@ interface LongText {
 }
 
 interface Song {
+  longTextId: number;
   title: string;
   lyrics: string[];
 }
@@ -37,7 +37,7 @@ const TypingPage: React.FC = () => {
 
 
   // 로그인 상태 확인 (basicAuth)
-  const savedAuthHeader = sessionStorage.getItem("authHeader") || "";
+  const savedAuthHeader = typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : "";
   const [authHeader, setAuthHeader] = useState<string>(savedAuthHeader);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!savedAuthHeader);
 
@@ -48,6 +48,8 @@ const TypingPage: React.FC = () => {
   //   setIsLoggedIn(false);
   // };
 
+
+  
   // 로그인 유지 확인 (로그인 상태 조회)
   useEffect(() => {
   if (!authHeader) {
@@ -89,15 +91,13 @@ useEffect(() => {
 
 // 가사 목록 불러오기
 useEffect(() => {
-  if (!authHeader) return;
-
   axios.get("http://localhost:8080/long-text", {
-    headers: { Authorization: authHeader },
     withCredentials: true,
   })
     .then(res => {
       const data: LongText[] = res.data.data;
       const songs = data.map(item => ({
+        longTextId: item.longTextId,
         title: item.title,
         lyrics: item.content.split("\n"),
       }));
@@ -113,7 +113,22 @@ useEffect(() => {
         alert("인증 실패! 다시 로그인 해주세요.");
       }
     });
-}, [authHeader]);
+}, []);
+
+
+// 전체 유저의 긴글점수 목록 조회
+useEffect(() => {
+  axios.get("http://localhost:8080/user/long-text/scores", {
+    withCredentials: true,
+  })
+    .then(res => {
+      console.log('전체 목록', res.data)
+    })
+    .catch(err => {
+      console.error("API 호출 실패", err);
+    });
+}, []);
+
 
 if (!selectedSong) {
   return <div>로딩중...</div>;
@@ -141,7 +156,7 @@ if (!selectedSong) {
         <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
 
         <MainWrapper>
-          <TypingGame lyrics={selectedSong.lyrics} />
+          <TypingGame longTextId={selectedSong.longTextId} lyrics={selectedSong.lyrics} />
         </MainWrapper>
       </Content>
     </Box>

@@ -24,7 +24,6 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = document.querySelector(`.key--${e.code}`);
-      console.log(e.code)
       if (key) key.classList.add("pressed");
     };
 

@@ -1,6 +1,7 @@
 // components/ResultModal.tsx
 "use client";
 
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
@@ -13,6 +14,7 @@ interface ResultModalProps {
   correctChars: number;
   lineCount: number;
   onRetry: () => void;
+  longTextId:number;
 }
 
 const ResultModal: React.FC<ResultModalProps> = ({
@@ -22,13 +24,62 @@ const ResultModal: React.FC<ResultModalProps> = ({
   totalChars,
   correctChars,
   lineCount,
-  onRetry
+  onRetry,
+  longTextId,
 }) => {
   const [mounted, setMounted] = useState(false);
+  const [score, setScore] = useState(0);
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
+  const authHeader = typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : "";
+  
+// 특정 긴글의 점수목록 조회
+  useEffect(() => {
+    axios.get(`http://localhost:8080/long-text/${longTextId}/scores`, {
+      withCredentials: true,
+    })
+      .then(res => {
+        const scores = res.data.data;
+        console.log(scores)
+        if (scores && scores.length > 0) {
+          setScore(scores[scores.length - 1].score);
+        } else {
+          setScore(0);
+        }
+      })
+      .catch(err => {
+        console.error("API 호출 실패", err);
+      });
+  },[longTextId]);
+
+  const handleRecord = async (e: React.FormEvent) => {
+     e.preventDefault();
+    console.log("점수 기록 요청..."); 
+    try{
+      const res = await fetch(`http://localhost:8080/long-text/${longTextId}/score`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", 
+           Authorization: authHeader,
+        },
+        body: JSON.stringify({
+          score : cpm,
+        }),
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      console.log("응답 데이터:", data);
+      alert("점수 기록 성공!");
+      onRetry();
+    } catch (error) {
+      console.error("점수 기록 실패", error);
+      alert("점수 기록에 실패했습니다.");
+    }
+  };
 
   if (!mounted) return null;
 
@@ -42,7 +93,8 @@ const ResultModal: React.FC<ResultModalProps> = ({
           <StatBox>시간 {(elapsedTime / 1000).toFixed(1)}초</StatBox>
         </ResultStats>
         <h2>🎉 타자 연습 완료!</h2>
-        <h2>📍 내 타수 기록하기</h2>
+        <RecordButton onClick={handleRecord}><h2>📍 내 타수 기록하기</h2></RecordButton>
+        <h2>이전 기록 : {score} </h2>
         <br />
         <p>줄 수: {lineCount}줄</p>
         <p>글자 수: {correctChars} / {totalChars}자</p>
@@ -65,6 +117,14 @@ const CloseButton = styled.button`
 
   &:hover {
     color: #fff;
+  }
+`;
+
+const RecordButton = styled.button`
+  cursor: pointer;
+  
+  &:hover {
+    color: var(--progress-fill);
   }
 `;
 
