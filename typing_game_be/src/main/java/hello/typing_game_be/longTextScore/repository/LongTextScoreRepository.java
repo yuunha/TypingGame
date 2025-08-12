@@ -15,7 +15,5 @@ public interface LongTextScoreRepository extends JpaRepository<LongTextScore, Lo
     @Query("select s from LongTextScore s join fetch s.longText where s.user.userId = :userId")
     List<LongTextScore> findByUserId(@Param("userId") Long userId);
 
-    //User를 페치조인(User의 username 필요)
-    @Query("select s from LongTextScore s join fetch s.user where s.longText.longTextId = :longTextId")
-    List<LongTextScore> findByLongTextId(@Param("longTextId")Long longTextId);
+    List<LongTextScore> findByUser_UserIdAndLongText_LongTextId(Long userId, Long longTextId);
 }

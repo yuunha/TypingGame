@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LongTextScoreContoller {
     private final LongTextScoreService longTextScoreService;
-    private final UserService userService;
 
     @PostMapping("/long-text/{longTextId}/score")
     public ResponseEntity<Long> register(@PathVariable Long longTextId,@Valid @RequestBody LongTextScoreRequest request,
@@ -40,16 +39,17 @@ public class LongTextScoreContoller {
     }
 
 
-    @GetMapping("/user/long-text/scores") // 특정 유저의 긴글점수 목록 조회
+    @GetMapping("/user/long-text/scores") // 유저의 점수 목록 전체조회
     public ResponseEntity<Result> getLongScore(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserId();
         List<LongTextScoreWithTitleResponse> list = longTextScoreService.getLongScoresByUserId(userId);
         return ResponseEntity.ok(new Result(list));
     }
 
-    @GetMapping("/long-text/{longTextId}/scores") // 특정 긴글의 긴글점수 목록 조회
-    public ResponseEntity<Result> getLongScoreRankByLongText(@PathVariable Long longTextId) {
-        List<LongTextScoreWithUsernameResponse> list = longTextScoreService.getScoresWithUsernamesByLongTextId(longTextId);
+    @GetMapping("/user/long-text/{longTextId}/scores") // 유저의 특정 긴글에 대한 점수 목록 조회
+    public ResponseEntity<Result> getLongScoreRankByLongText(@PathVariable Long longTextId,@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getUserId();
+        List<LongTextScoreWithUsernameResponse> list = longTextScoreService.getScoresWithUsernamesByLongTextIdAndUserId(userId,longTextId);
         return ResponseEntity.ok(new Result(list));
     }
 

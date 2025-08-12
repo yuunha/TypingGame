@@ -44,6 +44,8 @@ public class LongTextScoreService {
         return longTextScore.getLongScoreId();
     }
 
+    //유저의 긴글 점수 전체 조회
+    //응답값 : 리스트 - { title (긴글 제목) , score }
     @Transactional
     public List<LongTextScoreWithTitleResponse> getLongScoresByUserId(Long userId) {
         List<LongTextScore> scores = longTextScoreRepository.findByUserId(userId);
@@ -51,12 +53,12 @@ public class LongTextScoreService {
         return LongTextScoreMapper.toTitleResponseList(scores);
     }
 
-    public List<LongTextScoreWithUsernameResponse> getScoresWithUsernamesByLongTextId(Long longTextId) {
+    //유저의 특정 긴글에 대한 점수 조회
+    public List<LongTextScoreWithUsernameResponse> getScoresWithUsernamesByLongTextIdAndUserId(Long userId,Long longTextId ) {
         if (!longTextRepository.existsById(longTextId)) {
             throw new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND);
         }
-        List<LongTextScore> scores = longTextScoreRepository.findByLongTextId(longTextId);
+        List<LongTextScore> scores = longTextScoreRepository.findByUser_UserIdAndLongText_LongTextId(userId,longTextId);
         return  LongTextScoreMapper.toUsernameResponseList(scores);
     }
-
 }
