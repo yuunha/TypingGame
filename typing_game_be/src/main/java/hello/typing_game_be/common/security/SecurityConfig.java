@@ -31,7 +31,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (REST API)
             .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 콘솔 허용
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**", "/user/**").permitAll() // H2 콘솔과 인증 관련 API는 인증 없이 허용
+                .requestMatchers("/h2-console/**").permitAll() // H2 콘솔과 인증 관련 API는 인증 없이 허용
+                .requestMatchers(HttpMethod.POST, "/user").permitAll()   // 회원가입 등 POST만 허용
+                .requestMatchers("/user/**").authenticated()            // 그 외 /user 하위 경로는 인증 필요
                 .requestMatchers(HttpMethod.GET, "/long-text/**").permitAll()  // GET 요청만 허용
                 .anyRequest().authenticated()
             )

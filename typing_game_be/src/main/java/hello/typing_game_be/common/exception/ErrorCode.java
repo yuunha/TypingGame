@@ -15,6 +15,8 @@ public enum ErrorCode {
     LONG_TEXT_NOT_FOUND(HttpStatus.NOT_FOUND,"LONG-TEXT-001","존재하지 않는 긴글입니다."),
     //Long-score
     LONG_SCORE_TITLE_NOT_FOUND(HttpStatus.NOT_FOUND,"LONG-SCORE-001","존재하지 않는 title입니다."),
+    //my-long-text
+    MY_LONG_TEXT_NOT_FOUND(HttpStatus.NOT_FOUND,"MY-LONG-TEXT-001","존재하지 않는 '나의 긴글'입니다."),
     //DB
     DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반"),
 
