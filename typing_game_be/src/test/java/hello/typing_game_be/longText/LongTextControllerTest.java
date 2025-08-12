@@ -33,7 +33,7 @@ public class LongTextControllerTest {
     String content = "내용입니다\n내용입니다";
 
     @Test
-    void 긴글조회_성공() throws Exception {
+    void 긴글목록조회_성공() throws Exception {
         //given
         longTextRepository.save(
             LongText.builder()
@@ -45,6 +45,22 @@ public class LongTextControllerTest {
                 //인증 없이 허용
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[0].title").value(title));
+    }
+    @Test
+    void 긴글단건조회_성공() throws Exception {
+        //given
+        longTextRepository.save(
+            LongText.builder()
+                .title(title)
+                .content(content)
+                .build());
+        Long longTextId = longTextRepository.findAll().get(0).getLongTextId();
+        //when
+        mockMvc.perform(get("/long-text/{longTextId}",longTextId))
+            //인증 없이 허용
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.title").value(title))
+            .andExpect(jsonPath("$..content").value(content));
     }
 
 }

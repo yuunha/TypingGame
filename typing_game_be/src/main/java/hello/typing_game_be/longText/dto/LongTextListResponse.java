@@ -12,8 +12,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LongTextResponse {
+public class LongTextListResponse {
     private Long longTextId;
     private String title;
-    private String content;
+    public LongTextListResponse(LongText longText) {
+        this.longTextId = longText.getLongTextId();
+        this.title = longText.getTitle();
+    }
 }
