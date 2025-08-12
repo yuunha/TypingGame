@@ -12,18 +12,12 @@ import axios from "axios";
 interface LongText {
   longTextId: number;
   title: string;
-  content: string;
 }
 
-interface Song {
-  longTextId: number;
-  title: string;
-  lyrics: string[];
-}
 
 const TypingPage: React.FC = () => {
-  const [lyricsList, setLyricsList] = useState<Song[]>([]);
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [lyricsList, setLyricsList] = useState<LongText[]>([]);
+  const [selectedSong, setSelectedSong] = useState<LongText | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<
     { title: string; lyrics: string[] }[]
   >([]);
@@ -52,26 +46,23 @@ const TypingPage: React.FC = () => {
   
   // 로그인 유지 확인 (로그인 상태 조회)
   useEffect(() => {
-  if (!authHeader) {
-    setIsLoggedIn(false);
-    return;
-  }
-
-  axios.get("http://localhost:8080/user", {
-    headers: { Authorization: authHeader },
-    withCredentials: true,
-  })
-    .then(res => {
-      if (res.status === 200) {
-        setIsLoggedIn(true);
-      }
-    })
-    .catch(() => {
+    if (!authHeader) {
       setIsLoggedIn(false);
-      sessionStorage.removeItem("authHeader");
-      setAuthHeader("");
-    });
-}, [authHeader]);
+      return;
+    }
+
+    axios.get("http://localhost:8080/user", {
+      headers: { Authorization: authHeader },
+      withCredentials: true,
+    })
+      .then(res => {
+        if (res.status === 200) {
+          setIsLoggedIn(true);
+          console.log("로그인 되어 있습니다")
+        }
+      })
+      
+  }, [authHeader]);
 
 // 로그인 안 되어 있으면 prompt 띄우기
 useEffect(() => {
@@ -82,26 +73,27 @@ useEffect(() => {
       const basicAuth = "Basic " + btoa(`${username}:${password}`);
       sessionStorage.setItem("authHeader", basicAuth);
       setAuthHeader(basicAuth);
-      setIsLoggedIn(true);
+      // 여기서 setIsLoggedIn(true) 하면 안 돼요
+      // 서버에서 인증 확인 후 isLoggedIn을 true로 바꿔야 합니다.
     } else {
       alert("로그인 정보가 필요합니다.");
     }
   }
 }, [isLoggedIn]);
 
-// 가사 목록 불러오기
+// 긴글 목록 불러오기
 useEffect(() => {
+  if (!isLoggedIn) return;
+  
   axios.get("http://localhost:8080/long-text", {
-    withCredentials: true,
   })
     .then(res => {
       const data: LongText[] = res.data.data;
       const songs = data.map(item => ({
         longTextId: item.longTextId,
         title: item.title,
-        lyrics: item.content.split("\n"),
       }));
-      setLyricsList(songs);
+      setLyricsList(songs)
       if (songs.length > 0) setSelectedSong(songs[0]);
     })
     .catch(err => {
@@ -119,6 +111,7 @@ useEffect(() => {
 // 전체 유저의 긴글점수 목록 조회
 useEffect(() => {
   axios.get("http://localhost:8080/user/long-text/scores", {
+    headers: { Authorization: authHeader },
     withCredentials: true,
   })
     .then(res => {
@@ -130,9 +123,6 @@ useEffect(() => {
 }, []);
 
 
-if (!selectedSong) {
-  return <div>로딩중...</div>;
-} 
   return (
     <Box>
       {isSidebarOpen && (
@@ -147,17 +137,23 @@ if (!selectedSong) {
         </SidebarWrapper>
       )}
       <Content>
-        <Header>
-          <span>긴글연습</span>
-          <Title>{selectedSong.title}</Title>
-          <RightInfo>로그인</RightInfo>
-        </Header>
+        {selectedSong ? (
+        <>
+          <Header>
+            <span>긴글연습</span>
+            <Title>{selectedSong.title}</Title>
+            <RightInfo>로그인</RightInfo>
+          </Header>
 
-        <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
+          <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
 
-        <MainWrapper>
-          <TypingGame longTextId={selectedSong.longTextId} lyrics={selectedSong.lyrics} />
-        </MainWrapper>
+          <MainWrapper>
+            <TypingGame longTextId={selectedSong.longTextId} authHeader={authHeader} isLoggedIn={isLoggedIn}/>
+          </MainWrapper>
+        </>
+      ) : (
+        <div>로딩중...</div>
+      )}
       </Content>
     </Box>
   );

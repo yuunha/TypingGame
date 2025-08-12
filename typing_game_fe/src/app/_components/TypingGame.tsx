@@ -4,12 +4,28 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
 import ResultModal from "./ResultModal";
+import axios from "axios";
 
-interface TypingGameProps {
+interface LongText {
+  longTextId: number;
+  title: string;
+  content: string;
+}
+
+interface Song {
+  longTextId: number;
+  title: string;
   lyrics: string[];
 }
 
-const TypingGame: React.FC<TypingGameProps> = ({ longTextId, lyrics }) => {
+interface TypingGameProps {
+  longTextId: number;
+  authHeader: string;
+  isLoggedIn: boolean;
+}
+
+
+const TypingGame: React.FC<TypingGameProps> = ({ longTextId, authHeader, isLoggedIn }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
@@ -19,11 +35,34 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, lyrics }) => {
   const [correctChars, setCorrectChars] = useState(0);
   const [totalChars, setTotalChars] = useState(0);
 
+
+  //가사 관련
+  const [lyrics, setLyrics] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const m1Line = currentLineIndex > 0 ? lyrics[currentLineIndex - 1] : null;
   const currentLine = lyrics[currentLineIndex];
-  const p1Line = currentLineIndex < lyrics.length ? lyrics[currentLineIndex + 1] : null;
+  const p1Line = currentLineIndex + 1 < lyrics.length ? lyrics[currentLineIndex + 1] : null;
 
 
+  // 가사 불러오기
+  useEffect(() => {
+    if (!authHeader || !isLoggedIn) return;
+    setLoading(true);
+    
+    axios.get(`http://localhost:8080/long-text/${longTextId}`, {
+      withCredentials: true,
+    })
+      .then(res => {
+        const data = res.data;
+        setLyrics((data.content || "").split("\n"));
+      })
+      .catch(err => {
+        console.error("가사 불러오기 실패", err);
+      })
+      .finally(() => setLoading(false));
+  }, [longTextId, authHeader, isLoggedIn]);
+  
   const totalTypedChars = () => {
     // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기
     const pastChars = Hangul
@@ -157,7 +196,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, lyrics }) => {
         {m1Line && <SubLine>{m1Line}</SubLine>}
 
         <CurrentLine>
-          {currentLine.split("").map((char, i) => {
+          {(currentLine ?? "").split("").map((char, i) => {
             const typedChar = inputValue[i];
             let color = "";
 
@@ -192,7 +231,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, lyrics }) => {
 
         <InfoBox>
           <p>평균 {cpm} 타</p>
-          <p>정확도 {cpm} 타</p>
+          <p>정확도 {accuracy} %</p>
         </InfoBox>
       </Wrapper>
     
