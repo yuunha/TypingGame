@@ -15,10 +15,8 @@ import lombok.Setter;
 public class LongTextResponse {
     private Long longTextId;
     private String title;
-    private String content;
     public LongTextResponse(LongText longText) {
         this.longTextId = longText.getLongTextId();
         this.title = longText.getTitle();
-        this.content = longText.getContent();
     }
 }
