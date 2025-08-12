@@ -41,9 +41,8 @@ public class LongTextControllerTest {
                 .content(content)
             .build());
         //when
-        mockMvc.perform(get("/long-text")
-                .with(httpBasic("admin", "12345")))
-            .andDo(print())
+        mockMvc.perform(get("/long-text"))
+                //인증 없이 허용
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[0].title").value(title))
             .andExpect(jsonPath("$.data[0].content").value(content));

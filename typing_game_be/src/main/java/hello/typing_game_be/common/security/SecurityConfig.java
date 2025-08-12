@@ -2,6 +2,7 @@ package hello.typing_game_be.common.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,6 +32,7 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 콘솔 허용
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**", "/user/**").permitAll() // H2 콘솔과 인증 관련 API는 인증 없이 허용
+                .requestMatchers(HttpMethod.GET, "/long-text/**").permitAll()  // GET 요청만 허용
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())  // 폼 로그인 비활성화
