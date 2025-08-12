@@ -138,14 +138,14 @@ public class MyLongTextControllerTest {
         //유저 조회
         User user= userRepository.findByLoginId("testid").orElseThrow();
         //유저가 나의긴글 저장
-        MyLongText myLongText1 = myLongTextRepository.save(
+        myLongTextRepository.save(
             MyLongText.builder()
                 .user(user)
                 .title("애국가1")
                 .content("동해물과 백두산이\n")
                 .build()
         );
-        MyLongText myLongText2 = myLongTextRepository.save(
+        myLongTextRepository.save(
             MyLongText.builder()
                 .user(user)
                 .title("애국가2")
@@ -158,5 +158,26 @@ public class MyLongTextControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].title").value("애국가1"))
             .andExpect(jsonPath("$[1].title").value("애국가2"));
+    }
+    @Test
+    void 나의긴글_단건조회_성공() throws Exception {
+        //given
+        //유저 조회
+        User user= userRepository.findByLoginId("testid").orElseThrow();
+        //유저가 나의긴글 저장
+        MyLongText myLongText = myLongTextRepository.save(
+            MyLongText.builder()
+                .user(user)
+                .title("애국가")
+                .content("동해물과 백두산이\n")
+                .build()
+        );
+
+        //when&then
+        mockMvc.perform(get("/user/my-long-text/{myLongTextId}",myLongText.getMyLongTextId())
+                .with(httpBasic("testid", "1111")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.title").value("애국가"))
+            .andExpect(jsonPath("$.content").value("동해물과 백두산이\n"));
     }
 }

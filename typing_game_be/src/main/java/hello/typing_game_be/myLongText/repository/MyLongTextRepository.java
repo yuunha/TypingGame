@@ -14,5 +14,5 @@ public interface MyLongTextRepository extends JpaRepository<MyLongText, Long> {
     List<MyLongText> findByUser(User user);
     List<MyLongText> findByUser_UserId(Long userId);
 
-
+    MyLongText findByUser_UserIdAndMyLongTextId(Long userId, Long myLongTextId);
 }

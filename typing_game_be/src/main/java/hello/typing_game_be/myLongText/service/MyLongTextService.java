@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.myLongText.dto.MyLongTextRequest;
+import hello.typing_game_be.myLongText.dto.MyLongTextListResponse;
 import hello.typing_game_be.myLongText.dto.MyLongTextResponse;
 import hello.typing_game_be.myLongText.entity.MyLongText;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
@@ -49,12 +50,20 @@ public class MyLongTextService {
         myLongTextRepository.delete(longText);
     }
 
-    public List<MyLongTextResponse> getByUserId(Long userId) {
+    public List<MyLongTextListResponse> getByUserId(Long userId) {
         List<MyLongText> myLongTexts = myLongTextRepository.findByUser_UserId(userId);
 
         return myLongTexts.stream()
-            .map(entity -> MyLongTextResponse.fromEntity(entity))  // fromEntity는 DTO 변환 메서드
+            .map(entity -> MyLongTextListResponse.fromEntity(entity))  // fromEntity는 DTO 변환 메서드
             .collect(Collectors.toList());
 
+    }
+
+    public MyLongTextResponse getMyLongText(Long myLongTextId, Long userId) {
+        MyLongText myLongText = myLongTextRepository.findByUser_UserIdAndMyLongTextId(userId, myLongTextId);
+        if (!myLongText.getUser().getUserId().equals(userId)) {
+            throw new AccessDeniedException("조회 권한이 없습니다."); //403 Forbidden 응답
+        }
+        return MyLongTextResponse.fromEntity(myLongText);
     }
 }

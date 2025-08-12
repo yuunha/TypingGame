@@ -12,12 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MyLongTextResponse {
+public class MyLongTextListResponse {
     private Long myLongTextId;
     private String title;
-    private String content;
 
-    public static MyLongTextResponse fromEntity(MyLongText myLongText) {
-        return new MyLongTextResponse(myLongText.getMyLongTextId(), myLongText.getTitle(), myLongText.getContent());
+    public static MyLongTextListResponse fromEntity(MyLongText entity) {
+        return new MyLongTextListResponse(
+            entity.getMyLongTextId(),
+            entity.getTitle()
+        );
     }
 }
