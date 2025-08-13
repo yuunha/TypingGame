@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.myLongText.entity.MyLongText;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
@@ -51,7 +52,9 @@ public class MyLongTextScoreControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private User user;
     private Long userId;
+    private MyLongText myLongText;
     private Long myLongTextId;
 
     @BeforeEach
@@ -69,7 +72,7 @@ public class MyLongTextScoreControllerTest {
                 .password("1111")
                 .build()
         );
-        User user = userRepository.findByLoginId("testid").orElseThrow();
+        user = userRepository.findByLoginId("testid").orElseThrow();
         userId = user.getUserId();
 
         //3. 긴글 저장 및 ID 저장
@@ -78,7 +81,7 @@ public class MyLongTextScoreControllerTest {
             .content("나의긴글입니다..")
             .build()
         );
-        MyLongText myLongText = myLongTextRepository.findByTitle("나의긴글").orElseThrow();
+        myLongText = myLongTextRepository.findByTitle("나의긴글").orElseThrow();
         myLongTextId = myLongText.getMyLongTextId();
     }
     @AfterEach
@@ -104,5 +107,31 @@ public class MyLongTextScoreControllerTest {
         MyLongTextScore savedScore = savedScores.get(0);
         assertThat(savedScore.getMyLongText().getTitle()).isEqualTo("나의긴글");
         assertThat(savedScore.getScore()).isEqualTo(500);
+    }
+    @Test
+    void 특정_나의긴글에대한_최고점수_조회_성공() throws Exception {
+        //given
+        //긴글에 대한 점수 저장
+        myLongTextScoreRepository.save(
+            MyLongTextScore.builder()
+                .user(user)
+                .myLongText(myLongText)
+                .score(100)
+                .build()
+        );
+        myLongTextScoreRepository.save(
+            MyLongTextScore.builder()
+                .user(user)
+                .myLongText(myLongText)
+                .score(200)
+                .build()
+        );
+
+        //when&then
+        mockMvc.perform(get("/my-long-text/" + myLongTextId  + "/score")
+                .with(httpBasic("testid", "1111"))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.score").value(200));
     }
 }

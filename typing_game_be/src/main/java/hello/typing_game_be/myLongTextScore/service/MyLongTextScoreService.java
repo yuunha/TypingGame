@@ -39,4 +39,15 @@ public class MyLongTextScoreService {
 
         return myLongTextScore.getMyLongTextScoreId();
     }
+
+    public int getTopScoreByMyLongText(Long userId, Long myLongTextId) {
+        if (!myLongTextRepository.existsById(myLongTextId)) {
+            throw new BusinessException(ErrorCode.MY_LONG_TEXT_NOT_FOUND);
+        }
+        Integer maxScore = myLongTextScoreRepository.findMaxScoreByUserIdAndLongTextId(userId,myLongTextId);
+        if (maxScore == null) {
+            maxScore = 0;
+        }
+        return maxScore;
+    }
 }
