@@ -52,7 +52,6 @@ const TypingPage: React.FC = () => {
     }
 
     axios.get("http://localhost:8080/user", {
-      headers: { Authorization: authHeader },
       withCredentials: true,
     })
       .then(res => {
@@ -73,8 +72,7 @@ useEffect(() => {
       const basicAuth = "Basic " + btoa(`${username}:${password}`);
       sessionStorage.setItem("authHeader", basicAuth);
       setAuthHeader(basicAuth);
-      // 여기서 setIsLoggedIn(true) 하면 안 돼요
-      // 서버에서 인증 확인 후 isLoggedIn을 true로 바꿔야 합니다.
+      setIsLoggedIn(true);
     } else {
       alert("로그인 정보가 필요합니다.");
     }
@@ -105,13 +103,12 @@ useEffect(() => {
         alert("인증 실패! 다시 로그인 해주세요.");
       }
     });
-}, []);
+}, [isLoggedIn]);
 
 
 // 전체 유저의 긴글점수 목록 조회
 useEffect(() => {
   axios.get("http://localhost:8080/user/long-text/scores", {
-    headers: { Authorization: authHeader },
     withCredentials: true,
   })
     .then(res => {
@@ -138,22 +135,20 @@ useEffect(() => {
       )}
       <Content>
         {selectedSong ? (
-        <>
           <Header>
             <span>긴글연습</span>
             <Title>{selectedSong.title}</Title>
             <RightInfo>로그인</RightInfo>
           </Header>
+        ) : (<></>)}
+        <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
 
-          <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
-
-          <MainWrapper>
+        {selectedSong ? (
+        <MainWrapper>
             <TypingGame longTextId={selectedSong.longTextId} authHeader={authHeader} isLoggedIn={isLoggedIn}/>
-          </MainWrapper>
-        </>
-      ) : (
-        <div>로딩중...</div>
-      )}
+         
+        </MainWrapper> 
+        ) : (<></>)}
       </Content>
     </Box>
   );
