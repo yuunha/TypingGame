@@ -1,6 +1,7 @@
 package hello.typing_game_be.myLongText.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,6 @@ public interface MyLongTextRepository extends JpaRepository<MyLongText, Long> {
     List<MyLongText> findByUser_UserId(Long userId);
 
     MyLongText findByUser_UserIdAndMyLongTextId(Long userId, Long myLongTextId);
+
+    Optional<MyLongText> findByTitle(String title);
 }
