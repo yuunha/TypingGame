@@ -5,8 +5,10 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 interface SongLike {
+  longTextId : number;
   title: string;
   lyrics: string[];
+  isUserFile?: boolean;
 }
 
 interface SidebarProps {
@@ -26,18 +28,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [error, setError] = useState<string | null>(null);
   // 파일 input을 다시 선택할 수 있게 ref 사용 (같은 파일 재업로드 대비)
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [myFiles, setMyFiles] = useState<SongLike[]>([]);
   
   /** 파일 선택 핸들러 */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
     const file = e.target.files?.[0];
-    if (!file) {
-      setFileName(null);
-      setFileContent("");
-      return;
-    }
-
+    if (!file) return;
     setFileName(file.name);
 
     const reader = new FileReader();
@@ -65,9 +61,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       return;
     }
 
-    // 줄 단위 파싱: 공백 줄 제거
-    
-
     // 제목: 파일명(확장자 제거) 또는 자동카운트
     const baseTitle =
       (fileName?.replace(/\.[^.]+$/, "") || `내 파일 ${fileName.length + 1}`).trim() ||
@@ -85,7 +78,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     )
     .then(res => {
       console.log('나의 파일', res.data);
-      setMyFiles(res.data);
     })
     .catch(error => {
       console.error(error);
@@ -97,11 +89,23 @@ const Sidebar: React.FC<SidebarProps> = ({
     setFileName(null);
     setFileContent("");
 
-
-    // if (fileInputRef.current) {
-    //   fileInputRef.current.value = ""; // 같은 파일 다시 선택 가능하게
-    // }
   };
+
+  const handleDelete = (longTextId: number) => {
+    if (!confirm("정말 이 파일을 삭제하시겠습니까?")) return;
+
+    axios.delete(`http://localhost:8080/my-long-text/${longTextId}`, {
+      withCredentials: true,
+    })
+    .then(res => {
+      console.log("삭제 성공")
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  };
+
+
 
   // 내 파일 불러오기
   return (
@@ -110,8 +114,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="list">
         {[...lyricsList].map((song, index) => {
           const title = song.title;
-          const isSelected = selectedSong.title === title;
-            const isFirstUserFile = song.isUserFile && !lyricsList.slice(0, index).some(s => s.isUserFile);
+          const longTextId = song.longTextId;
+          const isSelected = selectedSong.longTextId === longTextId && selectedSong.title === title;
+          const isFirstUserFile = song.isUserFile && !lyricsList.slice(0, index).some(s => s.isUserFile);
+          const isLastUserFile = song.isUserFile && !lyricsList.slice(index + 1).some(s => s.isUserFile);
 
           return (
             <React.Fragment key={`${index}`}>
@@ -122,6 +128,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               >
                 {title}
               </a>
+              {(isLastUserFile && selectedSong.isUserFile)  &&
+                <ButtonDelete onClick={() => handleDelete(song.longTextId)}>삭제하기</ButtonDelete>
+              }
             </React.Fragment>
           );
         })}
@@ -257,6 +266,17 @@ const UploadToggleBtn = styled.button`
   cursor:pointer;
   padding-left: 1rem;
   cursor: pointer;
+  &:hover {
+   color: var(--progress-fill);
+  }
+`;
+
+const ButtonDelete = styled.button`
+  margin: 1rem 1rem 0.5rem;
+  color: #000000ff;
+  cursor:pointer;
+  cursor: pointer;
+  font-size: 0.75rem;
   &:hover {
    color: var(--progress-fill);
   }
