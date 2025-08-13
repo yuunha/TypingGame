@@ -1,6 +1,8 @@
 package hello.typing_game_be.longTextScore.service;
 
 import java.util.List;
+
+import org.hibernate.validator.internal.engine.messageinterpolation.InterpolationTerm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,5 +62,16 @@ public class LongTextScoreService {
         }
         List<LongTextScore> scores = longTextScoreRepository.findByUser_UserIdAndLongText_LongTextId(userId,longTextId);
         return  LongTextScoreMapper.toUsernameResponseList(scores);
+    }
+
+    public int getTopScoreByLongText(Long userId, Long longTextId) {
+        if (!longTextRepository.existsById(longTextId)) {
+            throw new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND);
+        }
+        Integer maxScore = longTextScoreRepository.findMaxScoreByUserIdAndLongTextId(userId,longTextId);
+        if (maxScore == null) {
+            maxScore = 0;
+        }
+        return maxScore;
     }
 }

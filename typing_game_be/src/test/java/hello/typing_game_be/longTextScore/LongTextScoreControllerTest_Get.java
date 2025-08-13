@@ -185,4 +185,14 @@ public class LongTextScoreControllerTest_Get {
             .andExpect(jsonPath("$.message").value("존재하지 않는 긴글입니다."));
     }
 
+
+    @Test //유저1의 긴글1에 대한 최고점수 조회
+    void 유저의_특정글에대한_최고점수조회_성공() throws Exception {
+        // when & then
+        mockMvc.perform(get("/long-text/{longTextId}/score", longTextId1)
+                .with(httpBasic("testid1", "1111")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.score").value(200));
+    }
+
 }

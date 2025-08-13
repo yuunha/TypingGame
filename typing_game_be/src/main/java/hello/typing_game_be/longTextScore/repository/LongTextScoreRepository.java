@@ -1,6 +1,7 @@
 package hello.typing_game_be.longTextScore.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,7 @@ public interface LongTextScoreRepository extends JpaRepository<LongTextScore, Lo
     List<LongTextScore> findByUserId(@Param("userId") Long userId);
 
     List<LongTextScore> findByUser_UserIdAndLongText_LongTextId(Long userId, Long longTextId);
+
+    @Query("SELECT MAX(lts.score) FROM LongTextScore lts WHERE lts.user.userId = :userId AND lts.longText.longTextId = :longTextId")
+    Integer findMaxScoreByUserIdAndLongTextId(@Param("userId") Long userId, @Param("longTextId") Long longTextId);
 }

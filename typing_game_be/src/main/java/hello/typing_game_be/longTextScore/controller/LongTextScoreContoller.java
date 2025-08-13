@@ -45,16 +45,28 @@ public class LongTextScoreContoller {
     }
 
     @GetMapping("/long-text/{longTextId}/scores") // 유저의 특정 긴글에 대한 점수 목록 조회
-    public ResponseEntity<Result> getLongScoreRankByLongText(@PathVariable Long longTextId,@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<Result> getLongScoreByLongText(@PathVariable Long longTextId,@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserId();
         List<LongTextScoreSimpleResponse> list = longTextScoreService.getScoresWithUsernamesByLongTextIdAndUserId(userId,longTextId);
         return ResponseEntity.ok(new Result(list));
     }
 
+    @GetMapping("/long-text/{longTextId}/score")
+    public ResponseEntity<ScoreResponse> getTopScore(@PathVariable Long longTextId,@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getUserId();
+        int score = longTextScoreService.getTopScoreByLongText(userId,longTextId);
+        return ResponseEntity.ok(new ScoreResponse(score));
+    }
     @Data
     @AllArgsConstructor
     static class Result<T> {
         //private int count; //필드 추가 가능
         private T data;
+    }
+    @Data
+    @AllArgsConstructor
+    static class ScoreResponse {
+        //private int count; //필드 추가 가능
+        private int score;
     }
 }
