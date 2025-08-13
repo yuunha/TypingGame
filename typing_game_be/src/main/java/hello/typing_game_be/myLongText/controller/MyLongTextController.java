@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class MyLongTextController {
     private final MyLongTextService myLongTextService;
     //'나의긴글' 저장
-    @PostMapping("/user/my-long-text")
+    @PostMapping("/my-long-text")
     public ResponseEntity<Long> register(@Valid @RequestBody MyLongTextRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -34,7 +34,7 @@ public class MyLongTextController {
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
     //'나의긴글' 삭제 //권한체크(서비스코드)
-    @DeleteMapping("/user/my-long-text/{myLongTextId}")
+    @DeleteMapping("/my-long-text/{myLongTextId}")
     public ResponseEntity<Void> delete(@PathVariable Long myLongTextId ,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -44,14 +44,14 @@ public class MyLongTextController {
     }
 
     //'나의긴글' 목록 조회
-    @GetMapping("/user/my-long-text")
+    @GetMapping("/my-long-text")
     public ResponseEntity<List<MyLongTextListResponse>> getMyLongTexts(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
         return ResponseEntity.status(HttpStatus.OK)
             .body( myLongTextService.getByUserId(userDetails.getUserId()));
     }
     //'나의긴글' 단건 조회  //권한체크(서비스코드)
-    @GetMapping("/user/my-long-text/{myLongTextId}")
+    @GetMapping("/my-long-text/{myLongTextId}")
     public ResponseEntity<MyLongTextResponse> getMyLongText(@PathVariable Long myLongTextId ,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
 

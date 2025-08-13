@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,11 @@ public class MyLongTextControllerTest {
                 .build()
         );
     }
+    @AfterEach
+    void afterEach() {
+        myLongTextRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test//유저가 긴글 저장
     void 나의긴글_저장_성공() throws Exception {
@@ -69,7 +75,7 @@ public class MyLongTextControllerTest {
             .build();
 
         //when&then
-        mockMvc.perform(post("/user/my-long-text")
+        mockMvc.perform(post("/my-long-text")
                 .with(httpBasic("testid", "1111"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -93,7 +99,7 @@ public class MyLongTextControllerTest {
             .build()
         );
         //when&then
-        mockMvc.perform(delete("/user/my-long-text/{myLongTextId}",myLongText.getMyLongTextId())
+        mockMvc.perform(delete("/my-long-text/{myLongTextId}",myLongText.getMyLongTextId())
             .with(httpBasic("testid", "1111")))
             .andExpect(status().isOk());
 
@@ -121,13 +127,13 @@ public class MyLongTextControllerTest {
         );
 
         //when&then
-        mockMvc.perform(delete("/user/my-long-text/100",myLongText.getMyLongTextId())
+        mockMvc.perform(delete("/my-long-text/100",myLongText.getMyLongTextId())
                 .with(httpBasic("testid", "1111")))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value("존재하지 않는 '나의 긴글'입니다."));
 
         //유저2가 유저1의 글 삭제
-        mockMvc.perform(delete("/user/my-long-text/{myLongTextId}",myLongText.getMyLongTextId())
+        mockMvc.perform(delete("/my-long-text/{myLongTextId}",myLongText.getMyLongTextId())
             .with(httpBasic("testid2", "11112")))
             .andExpect(status().isForbidden());
 
@@ -153,7 +159,7 @@ public class MyLongTextControllerTest {
                 .build()
         );
         //when&then
-        mockMvc.perform(get("/user/my-long-text")
+        mockMvc.perform(get("/my-long-text")
                 .with(httpBasic("testid", "1111")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].title").value("애국가1"))
@@ -174,7 +180,7 @@ public class MyLongTextControllerTest {
         );
 
         //when&then
-        mockMvc.perform(get("/user/my-long-text/{myLongTextId}",myLongText.getMyLongTextId())
+        mockMvc.perform(get("/my-long-text/{myLongTextId}",myLongText.getMyLongTextId())
                 .with(httpBasic("testid", "1111")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.title").value("애국가"))

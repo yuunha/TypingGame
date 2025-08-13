@@ -6,6 +6,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,10 @@ public class UserControllerTest {
 
     @BeforeEach
     void clearDB() {
+        userRepository.deleteAll();
+    }
+    @AfterEach
+    void afterEach() {
         userRepository.deleteAll();
     }
 

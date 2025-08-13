@@ -4,6 +4,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,11 +132,17 @@ public class LongTextScoreControllerTest_Get {
         );
 
     }
+    @AfterEach
+    void afterEach() {
+        longTextScoreRepository.deleteAll();
+        userRepository.deleteAll();
+        longTextRepository.deleteAll();
+    }
 
     @Test//유저1의 전체 점수 목록
     void 유저의_점수목록조회_성공() throws Exception {
         //when
-        mockMvc.perform(get("/user/long-text/scores")
+        mockMvc.perform(get("/long-text/scores")
                 .with(httpBasic("testid1", "1111" )))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.length()").value(2))
@@ -150,7 +157,7 @@ public class LongTextScoreControllerTest_Get {
     @Test//로그인안됨 -> 401
     void 유저의_점수목록조회_실패_인증문제() throws Exception {
         //when&then
-        mockMvc.perform(get("/user/long-text/scores")
+        mockMvc.perform(get("/long-text/scores")
                 .with(httpBasic("testid1", "1112" )))
             .andExpect(status().isUnauthorized());
     }
@@ -161,7 +168,7 @@ public class LongTextScoreControllerTest_Get {
         // given
 
         // when & then
-        mockMvc.perform(get("/user/long-text/{longTextId}/scores", longTextId1)
+        mockMvc.perform(get("/long-text/{longTextId}/scores", longTextId1)
                 .with(httpBasic("testid1", "1111")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[0].score").value(100))
@@ -174,7 +181,7 @@ public class LongTextScoreControllerTest_Get {
     @Test
     void 유저가_특정글에대한_점수목록조회_실패_존재하지않는_longTextId() throws Exception {
         // when & then
-        mockMvc.perform(get("/user/long-text/{longTextId}/scores", 1000)
+        mockMvc.perform(get("/long-text/{longTextId}/scores", 1000)
                 .with(httpBasic("testid1", "1111")))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value("존재하지 않는 긴글입니다."));
