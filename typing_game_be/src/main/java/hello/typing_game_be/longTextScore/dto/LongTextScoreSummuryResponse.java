@@ -1,5 +1,7 @@
 package hello.typing_game_be.longTextScore.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LongTextScoreWithTitleResponse {
+public class LongTextScoreSummuryResponse {
 
     private Long longScoreId;
 
@@ -19,4 +21,6 @@ public class LongTextScoreWithTitleResponse {
     //Integer 자료형이라면 null이 입력됨
 
     private String title;
+
+    private LocalDateTime createdAt;
 }

@@ -9,8 +9,8 @@ import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
 import hello.typing_game_be.longTextScore.dto.LongTextScoreRequest;
-import hello.typing_game_be.longTextScore.dto.LongTextScoreWithTitleResponse;
-import hello.typing_game_be.longTextScore.dto.LongTextScoreWithUsernameResponse;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreSimpleResponse;
+import hello.typing_game_be.longTextScore.dto.LongTextScoreSummuryResponse;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.longTextScore.mapper.LongTextScoreMapper;
 import hello.typing_game_be.longTextScore.repository.LongTextScoreRepository;
@@ -47,14 +47,14 @@ public class LongTextScoreService {
     //유저의 긴글 점수 전체 조회
     //응답값 : 리스트 - { title (긴글 제목) , score }
     @Transactional
-    public List<LongTextScoreWithTitleResponse> getLongScoresByUserId(Long userId) {
+    public List<LongTextScoreSummuryResponse> getLongScoresByUserId(Long userId) {
         List<LongTextScore> scores = longTextScoreRepository.findByUserId(userId);
 
         return LongTextScoreMapper.toTitleResponseList(scores);
     }
 
     //유저의 특정 긴글에 대한 점수 조회
-    public List<LongTextScoreWithUsernameResponse> getScoresWithUsernamesByLongTextIdAndUserId(Long userId,Long longTextId ) {
+    public List<LongTextScoreSimpleResponse> getScoresWithUsernamesByLongTextIdAndUserId(Long userId,Long longTextId ) {
         if (!longTextRepository.existsById(longTextId)) {
             throw new BusinessException(ErrorCode.LONG_TEXT_NOT_FOUND);
         }

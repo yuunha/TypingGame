@@ -172,9 +172,7 @@ public class LongTextScoreControllerTest_Get {
                 .with(httpBasic("testid1", "1111")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[0].score").value(100))
-            .andExpect(jsonPath("$.data[0].username").value("admin1"))
-            .andExpect(jsonPath("$.data[1].score").value(200))
-            .andExpect(jsonPath("$.data[1].username").value("admin1"));
+            .andExpect(jsonPath("$.data[1].score").value(200));
     }
 
     //유저1의 긴글1에 대한 점수목록

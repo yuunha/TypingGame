@@ -1,5 +1,7 @@
 package hello.typing_game_be.longTextScore.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,9 +9,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class LongTextScoreWithUsernameResponse {
+public class LongTextScoreSimpleResponse {
     private Long longScoreId;
     private int score;
-    private String username;
-
+    private LocalDateTime createdAt;
 }

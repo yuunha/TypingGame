@@ -1,9 +1,14 @@
 package hello.typing_game_be.longTextScore.entity;
 
+import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +27,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //외부에서 기본 생성자 막기
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "long_text_score")
 public class LongTextScore {
     @Id
@@ -37,5 +43,9 @@ public class LongTextScore {
 
     @Column(nullable = false)
     private Integer score;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
 }
