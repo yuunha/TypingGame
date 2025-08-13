@@ -9,5 +9,5 @@ import hello.typing_game_be.myLongTextScore.entity.MyLongTextScore;
 
 public interface MyLongTextScoreRepository extends JpaRepository<MyLongTextScore, Long> {
 
-    List<LongTextScore> findByUserUserId(Long userId);
+    List<MyLongTextScore> findByUserUserId(Long userId);
 }

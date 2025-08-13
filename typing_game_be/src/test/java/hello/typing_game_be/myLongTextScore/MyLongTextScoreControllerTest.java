@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,6 +23,7 @@ import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.myLongText.entity.MyLongText;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.myLongTextScore.dto.MyLongTextScoreRequest;
+import hello.typing_game_be.myLongTextScore.entity.MyLongTextScore;
 import hello.typing_game_be.myLongTextScore.repository.MyLongTextScoreRepository;
 import hello.typing_game_be.myLongTextScore.service.MyLongTextScoreService;
 import hello.typing_game_be.user.dto.UserCreateRequest;
@@ -31,6 +33,7 @@ import hello.typing_game_be.user.service.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class MyLongTextScoreControllerTest {
 
     @Autowired
@@ -97,9 +100,9 @@ public class MyLongTextScoreControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated());
 
-        // List<LongTextScore> savedScores = myLongTextScoreRepository.findByUserUserId(userId);
-        // LongTextScore savedScore = savedScores.get(0);
-        // assertThat(savedScore.getLongText().getTitle()).isEqualTo("나의긴글");
-        // assertThat(savedScore.getScore()).isEqualTo(500);
+        List<MyLongTextScore> savedScores = myLongTextScoreRepository.findByUserUserId(userId);
+        MyLongTextScore savedScore = savedScores.get(0);
+        assertThat(savedScore.getMyLongText().getTitle()).isEqualTo("나의긴글");
+        assertThat(savedScore.getScore()).isEqualTo(500);
     }
 }
