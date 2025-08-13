@@ -1,7 +1,8 @@
 "use client";
 
 import styled from "styled-components";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 
 interface SongLike {
   title: string;
@@ -29,7 +30,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [error, setError] = useState<string | null>(null);
   // 파일 input을 다시 선택할 수 있게 ref 사용 (같은 파일 재업로드 대비)
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+  const [myFiles, setMyFiles] = useState<SongLike[]>([]);
+  
   /** 파일 선택 핸들러 */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
@@ -62,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   /** 업로드 확정 */
   const handleUpload = () => {
-    if (!fileContent.trim()) {
+    if (!fileContent.trim() || !fileName?.trim()) {
       setError("내용이 비어 있습니다.");
       return;
     }
@@ -98,24 +100,36 @@ const Sidebar: React.FC<SidebarProps> = ({
     setShowUpload(false);
     setFileName(null);
     setFileContent("");
+
+
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // 같은 파일 다시 선택 가능하게
     }
   };
 
-
+  useEffect(() => {
+    axios.get("http://localhost:8080/my-long-text", {
+      withCredentials: true,
+    })
+      .then(res => {
+        console.log('나의 파일', res.data)
+        setMyFiles(res.data)
+      }).catch(error =>{
+        console.log(error)
+      })
+  }, []);
   return (
   <Aside>
     <ContentWrapper>
       <div className="list">
-        {[...lyricsList, ...uploadedFiles].map((song, index) => {
+        {[...lyricsList, ...myFiles].map((song, index) => {
           const isUploaded = index >= lyricsList.length;
           const title = song.title;
           const isSelected = selectedSong.title === title;
 
           return (
             <React.Fragment key={`${isUploaded ? "uploaded" : "default"}-${index}`}>
-              {index === lyricsList.length && uploadedFiles.length > 0 && <SubHeading>내 파일</SubHeading>}
+              {index === lyricsList.length && myFiles.length > 0 && <Divider/>}
               <a
                 data-active={isSelected}
                 onClick={() => onSelectSong(song)}
@@ -145,6 +159,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <ButtonRow>
             <UploadBtn onClick={handleUpload}>업로드</UploadBtn>
           </ButtonRow>
+          <input
+            type="text"
+            onChange={e => setFileName(e.target.value)}
+            style={{ width: "100%" , color: "black", height : "25px"}}
+            placeholder="제목"
+          />
           <textarea
             id="paste-area"
             value={fileContent}
@@ -218,6 +238,8 @@ const ContentWrapper = styled.div`
       color: grey;
       flex-shrink: 0;
       cursor: pointer;
+      width : 150px;
+      overflow: hidden;
 
       &:hover {
         color: var(--color-correct);
@@ -233,10 +255,14 @@ const ContentWrapper = styled.div`
 `
 
 
-const SubHeading = styled.h3`
-  padding-top : 10px;
-  font-size: 1.125rem;
-  margin: 1.5rem 1rem 0.5rem;
+const Divider = styled.hr`
+  margin: 1rem 1rem 0.5rem;
+  width : 120px;
+
+  border: 0;
+  border-top: 1px dashed #8c8c8c;
+  border-bottom: 1px dashed #d8d3d3ff;
+
 `;
 
 const UploadToggleBtn = styled.button`

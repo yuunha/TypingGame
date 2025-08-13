@@ -40,20 +40,20 @@ const ResultModal: React.FC<ResultModalProps> = ({
     axios.get(`http://localhost:8080/long-text/${longTextId}/scores`, {
       withCredentials: true,
     })
-      .then(res => {
-        const scores = res.data.data;
-        console.log(scores)
-        if (scores && scores.length > 0) {
-          setScore(scores[scores.length - 1].score);
-        } else {
-          setScore(0);
-        }
-      })
-      .catch(err => {
-        console.error("API 호출 실패", err);
-      });
+    .then(res => {
+      const scores = res.data.data;
+      console.log("점수 목록", scores)
+      const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
+      setScore(score)
+      console.log("최고 점수", score)
+    })
+    .catch(err => {
+      console.error("API 호출 실패", err);
+    });
+      
   },[longTextId]);
 
+  // 점수 기록하기
   const handleRecord = async (e: React.FormEvent) => {
      e.preventDefault();
     console.log("점수 기록 요청..."); 
@@ -93,8 +93,11 @@ const ResultModal: React.FC<ResultModalProps> = ({
           <StatBox>시간 {(elapsedTime / 1000).toFixed(1)}초</StatBox>
         </ResultStats>
         <h2>🎉 타자 연습 완료!</h2>
+        {accuracy===100 && (
         <RecordButton onClick={handleRecord}><h2>📍 내 타수 기록하기</h2></RecordButton>
-        <h2>이전 기록 : {score} </h2>
+        )}
+        <p>*정확도 100%시 기록 가능</p>
+        <h2>이전 최고 기록 : {score} </h2>
         <br />
         <p>줄 수: {lineCount}줄</p>
         <p>글자 수: {correctChars} / {totalChars}자</p>

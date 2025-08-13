@@ -136,9 +136,9 @@ useEffect(() => {
       <Content>
         {selectedSong ? (
           <Header>
-            <span>긴글연습</span>
+            <span> </span>
             <Title>{selectedSong.title}</Title>
-            <RightInfo>로그인</RightInfo>
+            <RightInfo> </RightInfo>
           </Header>
         ) : (<></>)}
         <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />

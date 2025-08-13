@@ -76,6 +76,23 @@ const Profile: React.FC = () => {
     })
   };
 
+  const handleDeleteProfile = () => {
+    axios.delete("http://localhost:8080/user", {
+      withCredentials: true,
+        headers: {
+        Authorization: authHeader,
+      },
+    }).then(res => {
+        if (res.status === 200) {
+          sessionStorage.removeItem("authHeader");
+          setIsLoggedIn(false);
+          console.log("탈퇴 성공")
+        }
+      }).catch(err => {
+      console.error("회원 탈퇴 실패", err);
+    });
+
+  }
 
   return (
     <Box>
@@ -92,6 +109,7 @@ const Profile: React.FC = () => {
             />
           </div>
           <button onClick={handleUpdateProfile}>회원정보수정</button>
+          <button onClick={handleDeleteProfile}>탈퇴하기</button>
         </MainWrapper> 
       </Content>
     </Box>
