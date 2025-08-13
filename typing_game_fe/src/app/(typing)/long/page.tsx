@@ -12,19 +12,13 @@ import axios from "axios";
 interface LongText {
   longTextId: number;
   title: string;
+  isUserFile?: boolean;
 }
 
 
 const TypingPage: React.FC = () => {
   const [lyricsList, setLyricsList] = useState<LongText[]>([]);
   const [selectedSong, setSelectedSong] = useState<LongText | null>(null);
-  const [uploadedFiles, setUploadedFiles] = useState<
-    { title: string; lyrics: string[] }[]
-  >([]);
-
-  const handleUploadFile = (file: { title: string; lyrics: string[] }) => {
-    setUploadedFiles((prev) => [...prev, file]);
-  };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -90,6 +84,7 @@ useEffect(() => {
       const songs = data.map(item => ({
         longTextId: item.longTextId,
         title: item.title,
+        isUserFile : false,
       }));
       setLyricsList(songs)
       if (songs.length > 0) setSelectedSong(songs[0]);
@@ -103,21 +98,37 @@ useEffect(() => {
         alert("인증 실패! 다시 로그인 해주세요.");
       }
     });
+
+    // 사용자 파일
+    axios.get("http://localhost:8080/my-long-text", {
+      withCredentials: true,
+    })
+      .then(res => {
+        const data: LongText[] = res.data;
+        const songs = data.map(item => ({
+          longTextId: item.myLongTextId,
+          title: item.title,
+          isUserFile : true,
+        }));
+        setLyricsList(prev => [...prev, ...songs])
+      }).catch(error =>{
+        console.log(error)
+      })
 }, [isLoggedIn]);
 
 
 // 전체 유저의 긴글점수 목록 조회
-useEffect(() => {
-  axios.get("http://localhost:8080/user/long-text/scores", {
-    withCredentials: true,
-  })
-    .then(res => {
-      console.log('전체 목록', res.data)
-    })
-    .catch(err => {
-      console.error("API 호출 실패", err);
-    });
-}, []);
+// useEffect(() => {
+//   axios.get("http://localhost:8080/user/long-text/scores", {
+//     withCredentials: true,
+//   })
+//     .then(res => {
+//       console.log('전체 목록', res.data)
+//     })
+//     .catch(err => {
+//       console.error("API 호출 실패", err);
+//     });
+// }, []);
 
 
   return (
@@ -126,10 +137,8 @@ useEffect(() => {
         <SidebarWrapper>
           <Sidebar
             lyricsList={lyricsList}
-            uploadedFiles={uploadedFiles}
             selectedSong={selectedSong}
             onSelectSong={setSelectedSong}
-            onUploadFile={handleUploadFile}
           />
         </SidebarWrapper>
       )}
@@ -145,7 +154,7 @@ useEffect(() => {
 
         {selectedSong ? (
         <MainWrapper>
-            <TypingGame longTextId={selectedSong.longTextId} authHeader={authHeader} isLoggedIn={isLoggedIn}/>
+            <TypingGame longTextId={selectedSong.longTextId} isLoggedIn={isLoggedIn} isUserFile={selectedSong.isUserFile}/>
          
         </MainWrapper> 
         ) : (<></>)}

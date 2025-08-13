@@ -20,12 +20,12 @@ interface Song {
 
 interface TypingGameProps {
   longTextId: number;
-  authHeader: string;
   isLoggedIn: boolean;
+  isUserFile: boolean;
 }
 
 
-const TypingGame: React.FC<TypingGameProps> = ({ longTextId, authHeader, isLoggedIn }) => {
+const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserFile }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
@@ -47,10 +47,11 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, authHeader, isLogge
 
   // 가사 불러오기
   useEffect(() => {
-    if (!authHeader || !isLoggedIn) return;
+    if (!isLoggedIn) return;
     setLoading(true);
     
-    axios.get(`http://localhost:8080/long-text/${longTextId}`, {
+    if(isUserFile){
+      axios.get(`http://localhost:8080/my-long-text/${longTextId}`, {
       withCredentials: true,
     })
       .then(res => {
@@ -61,7 +62,20 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, authHeader, isLogge
         console.error("가사 불러오기 실패", err);
       })
       .finally(() => setLoading(false));
-  }, [longTextId, authHeader, isLoggedIn]);
+    }else{
+      axios.get(`http://localhost:8080/long-text/${longTextId}`, {
+        withCredentials: true,
+      })
+        .then(res => {
+          const data = res.data;
+          setLyrics((data.content || "").split("\n"));
+        })
+        .catch(err => {
+          console.error("가사 불러오기 실패", err);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [longTextId, isLoggedIn]);
   
   const totalTypedChars = () => {
     // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기

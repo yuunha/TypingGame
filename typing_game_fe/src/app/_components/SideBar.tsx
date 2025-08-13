@@ -11,18 +11,14 @@ interface SongLike {
 
 interface SidebarProps {
   lyricsList: SongLike[];                    // 기본 제공 글
-  uploadedFiles: SongLike[];                 // 사용자 업로드 글
   selectedSong: SongLike;                    // 현재 선택된 글
   onSelectSong: (song: SongLike) => void;    // 글 선택 콜백
-  onUploadFile: (file: SongLike) => void;    // 업로드 완료 콜백 (부모가 상태 저장)
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   lyricsList,
-  uploadedFiles,
   selectedSong,
   onSelectSong,
-  onUploadFile,
 }) => {
   const [showUpload, setShowUpload] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -70,31 +66,31 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
 
     // 줄 단위 파싱: 공백 줄 제거
-    const lines = fileContent
-      .split(/\r?\n/)
-      .map(l => l.trim())
-      .filter(l => l.length > 0);
-
-    if (lines.length === 0) {
-      setError("사용할 수 있는 줄이 없습니다.");
-      return;
-    }
+    
 
     // 제목: 파일명(확장자 제거) 또는 자동카운트
     const baseTitle =
-      (fileName?.replace(/\.[^.]+$/, "") || `내 파일 ${uploadedFiles.length + 1}`).trim() ||
-      `내 파일 ${uploadedFiles.length + 1}`;
+      (fileName?.replace(/\.[^.]+$/, "") || `내 파일 ${fileName.length + 1}`).trim() ||
+      `내 파일 ${fileName.length + 1}`;
 
-    const newFile: SongLike = {
-      title: baseTitle,
-      lyrics: lines,
-    };
+    axios.post(
+      "http://localhost:8080/my-long-text",
+      {
+        title: baseTitle,
+        content: (fileContent || ""),
+      },
+      {
+        withCredentials: true
+      }
+    )
+    .then(res => {
+      console.log('나의 파일', res.data);
+      setMyFiles(res.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
 
-    // 부모에 전달
-    onUploadFile(newFile);
-
-    // 업로드 후 자동 선택
-    onSelectSong(newFile);
 
     // UI 리셋
     setShowUpload(false);
@@ -102,34 +98,24 @@ const Sidebar: React.FC<SidebarProps> = ({
     setFileContent("");
 
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // 같은 파일 다시 선택 가능하게
-    }
+    // if (fileInputRef.current) {
+    //   fileInputRef.current.value = ""; // 같은 파일 다시 선택 가능하게
+    // }
   };
 
-  useEffect(() => {
-    axios.get("http://localhost:8080/my-long-text", {
-      withCredentials: true,
-    })
-      .then(res => {
-        console.log('나의 파일', res.data)
-        setMyFiles(res.data)
-      }).catch(error =>{
-        console.log(error)
-      })
-  }, []);
+  // 내 파일 불러오기
   return (
   <Aside>
     <ContentWrapper>
       <div className="list">
-        {[...lyricsList, ...myFiles].map((song, index) => {
-          const isUploaded = index >= lyricsList.length;
+        {[...lyricsList].map((song, index) => {
           const title = song.title;
           const isSelected = selectedSong.title === title;
+            const isFirstUserFile = song.isUserFile && !lyricsList.slice(0, index).some(s => s.isUserFile);
 
           return (
-            <React.Fragment key={`${isUploaded ? "uploaded" : "default"}-${index}`}>
-              {index === lyricsList.length && myFiles.length > 0 && <Divider/>}
+            <React.Fragment key={`${index}`}>
+              {isFirstUserFile  && <Divider/>}
               <a
                 data-active={isSelected}
                 onClick={() => onSelectSong(song)}
