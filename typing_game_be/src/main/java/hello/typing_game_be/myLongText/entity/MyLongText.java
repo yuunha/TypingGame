@@ -1,6 +1,7 @@
 package hello.typing_game_be.myLongText.entity;
 
 import hello.typing_game_be.user.entity.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,8 +27,10 @@ public class MyLongText {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long myLongTextId;
 
+    @Column(nullable = false)
     String title;
 
+    @Column(nullable = false)
     String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
