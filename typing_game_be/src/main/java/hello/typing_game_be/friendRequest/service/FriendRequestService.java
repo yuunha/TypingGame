@@ -1,6 +1,7 @@
 package hello.typing_game_be.friendRequest.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
@@ -40,7 +41,28 @@ public class FriendRequestService {
             .build();
         friendRequestRepository.save(fr);
         return FriendRequestResponse.fromEntity(fr);
+    }
+    @Transactional
+    public void respondToFriendRequest(Long friendRequestId, Long userId, String action) {
+        FriendRequest fr = friendRequestRepository.findById(friendRequestId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 요청입니다."));
 
+        // 요청 수신자가 맞는지 확인
+        if (!fr.getReceiver().getUserId().equals(userId)) {
+            throw new IllegalStateException("해당 친구 요청을 처리할 권한이 없습니다.");
+        }
+        FriendRequest updatedFr;
 
+        // action 처리
+        if ("ACCEPT".equalsIgnoreCase(action)) {
+            // 수락: 상태 변경
+            updatedFr = fr.accept(); // status를 accep로 변경
+            friendRequestRepository.save(updatedFr);
+        } else if ("DECLINE".equalsIgnoreCase(action)) {
+            // 거부: 레코드 삭제
+            friendRequestRepository.delete(fr);
+        } else {
+            throw new IllegalArgumentException("유효하지 않은 action입니다.");
+        }
     }
 }

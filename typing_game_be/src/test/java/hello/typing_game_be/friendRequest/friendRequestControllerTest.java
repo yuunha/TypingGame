@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hello.typing_game_be.friendRequest.dto.FriendRequestCreateRequest;
+import hello.typing_game_be.friendRequest.dto.FriendRequestUpdateRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
@@ -47,15 +48,6 @@ public class friendRequestControllerTest {
 
     @BeforeEach
     void beforeEach() {
-
-    }
-    @AfterEach
-    void afterEach() {
-    }
-
-    @Test
-    void 친구요청_성공() throws Exception {
-        //given
         //1. 테스트용 유저1,2 저장
         userService.register(   //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
             UserCreateRequest.builder()
@@ -64,7 +56,6 @@ public class friendRequestControllerTest {
                 .password("1111")
                 .build()
         );
-        User requester = userRepository.findByLoginId("testid1").orElseThrow();
         userService.register(
             UserCreateRequest.builder()
                 .username("admin2")
@@ -72,12 +63,18 @@ public class friendRequestControllerTest {
                 .password("2222")
                 .build()
         );
+    }
+
+    @Test
+    void 친구요청_성공() throws Exception {
+        //given
+        User requester = userRepository.findByLoginId("testid1").orElseThrow();
         User receiver = userRepository.findByLoginId("testid2").orElseThrow();
 
         //when
         FriendRequestCreateRequest request = new FriendRequestCreateRequest(receiver.getUserId());
 
-        //2.유저1 -> 유저2 친구 신청
+        //유저1 -> 유저2 친구 신청
         mockMvc.perform(post("/friend-requests")
                 .with(httpBasic("testid1", "1111" ))
             .contentType(MediaType.APPLICATION_JSON)
@@ -90,6 +87,31 @@ public class friendRequestControllerTest {
         assertEquals(receiver.getUserId(), fr.getReceiver().getUserId());
         assertEquals(FriendRequestStatus.PENDING, fr.getStatus());
 
+    }
+
+    @Test
+    void 친구요청_수락_성공() throws Exception {
+        //given
+        User requester = userRepository.findByLoginId("testid1").orElseThrow();
+        User receiver = userRepository.findByLoginId("testid2").orElseThrow();
+
+        friendRequestRepository.save(
+            FriendRequest.builder()
+                .requester(requester)
+                .receiver(receiver)
+                .status(FriendRequestStatus.PENDING)
+                .build()
+        );
+
+        //when
+        FriendRequest fr = friendRequestRepository.findByRequesterAndReceiver(requester,receiver).orElseThrow();
+        FriendRequestUpdateRequest updateRequest = new FriendRequestUpdateRequest("ACCEPT");
+        //유저2가 유저1의 친구 신청을 수락
+        mockMvc.perform(patch("/friend-requests/{friendRequestId}",fr.getFriendRequestId())
+                .with(httpBasic("testid2", "2222" ))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateRequest)))
+            .andExpect(status().isOk());
 
     }
 }

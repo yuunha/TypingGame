@@ -1,9 +1,12 @@
 package hello.typing_game_be.friendRequest.dto;
 
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
+import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 @AllArgsConstructor
 public class FriendRequestResponse {
@@ -20,4 +23,5 @@ public class FriendRequestResponse {
             fr.getStatus().name()
         );
     }
+
 }

@@ -52,4 +52,13 @@ public class FriendRequest {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    // 상태 변경용 메서드
+    public FriendRequest accept() {
+        return FriendRequest.builder()
+            .requester(this.requester)
+            .receiver(this.receiver)
+            .status(FriendRequestStatus.ACCEPTED)
+            .build();
+    }
+
 }
