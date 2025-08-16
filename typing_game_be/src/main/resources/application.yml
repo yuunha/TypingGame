@@ -1,6 +1,6 @@
 
 spring:
   profiles:
-    active: prod   # 기본은 dev 환경
+    active: dev   # 기본은 dev 환경
 
 
