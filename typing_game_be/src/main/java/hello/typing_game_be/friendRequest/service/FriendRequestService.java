@@ -45,11 +45,11 @@ public class FriendRequestService {
     @Transactional
     public void respondToFriendRequest(Long friendRequestId, Long userId, String action) {
         FriendRequest fr = friendRequestRepository.findById(friendRequestId)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 요청입니다."));
+            .orElseThrow(() -> new BusinessException(ErrorCode.FRIEND_REQEUST_NOT_FOUND));
 
         // 요청 수신자가 맞는지 확인
         if (!fr.getReceiver().getUserId().equals(userId)) {
-            throw new IllegalStateException("해당 친구 요청을 처리할 권한이 없습니다.");
+            throw new BusinessException(ErrorCode.FORBIDDEN_REQUEST);
         }
         FriendRequest updatedFr;
 
@@ -62,7 +62,7 @@ public class FriendRequestService {
             // 거부: 레코드 삭제
             friendRequestRepository.delete(fr);
         } else {
-            throw new IllegalArgumentException("유효하지 않은 action입니다.");
+            throw new BusinessException(ErrorCode.INVALID_ACTION);
         }
     }
 }

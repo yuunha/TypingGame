@@ -17,11 +17,16 @@ public enum ErrorCode {
     LONG_SCORE_TITLE_NOT_FOUND(HttpStatus.NOT_FOUND,"LONG-SCORE-001","존재하지 않는 title입니다."),
     //my-long-text
     MY_LONG_TEXT_NOT_FOUND(HttpStatus.NOT_FOUND,"MY-LONG-TEXT-001","존재하지 않는 '나의 긴글'입니다."),
+    //friend-request
+    FRIEND_REQEUST_NOT_FOUND(HttpStatus.NOT_FOUND,"FRIEND-REQEUST-001","존재하지 않는 친구 요청입니다."),
+    INVALID_ACTION(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-002","유효하지 않은 action입니다." ),
     //DB
     DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반"),
-
     //기타
-    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND,"COMMON-002","요청하신 리소스를 찾을 수 없습니다.");
+    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND,"COMMON-002","요청하신 리소스를 찾을 수 없습니다."),
+    //권한
+    FORBIDDEN_REQUEST(HttpStatus.FORBIDDEN, "COMMON-003","권한이 없습니다." );
+
 
     private final HttpStatus httpStatus;
     private final String errorCode;
