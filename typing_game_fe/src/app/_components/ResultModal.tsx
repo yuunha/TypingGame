@@ -15,6 +15,7 @@ interface ResultModalProps {
   lineCount: number;
   onRetry: () => void;
   longTextId:number;
+  isUserFile:boolean;
 }
 
 const ResultModal: React.FC<ResultModalProps> = ({
@@ -26,6 +27,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
   lineCount,
   onRetry,
   longTextId,
+  isUserFile,
 }) => {
   const [mounted, setMounted] = useState(false);
   const [score, setScore] = useState(0);
@@ -37,19 +39,37 @@ const ResultModal: React.FC<ResultModalProps> = ({
   
 // 특정 긴글의 점수목록 조회
   useEffect(() => {
-    axios.get(`http://localhost:8080/long-text/${longTextId}/scores`, {
-      withCredentials: true,
-    })
-    .then(res => {
-      const scores = res.data.data;
-      console.log("점수 목록", scores)
-      const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
-      setScore(score)
-      console.log("최고 점수", score)
-    })
-    .catch(err => {
-      console.error("API 호출 실패", err);
-    });
+    console.log('isUserFile?'+isUserFile)
+    if(isUserFile){
+      axios.get(`http://localhost:8080/my-long-text/${longTextId}/score`, {
+        withCredentials: true,
+      })
+      .then(res => {
+        const scores = res.data;
+        // console.log("점수 목록", scores)
+        // const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
+        // setScore(score)
+        console.log("최고 점수", scores)
+      })
+      .catch(err => {
+        console.error("API 호출 실패", err);
+      });
+    }else{
+      axios.get(`http://localhost:8080/long-text/${longTextId}/scores`, {
+        withCredentials: true,
+      })
+      .then(res => {
+        const scores = res.data.data;
+        console.log("점수 목록", scores)
+        const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
+        setScore(score)
+        console.log("최고 점수", score)
+      })
+      .catch(err => {
+        console.error("API 호출 실패", err);
+      });
+    }
+    
       
   },[longTextId]);
 
@@ -57,7 +77,31 @@ const ResultModal: React.FC<ResultModalProps> = ({
   const handleRecord = async (e: React.FormEvent) => {
      e.preventDefault();
     console.log("점수 기록 요청..."); 
-    try{
+    if(isUserFile){
+      try{
+      const res = await fetch(`http://localhost:8080/my-long-text/${longTextId}/score`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", 
+           Authorization: authHeader,
+        },
+        body: JSON.stringify({
+          score : cpm,
+        }),
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      console.log("응답 데이터:", data);
+      alert("점수 기록 성공!");
+      onRetry();
+      } catch (error) {
+        console.error("점수 기록 실패", error);
+        alert("점수 기록에 실패했습니다.");
+      }
+    }else{
+  try{
       const res = await fetch(`http://localhost:8080/long-text/${longTextId}/score`, {
         method: "POST",
         headers: {
@@ -78,6 +122,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
     } catch (error) {
       console.error("점수 기록 실패", error);
       alert("점수 기록에 실패했습니다.");
+    }    
     }
   };
 

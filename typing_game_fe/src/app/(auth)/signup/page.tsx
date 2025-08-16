@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
+import axios from "axios";
 
 const SignupPage: React.FC = () => {
     
@@ -13,36 +14,22 @@ const SignupPage: React.FC = () => {
   const router = useRouter();
 
   const handleSignup = async (e: React.FormEvent) => {
-      e.preventDefault(); 
-      console.log("회원가입 요청 시작..."); 
-      console.log({ username, loginId, password });
-      try{
-        const res = await fetch("http://localhost:8080/user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // JSON 타입 지정
-          },
-          body: JSON.stringify({
-            username,
-            loginId, 
-            password,
-          }),
-        });
+    e.preventDefault();
+    axios.post(`http://localhost:8080/user`, 
+      { username,
+        loginId,
+        password,
+       },
+      { withCredentials: true,})
+    .then(res => {
+      console.log("회원가입 완료");
+      router.push("/login");
+    })
+    .catch(err => {
+      console.log("실패", err);
+    })
+  };
 
-        console.log("응답 상태:", res.status);
-        console.log("응답 OK?", res.ok);
-  
-        const text = await res.text();
-        setMessage(text);
-        if (res.status === 201) {
-          router.push("/"); // 메인 페이지로 이동
-        }else if (res.status === 409) {
-          setMessage("회원가입 실패: 아이디 또는 비밀번호가 올바르지 않습니다.");
-        }
-      }catch(error){
-        setMessage("회원가입 요청 실패")
-      }
-    }
 
     return (
         <>

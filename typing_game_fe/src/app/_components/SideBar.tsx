@@ -78,6 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     )
     .then(res => {
       console.log('나의 파일', res.data);
+      window.location.reload();
     })
     .catch(error => {
       console.error(error);
@@ -99,6 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     })
     .then(res => {
       console.log("삭제 성공")
+      window.location.reload();
     })
     .catch(err => {
       console.error(err);
@@ -151,7 +153,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             onChange={handleFileChange}
             style={{ display: 'none' }}
           />
-                    <ButtonRow>
+          <ButtonRow>
             <UploadBtn onClick={handleUpload}>업로드</UploadBtn>
           </ButtonRow>
           <input

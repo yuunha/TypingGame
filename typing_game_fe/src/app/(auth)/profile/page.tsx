@@ -5,6 +5,7 @@ import miniKeys from "../../_components/keyboard/miniKeys";
 import styled from "styled-components";
 import axios from "axios";
 import KeyboardMini from "@/app/_components/KeyboardMini";
+import router from "next/router";
 
 
 
@@ -70,6 +71,7 @@ const Profile: React.FC = () => {
         headers: { Authorization: authHeader },})
     .then(res => {
       console.log("회원정보가 수정되었습니다.");
+      router.push("/");
     })
     .catch(err => {
       console.log("실패", err);

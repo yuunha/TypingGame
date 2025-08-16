@@ -49,7 +49,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
   useEffect(() => {
     if (!isLoggedIn) return;
     setLoading(true);
-    
+    console.log('isUserFile??',isUserFile)
     if(isUserFile){
       axios.get(`http://localhost:8080/my-long-text/${longTextId}`, {
       withCredentials: true,
@@ -139,23 +139,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
     setTotalChars(0);
   }
 
-  //복붙드래그앤드롭막기
-  useEffect(() => {
-  const handlePaste = (e: ClipboardEvent) => {
-    e.preventDefault();
-  };
-  const handleDrop = (e: DragEvent) => {
-    e.preventDefault();
-  };
-
-  document.addEventListener("paste", handlePaste);
-  document.addEventListener("drop", handleDrop);
-
-  return () => {
-    document.removeEventListener("paste", handlePaste);
-    document.removeEventListener("drop", handleDrop);
-  };
-}, []);
+ 
 
   // 실시간 CPM 계산
   useEffect(() => {
@@ -201,6 +185,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
             lineCount={lyrics.length}
             onRetry={handleRetry}
             longTextId = {longTextId}
+            isUserFile = {isUserFile}
           />
         )}
         <ProgressBarContainer>
@@ -236,6 +221,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
           type="text"
           value={inputValue}
           spellCheck={false} // 맞춤법
+          disabled={completed}
           onChange={(e) => setInputValue(e.target.value)}
           onPaste={(e) => {e.preventDefault()}} //붙여넣기 막기
           onDrop={(e) => e.preventDefault()} // 드래그앤드롭막기
@@ -245,7 +231,6 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
 
         <InfoBox>
           <p>평균 {cpm} 타</p>
-          <p>정확도 {accuracy} %</p>
         </InfoBox>
       </Wrapper>
     
