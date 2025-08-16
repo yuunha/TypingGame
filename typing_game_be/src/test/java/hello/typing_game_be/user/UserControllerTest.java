@@ -198,6 +198,28 @@ public class UserControllerTest {
         assertThat(exists).isFalse();
 
     }
+    @Test // "홍길"로 부분 검색 시 결과 2개
+    void 회원검색_성공() throws Exception {
+        //given
+        //회원 등록
+        userService.register(
+            UserCreateRequest.builder()
+                .username("홍길동")
+                .loginId(loginId)
+                .password(password)
+                .build());
+        userService.register(
+            UserCreateRequest.builder()
+                .username("홍길순")
+                .loginId("bbbb")
+                .password("1111")
+                .build());
 
+        mockMvc.perform(get("/users?username=홍길&page=0&size=5")
+                .with(httpBasic(loginId, password))) // Basic 인증 시뮬레이션
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].loginId").value(loginId))
+            .andExpect(jsonPath("$[1].loginId").value("bbbb"));
+    }
 
 }

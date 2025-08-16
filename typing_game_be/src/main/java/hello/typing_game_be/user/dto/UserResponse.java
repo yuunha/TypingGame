@@ -1,5 +1,6 @@
 package hello.typing_game_be.user.dto;
 
+import hello.typing_game_be.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,4 +10,7 @@ public class UserResponse {
     private Long userId;
     private String loginId;
     private String username;
+    public static UserResponse fromEntity(User user) {
+        return new UserResponse(user.getUserId(), user.getLoginId(), user.getUsername());
+    }
 }

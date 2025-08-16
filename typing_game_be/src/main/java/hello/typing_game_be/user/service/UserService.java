@@ -1,5 +1,8 @@
 package hello.typing_game_be.user.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,5 +83,11 @@ public class UserService {
             System.out.println("해당 userId " + userId+ "가 존재하지 않습니다.");
             return new BusinessException(ErrorCode.RESOURCE_NOT_FOUND);
         });
+    }
+
+    public List<UserResponse> searchUsersByUsername(String username, Pageable pageable) {
+        return userRepository.findByUsernameContainingIgnoreCase(username,pageable).stream()
+            .map(UserResponse::fromEntity)
+            .toList();
     }
 }

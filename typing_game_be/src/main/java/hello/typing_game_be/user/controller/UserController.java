@@ -1,6 +1,11 @@
 package hello.typing_game_be.user.controller;
 
 
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hello.typing_game_be.user.dto.UserCreateRequest;
@@ -23,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping
 public class UserController {
 
     private final UserService userService;
@@ -39,7 +45,7 @@ public class UserController {
     //     return ResponseEntity.status(HttpStatus.OK).build();
     // }
 
-    @PutMapping("/{id}")
+    @PutMapping("/user/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable("id") Long id,@Valid @RequestBody UserUpdateRequest request) {
         userService.update(id,request.getUsername());
         User user = userService.getUserById(id);
@@ -47,18 +53,30 @@ public class UserController {
             new UserResponse(user.getUserId(),user.getLoginId(),user.getUsername()));
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<UserResponse> getUser(Authentication authentication) {
         String loginId = authentication.getName(); // 현재 로그인 사용자 ID
         UserResponse userResponse = userService.getUserByLoginId(loginId);
         return ResponseEntity.ok(userResponse);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/user")
     public ResponseEntity<String> deleteUser(Authentication authentication) {
         String loginId = authentication.getName();
         userService.deleteUserByLoginId(loginId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    // username으로 유저 검색 : GET GET /users?username=홍길&page=0&size=5
+    @GetMapping("/users")
+    public ResponseEntity<List<UserResponse>> searchUsers(
+        @RequestParam String username,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
+        List<UserResponse> users = userService.searchUsersByUsername(username,pageable);
+        return ResponseEntity.ok(users);
     }
 
 
