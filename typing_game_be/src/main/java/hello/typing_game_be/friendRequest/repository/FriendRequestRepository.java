@@ -1,8 +1,11 @@
 package hello.typing_game_be.friendRequest.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
@@ -13,4 +16,9 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
     boolean existsByRequesterAndReceiver(User requester, User receiver);
 
     Optional<FriendRequest> findByRequesterAndReceiver(User requester, User receiver);
+
+    @Query("SELECT fr FROM FriendRequest fr " +
+        "WHERE fr.status = 'ACCEPTED' " +
+        "AND (fr.requester.userId = :userId OR fr.receiver.userId = :userId)")
+    List<FriendRequest> findAcceptedFriends(@Param("userId") Long userId);
 }
