@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: rgb(255, 255, 255);
   --foreground: #171717;
   --color-point: #0033a1ff;
   --color-white: #FFFFFF;
@@ -9,23 +9,36 @@
   
   --auth-beigie-title: rgb(117, 117, 115);
   /* keyboard:  */
-  --keyboard-bg: #eeece8ff;
-  --keyboard-row-bg: #493823ff;
+  --keyboard-text: black;
+  --keyboard-bg: #fdfdfe;
+  --keyboard-row-bg: #b2b7b9;
+  --keyboard-border: #d4d5d8;
   
-  --key-border-default: #e4e2dbff #ccc4b5ff;
-  --key-fill-default: #eeebe1ff;
+  --key-border-default: rgb(231, 231, 231) rgb(194, 194, 194);
+  --key-fill-default: rgb(238, 238, 238);
 
-  --key-border-blue: #648da7ff #3a6986ff;
-  --key-fill-blue: #7ea8c2ff;
+  --key-border-blue: rgb(126, 164, 187) rgb(74, 120, 148);
+  --key-fill-blue: rgb(141, 179, 202);
 
   --key-border-red: #f29288  #af594fff;
-  --key-fill-red: #E2675A;
+  --key-fill-red: #e67f74;
 
   --key-pressed-text: #ffffff44;
   --key-pressed-border: #00000010;
+
+  --key-linked-pressed : #e67f749c;
+  --key-linked-fill : #e67f7488;
+
+  --key-led-red : #e2685a75;
+  --key-led-blue: #7ea8c269;
+
   /* typing */
-  --color-correct: #3a6986ff;
-  --color-wrong: #af594fff;
+  --color-correct: white;
+  --color-wrong: white;
+
+  --color-correct-bg: rgba(58, 105, 134, 0.5);
+  --color-wrong-bg: rgba(175, 88, 79, 0.493);
+
 
   --progress-bg:#a1a1a1ff;
   --progress-fill: #7ea8c2ff;
@@ -34,6 +47,28 @@
 
   --typing-size : 19px;
 }
+
+[data-theme='dark'] {
+  /* keyboard:  */
+  --keyboard-text: white;
+
+  --keyboard-bg: #1e1e1eff;
+  --keyboard-row-bg: #2c2c2c;
+  --keyboard-border: #d4d5d8;
+
+  --key-border-default: #555555ff #333333ff;
+  --key-fill-default: #3a3a3aff;
+
+  --key-border-blue: #50708cff #2e4b5eff;
+  --key-fill-blue: #6090b0ff;
+
+  --key-border-red: #b35c5cff #7a3232ff;
+  --key-fill-red: #c04444ff;
+
+  --key-pressed-text: #ffffff44;
+  --key-pressed-border: #ffffff10;
+}
+
 
 * {
   margin:0;

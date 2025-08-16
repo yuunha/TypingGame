@@ -38,18 +38,15 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
 
   //가사 관련
   const [lyrics, setLyrics] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  const m1Line = currentLineIndex > 0 ? lyrics[currentLineIndex - 1] : null;
   const currentLine = lyrics[currentLineIndex];
   const p1Line = currentLineIndex + 1 < lyrics.length ? lyrics[currentLineIndex + 1] : null;
+  const p2Line = currentLineIndex + 2 < lyrics.length ? lyrics[currentLineIndex + 2] : null;
 
 
   // 가사 불러오기
   useEffect(() => {
     if (!isLoggedIn) return;
-    setLoading(true);
-    console.log('isUserFile??',isUserFile)
     if(isUserFile){
       axios.get(`http://localhost:8080/my-long-text/${longTextId}`, {
       withCredentials: true,
@@ -61,7 +58,6 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
       .catch(err => {
         console.error("가사 불러오기 실패", err);
       })
-      .finally(() => setLoading(false));
     }else{
       axios.get(`http://localhost:8080/long-text/${longTextId}`, {
         withCredentials: true,
@@ -73,9 +69,8 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
         .catch(err => {
           console.error("가사 불러오기 실패", err);
         })
-        .finally(() => setLoading(false));
     }
-  }, [longTextId, isLoggedIn]);
+  }, [longTextId, isLoggedIn, isUserFile]);
   
   const totalTypedChars = () => {
     // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기
@@ -192,23 +187,26 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
           <ProgressBarFill progress={totalTypedChars() / totalLyricsChars * 100} />
         </ProgressBarContainer>
       <TypingLine>
-        {m1Line && <SubLine>{m1Line}</SubLine>}
 
         <CurrentLine>
           {(currentLine ?? "").split("").map((char, i) => {
             const typedChar = inputValue[i];
-            let color = "";
+            let color = "var(--default-text)";
+            let backgroundColor = "transparent";
 
             if (typedChar !== undefined) {
-              if (i === inputValue.length - 1) {
-                color = 'black';
+              if (typedChar === char) {
+                color = "var(--color-correct)";
+                backgroundColor = "var(--color-correct-bg)";
               } else {
-                color = typedChar === char ? "var(--color-correct)" : "var(--color-wrong)";
+                color = "var(--color-wrong)";
+                backgroundColor = "var(--color-wrong-bg)";
               }
             }
 
+            
             return (
-              <CharSpan key={i} style={{ color: color || "inherit" }}>
+              <CharSpan key={i} style={{ color, backgroundColor }}>
                 {char}
               </CharSpan>
             );
@@ -216,6 +214,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
         </CurrentLine>
 
         {p1Line && <SubLine>{p1Line}</SubLine>}
+        {p2Line && <SubLine>{p2Line}</SubLine>}
       </TypingLine>
         <Input
           type="text"
@@ -265,7 +264,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 2rem;
-  height : 400px;
+  height : 370px;
   min-width: 600px;
   p {
     font-size: 15px;
@@ -305,37 +304,3 @@ const InfoBox = styled.div`
   font-size: 1.125rem;
 `;
 
-
-// 결과창
-const ResultStats = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 16px 0 16px 0;
-`;
-
-const StatBox = styled.div`
-  background-color: #2c2c2c;
-  padding: 8px 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  white-space: nowrap;
-  color: #ffffffff;
-  font-size: 0.8rem;
-`;
-
-const RetryButton = styled.button`
-
-  padding: 8px 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  white-space: nowrap;
-  font-size: 0.8rem;
-
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    // background-color: #d4d4d8;
-  }
-`;

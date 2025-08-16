@@ -1,28 +1,31 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import miniKeys from "../../_components/keyboard/miniKeys";
+import authKeys from "../../_components/keyboard/authKeys";
 
 import styled from "styled-components";
 import axios from "axios";
 import KeyboardMini from "@/app/_components/KeyboardMini";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 
 
 const Profile: React.FC = () => {
   // 로그인 상태 확인 (basicAuth)
-  const savedAuthHeader = typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : "";
-  const [authHeader, setAuthHeader] = useState<string>(savedAuthHeader);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!savedAuthHeader);
+  const [authHeader, setAuthHeader] = useState<string>(
+    typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : ""
+  );
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!authHeader);
 
-  const [username, setUsername] = useState('');
-  const [userId, setUserId] = useState('');
+  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
   
-  // const handleLogout = () => {
-  //   sessionStorage.removeItem("authHeader");
-  //   setAuthHeader("");
-  //   setIsLoggedIn(false);
-  // };
+  const router = useRouter();
+  
+  const handleLogout = () => {
+    sessionStorage.removeItem("authHeader");
+    setAuthHeader("");
+    setIsLoggedIn(false);
+  };
 
 
   
@@ -33,35 +36,50 @@ const Profile: React.FC = () => {
       return;
     }
 
-    axios.get("http://localhost:8080/user", {
-      withCredentials: true,
-    })
-      .then(res => {
+    const checkLogin = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/user", {
+          headers: { Authorization: authHeader },
+          withCredentials: true,
+        });
         if (res.status === 200) {
+          console.log("로그인 성공 ", res.data)
           setIsLoggedIn(true);
           setUsername(res.data.username);
           setUserId(res.data.userId);
-          console.log("로그인 되어 있습니다")
         }
-      })
-      
+      } catch (err) {
+        console.error("로그인 실패", err);
+        sessionStorage.removeItem("authHeader");
+        setAuthHeader("");
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLogin();
   }, [authHeader]);
 
   // 로그인 안 되어 있으면 prompt 띄우기
   useEffect(() => {
-    if (!isLoggedIn) {
-      const username = prompt("아이디를 입력하세요") || "";
-      const password = prompt("비밀번호를 입력하세요") || "";
-      if (username && password) {
-        const basicAuth = "Basic " + btoa(`${username}:${password}`);
-        sessionStorage.setItem("authHeader", basicAuth);
-        setAuthHeader(basicAuth);
-        setIsLoggedIn(true);
-      } else {
-        alert("로그인 정보가 필요합니다.");
+      if (!isLoggedIn) {
+        const login = async () => {
+          const usernameInput = prompt("아이디를 입력하세요") || "";
+          const passwordInput = prompt("비밀번호를 입력하세요") || "";
+          if (!usernameInput || !passwordInput) {
+            alert("로그인 정보가 필요합니다.");
+            return;
+          }
+  
+          const basicAuth = "Basic " + btoa(`${usernameInput}:${passwordInput}`);
+          sessionStorage.setItem("authHeader", basicAuth);
+          setAuthHeader(basicAuth);
+        };
+  
+        login();
       }
-    }
-  }, [isLoggedIn]);
+    }, [isLoggedIn]);
+
+
 
   // 회원정보 수정
   const handleUpdateProfile = () => {
@@ -71,7 +89,6 @@ const Profile: React.FC = () => {
         headers: { Authorization: authHeader },})
     .then(res => {
       console.log("회원정보가 수정되었습니다.");
-      router.push("/");
     })
     .catch(err => {
       console.log("실패", err);
@@ -99,7 +116,7 @@ const Profile: React.FC = () => {
   return (
     <Box>
       <Content>
-        <KeyboardMini keys={miniKeys} />
+        <KeyboardMini keys={authKeys} />
 
         <MainWrapper>
          <h2>회원 정보</h2>
@@ -110,6 +127,7 @@ const Profile: React.FC = () => {
               onChange={e => setUsername(e.target.value)}
             />
           </div>
+          <button onClick={handleLogout}>로그아웃</button>
           <button onClick={handleUpdateProfile}>회원정보수정</button>
           <button onClick={handleDeleteProfile}>탈퇴하기</button>
         </MainWrapper> 

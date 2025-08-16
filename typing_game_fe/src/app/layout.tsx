@@ -40,5 +40,5 @@ const Container = styled.div`
   align-items:center;
   justify-content: center;
   min-height:100vh;
-  background-color : #d6d4d2ff;
+  background-color : var(--background);
 `;

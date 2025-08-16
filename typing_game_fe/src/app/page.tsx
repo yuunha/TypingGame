@@ -9,8 +9,10 @@ import keys from './_components/keyboard/keys'
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
 return (
     <Keyboard keys = {keys} onToggleSidebar={toggleSidebar}/>
+    
   );
 };

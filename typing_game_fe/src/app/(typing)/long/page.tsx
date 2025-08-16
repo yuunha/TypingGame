@@ -19,22 +19,17 @@ interface LongText {
 const TypingPage: React.FC = () => {
   const [lyricsList, setLyricsList] = useState<LongText[]>([]);
   const [selectedSong, setSelectedSong] = useState<LongText | null>(null);
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
+  const [authHeader, setAuthHeader] = useState<string>(
+    typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : ""
+  );
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!authHeader);
 
-  // 로그인 상태 확인 (basicAuth)
-  const savedAuthHeader = typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : "";
-  const [authHeader, setAuthHeader] = useState<string>(savedAuthHeader);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!savedAuthHeader);
+  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
 
-  
-  // const handleLogout = () => {
-  //   sessionStorage.removeItem("authHeader");
-  //   setAuthHeader("");
-  //   setIsLoggedIn(false);
-  // };
+  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
 
 
   
@@ -45,91 +40,86 @@ const TypingPage: React.FC = () => {
       return;
     }
 
-    axios.get("http://localhost:8080/user", {
-      withCredentials: true,
-    })
-      .then(res => {
+    const checkLogin = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/user", {
+          headers: { Authorization: authHeader },
+          withCredentials: true,
+        });
         if (res.status === 200) {
+          console.log("로그인 성공 ", res.data)
           setIsLoggedIn(true);
-          console.log("로그인 되어 있습니다")
+          setUsername(res.data.username);
+          setUserId(res.data.userId);
         }
-      })
-      
+      } catch (err) {
+        console.error("로그인 실패", err);
+        sessionStorage.removeItem("authHeader");
+        setAuthHeader("");
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLogin();
   }, [authHeader]);
 
+
 // 로그인 안 되어 있으면 prompt 띄우기
-useEffect(() => {
-  if (!isLoggedIn) {
-    const username = prompt("아이디를 입력하세요") || "";
-    const password = prompt("비밀번호를 입력하세요") || "";
-    if (username && password) {
-      const basicAuth = "Basic " + btoa(`${username}:${password}`);
-      sessionStorage.setItem("authHeader", basicAuth);
-      setAuthHeader(basicAuth);
-      setIsLoggedIn(true);
-    } else {
-      alert("로그인 정보가 필요합니다.");
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const login = async () => {
+        const usernameInput = prompt("아이디를 입력하세요") || "";
+        const passwordInput = prompt("비밀번호를 입력하세요") || "";
+        if (!usernameInput || !passwordInput) {
+          alert("로그인 정보가 필요합니다.");
+          return;
+        }
+
+        const basicAuth = "Basic " + btoa(`${usernameInput}:${passwordInput}`);
+        sessionStorage.setItem("authHeader", basicAuth);
+        setAuthHeader(basicAuth);
+      };
+
+      login();
     }
-  }
-}, [isLoggedIn]);
+  }, [isLoggedIn]);
 
 // 긴글 목록 불러오기
-useEffect(() => {
-  if (!isLoggedIn) return;
-  
-  axios.get("http://localhost:8080/long-text", {
-  })
-    .then(res => {
-      const data: LongText[] = res.data.data;
-      const songs = data.map(item => ({
-        longTextId: item.longTextId,
-        title: item.title,
-        isUserFile : false,
-      }));
-      setLyricsList(songs)
-      if (songs.length > 0) setSelectedSong(songs[0]);
-    })
-    .catch(err => {
-      console.error("API 호출 실패", err);
-      if (err.response?.status === 401) {
-        setIsLoggedIn(false);
-        setAuthHeader("");
-        sessionStorage.removeItem("authHeader");
-        alert("인증 실패! 다시 로그인 해주세요.");
-      }
-    });
+  useEffect(() => {
+    if (!isLoggedIn || !authHeader) return;
 
-    // 사용자 파일
-    axios.get("http://localhost:8080/my-long-text", {
-      withCredentials: true,
-    })
-      .then(res => {
-        const data: LongText[] = res.data;
-        const songs = data.map(item => ({
+    const fetchLyrics = async () => {
+      try {
+        const [allRes, myRes] = await Promise.all([
+          axios.get("http://localhost:8080/long-text"),
+          axios.get("http://localhost:8080/my-long-text", {
+            headers: { Authorization: authHeader },
+            withCredentials: true,
+          }),
+        ]);
+
+        const allLyrics: LongText[] = allRes.data.data.map((item: any) => ({
+          longTextId: item.longTextId,
+          title: item.title,
+          isUserFile: false,
+        }));
+
+        const myLyrics: LongText[] = myRes.data.map((item: any) => ({
           longTextId: item.myLongTextId,
           title: item.title,
-          isUserFile : true,
+          isUserFile: true,
         }));
-        setLyricsList(prev => [...prev, ...songs])
-      }).catch(error =>{
-        console.log(error)
-      })
-}, [isLoggedIn]);
 
+        const combined = [...allLyrics, ...myLyrics];
+        setLyricsList(combined);
+        if (combined.length > 0) setSelectedSong(combined[0]);
+      } catch (err) {
+        console.error("긴글 불러오기 실패", err);
+      }
+    };
 
-// 전체 유저의 긴글점수 목록 조회
-// useEffect(() => {
-//   axios.get("http://localhost:8080/user/long-text/scores", {
-//     withCredentials: true,
-//   })
-//     .then(res => {
-//       console.log('전체 목록', res.data)
-//     })
-//     .catch(err => {
-//       console.error("API 호출 실패", err);
-//     });
-// }, []);
-
+    fetchLyrics();
+  }, [isLoggedIn, authHeader]);
 
   return (
     <Box>
@@ -150,14 +140,15 @@ useEffect(() => {
             <RightInfo> </RightInfo>
           </Header>
         ) : (<></>)}
-        <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
-
         {selectedSong ? (
         <MainWrapper>
-            <TypingGame longTextId={selectedSong.longTextId} isLoggedIn={isLoggedIn} isUserFile={selectedSong.isUserFile}/>
-         
+            <TypingGame 
+            longTextId={selectedSong.longTextId} 
+            isLoggedIn={isLoggedIn} 
+            isUserFile={selectedSong.isUserFile}/>
         </MainWrapper> 
         ) : (<></>)}
+        <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
       </Content>
     </Box>
   );
@@ -169,8 +160,6 @@ export default TypingPage;
 
 const Box = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100vw;

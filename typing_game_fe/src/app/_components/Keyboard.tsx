@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Link from 'next/link';
 import '../globals.css';
@@ -21,6 +21,14 @@ interface KeyboardProps {
 }
 
 const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    document.documentElement.setAttribute('data-theme', next);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = document.querySelector(`.key--${e.code}`);
@@ -49,6 +57,9 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
                 if (code === "CapsLock") {
                 onToggleSidebar?.();
                 }
+                if (code === "Backspace") {
+                toggleTheme();
+                }
             };
           const keyElement = (
             <Key
@@ -56,9 +67,10 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
               className={`key--${code}`}
               $color={color}
               $widthLevel={widthLevel}
+              $href={href}
               onClick={handleClick}
             >
-              <KeyCap $color={color}>{label}</KeyCap>
+              <KeyCap $color={color} $href={href}>{label}</KeyCap>
             </Key>
           );
 
@@ -84,6 +96,8 @@ const KeyboardFrame = styled.div`
   background-color: var(--keyboard-bg);
   box-shadow: 0 0 10px;
   border-radius : 10px;
+  box-shadow:4px 4px 1px -1px #0000001a, 0 2px 4px -2px #0000001a;
+  border : 1px solid var(--keyboard-border);
 `;
 const KeyboardWrapper = styled.div`
   display:flex;
@@ -96,6 +110,7 @@ const KeyboardWrapper = styled.div`
 const Key = styled.div<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
+  $href?: string;
 }>`
   width: ${({ $widthLevel }) =>
     $widthLevel === 3 ? '120px' :
@@ -113,11 +128,18 @@ const Key = styled.div<{
     $color === 'blue' ? 'var(--key-fill-blue)' :
     $color === 'red' ? 'var(--key-fill-red)' :
     'var(--key-fill-default)'};
-  color: ${({ $color }) => ($color ? 'white' : 'black')};
+  color: ${({ $color }) => ($color ? 'white' : 'var(--keyboard-text)')};
   &:hover{
     transform: scale(0.95);
     border-color: var(--key-pressed-border);
     color: var(--key-pressed-text);
+    background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
+    animation: ledGlow 0.3s ease-in-out;
+    box-shadow: 0 0 10px 1px ${({ $color }) =>
+      $color === 'blue' ? 'var(--key-led-blue)' :
+      $color === 'red' ? 'var(--key-led-red)' :
+      'var(--key-led-red)'};
+     color :  var(--key-led-red);
   }
   transition: transform 0.05s ease, box-shadow 0.05s ease;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
@@ -127,15 +149,28 @@ const Key = styled.div<{
     animation: press 0.15s ease;
     border-color: var(--key-pressed-border);
     color: var(--key-pressed-text);
+    background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
+    animation: ledGlow 0.3s ease-in-out;
+    box-shadow: 0 0 10px 1px ${({ $color }) =>
+      $color === 'blue' ? 'var(--key-led-blue)' :
+      $color === 'red' ? 'var(--key-led-red)' :
+      'var(--key-led-red)'};
+     color :  var(--key-led-red);
+  }
+  font-size : 13px;
+  @keyframes ledGlow {
+    0% { box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+    50% { box-shadow: 0 0 10px 5px var(--key-led-red); }
+    100% { box-shadow: 0 0 5px rgba(0,0,0,0.2); }
   }
 `;
 
 const KeyCap = styled.div<{
   $color?: 'blue' | 'red';
+  $href?: string;
 }>`
   width: 100%;
   height: 41px;
-  font-size: 13px;
   padding: 5px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   border-radius: 5px;
@@ -144,4 +179,14 @@ const KeyCap = styled.div<{
     $color === 'blue' ? 'var(--key-fill-blue)' :
     $color === 'red' ? 'var(--key-fill-red)' :
     'var(--key-fill-default)'};
+  white-space: pre-line;
+  ${Key}:hover &{
+    background-color: ${({ $href }) => $href ? 'var(--key-linked-fill)' : '' };
+  }
+  ${Key}.pressed &{
+    background-color: ${({ $href }) => $href ? 'var(--key-linked-fill)' : '' };
+  }
+
+
 `;
+
