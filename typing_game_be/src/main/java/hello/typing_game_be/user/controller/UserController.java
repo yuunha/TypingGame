@@ -33,7 +33,10 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     @PostMapping("/user")
     public ResponseEntity<Long> register(@Valid @RequestBody UserCreateRequest request) {
         Long userId = userService.register(request);
