@@ -6,6 +6,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -113,5 +115,32 @@ public class friendRequestControllerTest {
                 .content(objectMapper.writeValueAsString(updateRequest)))
             .andExpect(status().isOk());
 
+    }
+
+    @Test
+    void 친구삭제_성공() throws Exception {
+        //given
+        User requester = userRepository.findByLoginId("testid1").orElseThrow();
+        User receiver = userRepository.findByLoginId("testid2").orElseThrow();
+
+        // 친구 요청 생성 및 ACCEPTED 상태로 저장
+        FriendRequest fr = friendRequestRepository.save(
+            FriendRequest.builder()
+                .requester(requester)
+                .receiver(receiver)
+                .status(FriendRequestStatus.ACCEPTED)
+                .build()
+        );
+
+        //when
+        // 유저2가 유저1과의 친구 요청 삭제
+        mockMvc.perform(delete("/friend-requests/{friendRequestId}", fr.getFriendRequestId())
+                .with(httpBasic("testid2", "2222")))
+            .andExpect(status().isNoContent());
+
+        //then
+        // DB에서 삭제되었는지 확인
+        Optional<FriendRequest> deletedFr = friendRequestRepository.findById(fr.getFriendRequestId());
+        assertThat(deletedFr).isEmpty();
     }
 }

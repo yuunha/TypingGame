@@ -49,7 +49,7 @@ public class FriendRequestService {
 
         // 요청 수신자가 맞는지 확인
         if (!fr.getReceiver().getUserId().equals(userId)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_REQUEST);
+            throw new BusinessException(ErrorCode.FORBIDDEN_REQUEST); // 403 Forbidden
         }
         FriendRequest updatedFr;
 
@@ -64,5 +64,24 @@ public class FriendRequestService {
         } else {
             throw new BusinessException(ErrorCode.INVALID_ACTION);
         }
+    }
+
+    @Transactional
+    public void deleteFriend(Long friendRequestId, Long userId) {
+        FriendRequest fr = friendRequestRepository.findById(friendRequestId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.FRIEND_REQEUST_NOT_FOUND));
+
+        // 요청 수신자가 맞는지 또는 요청자가 맞는지 확인 (삭제 권한)
+        if (!fr.getReceiver().getUserId().equals(userId) && !fr.getRequester().getUserId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_REQUEST); // 403 Forbidden
+        }
+
+        // 상태가 ACCEPTED인지 확인
+        if (!FriendRequestStatus.ACCEPTED.equals(fr.getStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_ACTION,"삭제가 불가능합니다."); // PENDING이면 삭제 불가
+        }
+
+        // 삭제
+        friendRequestRepository.delete(fr);
     }
 }

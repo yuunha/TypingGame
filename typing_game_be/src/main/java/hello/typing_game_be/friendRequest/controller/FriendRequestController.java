@@ -3,6 +3,7 @@ package hello.typing_game_be.friendRequest.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class FriendRequestController {
     private final FriendRequestService friendRequestService;
 
+    // 친구 요청 생성
     @PostMapping
     public ResponseEntity<FriendRequestResponse> createFriendRequest(
         @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -33,6 +35,7 @@ public class FriendRequestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // 친구 요청 응답 (수락/거부)
     @PatchMapping("/{friendRequestId}")
     public ResponseEntity<Void> respondFriendRequest(
         @PathVariable Long friendRequestId,
@@ -46,5 +49,13 @@ public class FriendRequestController {
         );
         return ResponseEntity.ok().build();
     }
-
+    // 친구 삭제 (수락된 친구 요청 삭제)
+    @DeleteMapping("/{friendRequestId}")
+    public ResponseEntity<Void> deleteFriend(
+        @PathVariable Long friendRequestId,
+        @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        friendRequestService.deleteFriend(friendRequestId, userDetails.getUserId());
+        return ResponseEntity.noContent().build();
+    }
 }
