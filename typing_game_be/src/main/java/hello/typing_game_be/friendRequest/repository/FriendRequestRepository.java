@@ -21,4 +21,7 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
         "WHERE fr.status = 'ACCEPTED' " +
         "AND (fr.requester.userId = :userId OR fr.receiver.userId = :userId)")
     List<FriendRequest> findAcceptedFriends(@Param("userId") Long userId);
+
+    //최근요청이 배열의 맨앞에
+    List<FriendRequest> findByRequesterUserIdOrderByCreatedAtDesc(Long userId);
 }

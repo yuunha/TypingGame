@@ -1,9 +1,12 @@
 package hello.typing_game_be.friendRequest.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.friendRequest.dto.FriendRequestCreateRequest;
+import hello.typing_game_be.friendRequest.dto.FriendRequestListResponse;
 import hello.typing_game_be.friendRequest.dto.FriendRequestUpdateRequest;
 import hello.typing_game_be.friendRequest.service.FriendRequestService;
 import lombok.AllArgsConstructor;
@@ -50,6 +54,15 @@ public class FriendRequestController {
             request.getAction()
         );
         return ResponseEntity.ok().build();
+    }
+
+    // 보낸 친구 목록 요청 조회
+    @GetMapping("/sent")
+    public ResponseEntity<List<FriendRequestListResponse>> getSentFriendRequest(
+        @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body( friendRequestService.getSentFriendRequests(userDetails.getUserId()) );
     }
 
 

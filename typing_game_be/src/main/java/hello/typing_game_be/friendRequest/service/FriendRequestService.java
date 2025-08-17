@@ -1,10 +1,14 @@
 package hello.typing_game_be.friendRequest.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
+import hello.typing_game_be.friendRequest.dto.FriendRequestListResponse;
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
@@ -66,5 +70,15 @@ public class FriendRequestService {
         }
     }
 
+    //보낸 친구요청 조회
+    public List<FriendRequestListResponse> getSentFriendRequests(Long userId) {
 
+        //최근요청이 배열의 맨앞에
+        List<FriendRequest> list = friendRequestRepository.findByRequesterUserIdOrderByCreatedAtDesc(userId);
+
+        return list.stream()
+            .map(FriendRequestListResponse::fromEntity)
+            .collect(Collectors.toList());
+
+    }
 }

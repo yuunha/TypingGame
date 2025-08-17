@@ -54,6 +54,7 @@ public class friendRequestControllerTest {
 
     private Long user1Id;
     private Long user2Id;
+    private Long user3Id;
 
     @BeforeEach
     void beforeEach() {
@@ -75,11 +76,18 @@ public class friendRequestControllerTest {
             .loginId("user2")
             .password("2222")
             .build());
+        userService.register(UserCreateRequest.builder()
+            .username("홍길자")
+            .loginId("user3")
+            .password("3333")
+            .build());
 
         User user1 = userRepository.findByLoginId("user1").orElseThrow();
         User user2 = userRepository.findByLoginId("user2").orElseThrow();
+        User user3 = userRepository.findByLoginId("user3").orElseThrow();
         user1Id = user1.getUserId();
         user2Id = user2.getUserId();
+        user3Id = user3.getUserId();
     }
 
     @Test
@@ -108,8 +116,8 @@ public class friendRequestControllerTest {
     void 친구요청_수락_성공() throws Exception {
         //given
         //유저1 -> 유저2 친구 신청
-        User user1 = userRepository.findByLoginId("user1").orElseThrow();
-        User user2 = userRepository.findByLoginId("user2").orElseThrow();
+        User user1 = userRepository.findById(user1Id).orElseThrow();
+        User user2 = userRepository.findById(user2Id).orElseThrow();
         friendRequestRepository.save(
             FriendRequest.builder()
                 .requester(user1)
@@ -136,6 +144,41 @@ public class friendRequestControllerTest {
         assertEquals(user1Id, fr_.getRequester().getUserId());
         assertEquals(user2Id, fr_.getReceiver().getUserId());
         assertEquals(FriendRequestStatus.PENDING, fr.getStatus());
+    }
+
+    @Test
+    void 보낸친구요청목록_조회_성공() throws Exception {
+        //given
+
+        User user1 = userRepository.findById(user1Id).orElseThrow();
+        User user2 = userRepository.findById(user2Id).orElseThrow();
+        User user3 = userRepository.findById(user3Id).orElseThrow();
+
+        //유저1 -> 유저2 친구 신청
+        friendRequestRepository.save(
+            FriendRequest.builder()
+                .requester(user1)
+                .receiver(user2)
+                .status(FriendRequestStatus.PENDING)
+                .build()
+        );
+        //유저1 -> 유저3 친구 신청
+        friendRequestRepository.save(
+            FriendRequest.builder()
+                .requester(user1)
+                .receiver(user3)
+                .status(FriendRequestStatus.PENDING)
+                .build()
+        );
+
+        //유저1의 친구요청목록 조회
+        mockMvc.perform(get("/friend-requests/sent")
+                .with(httpBasic("user1", "1111" )))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].receiverName").value(user3.getUsername()))
+            .andExpect(jsonPath("$[1].receiverName").value(user2.getUsername()));
+
     }
 
 
