@@ -81,4 +81,15 @@ public class FriendRequestService {
             .collect(Collectors.toList());
 
     }
+
+
+    // 받은 친구 요청 조회
+    public List<FriendRequestListResponse> getReceivedFriendRequests(Long userId) {
+        // 최근 요청이 배열의 맨 앞에 오도록 정렬
+        List<FriendRequest> list = friendRequestRepository.findByReceiverUserIdOrderByCreatedAtDesc(userId);
+
+        return list.stream()
+            .map(FriendRequestListResponse::fromEntity)
+            .collect(Collectors.toList());
+    }
 }

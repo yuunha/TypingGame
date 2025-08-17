@@ -181,6 +181,40 @@ public class friendRequestControllerTest {
 
     }
 
+    @Test
+    void 받은친구요청목록_조회_성공() throws Exception {
+        //given
+
+        User user1 = userRepository.findById(user1Id).orElseThrow();
+        User user2 = userRepository.findById(user2Id).orElseThrow();
+        User user3 = userRepository.findById(user3Id).orElseThrow();
+
+        //유저2 -> 유저1 친구 신청
+        friendRequestRepository.save(
+            FriendRequest.builder()
+                .requester(user2)
+                .receiver(user1)
+                .status(FriendRequestStatus.PENDING)
+                .build()
+        );
+        //유저3 -> 유저1 친구 신청
+        friendRequestRepository.save(
+            FriendRequest.builder()
+                .requester(user3)
+                .receiver(user1)
+                .status(FriendRequestStatus.PENDING)
+                .build()
+        );
+
+        //유저1의 친구요청목록 조회
+        mockMvc.perform(get("/friend-requests/received")
+                .with(httpBasic("user1", "1111" )))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].requesterName").value(user3.getUsername()))
+            .andExpect(jsonPath("$[1].requesterName").value(user2.getUsername()));
+
+    }
 
 
 }

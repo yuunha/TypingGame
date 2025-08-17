@@ -65,7 +65,17 @@ public class FriendRequestController {
                 .body( friendRequestService.getSentFriendRequests(userDetails.getUserId()) );
     }
 
+    // 받은 친구 요청 목록 조회
+    @GetMapping("/received")
+    public ResponseEntity<List<FriendRequestListResponse>> getReceivedFriendRequests(
+        @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        List<FriendRequestListResponse> receivedRequests =
+            friendRequestService.getReceivedFriendRequests(userDetails.getUserId());
 
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(receivedRequests);
+    }
 
     @Data
     @AllArgsConstructor

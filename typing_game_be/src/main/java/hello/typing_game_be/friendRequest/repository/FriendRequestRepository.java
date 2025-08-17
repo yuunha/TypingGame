@@ -24,4 +24,6 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
 
     //최근요청이 배열의 맨앞에
     List<FriendRequest> findByRequesterUserIdOrderByCreatedAtDesc(Long userId);
+
+    List<FriendRequest> findByReceiverUserIdOrderByCreatedAtDesc(Long userId);
 }
