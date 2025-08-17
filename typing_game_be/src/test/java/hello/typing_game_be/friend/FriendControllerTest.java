@@ -92,12 +92,11 @@ public class FriendControllerTest {
     @AfterEach
     void tearDown() {
         friendRequestRepository.deleteAll();
-        userRepository.deleteAll();
+         userRepository.deleteAll();
     }
 
     @Test
     void 친구목록_조회_성공() throws Exception {
-        // user1 기준 친구 목록 조회
         // user1 기준 친구 목록 조회
         mockMvc.perform(get("/friends")
                 .with(httpBasic("user1", "1111")))
@@ -109,7 +108,6 @@ public class FriendControllerTest {
     }
     @Test
     void 친구삭제_성공() throws Exception {
-
         //when
         // 유저1가 유저2과의 친구 요청 삭제
         mockMvc.perform(delete("/friends/{friendRequestId}", friendRequest1.getFriendRequestId())

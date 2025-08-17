@@ -15,7 +15,7 @@ import hello.typing_game_be.user.entity.User;
 public interface FriendRequestRepository extends JpaRepository<FriendRequest, Long> {
     boolean existsByRequesterAndReceiver(User requester, User receiver);
 
-    Optional<FriendRequest> findByRequesterAndReceiver(User requester, User receiver);
+    Optional<FriendRequest> findByRequesterUserIdAndReceiverUserId(Long requesterId, Long receiverId);
 
     @Query("SELECT fr FROM FriendRequest fr " +
         "WHERE fr.status = 'ACCEPTED' " +

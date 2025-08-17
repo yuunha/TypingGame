@@ -19,6 +19,7 @@ public class FriendRequestService {
     private final FriendRequestRepository friendRequestRepository;
     private final UserRepository userRepository;
 
+    // 친구 요청 생성
     public FriendRequestResponse sendFriendRequest(Long requesterId, Long receiverId) {
         User requester = userRepository.findById(requesterId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND,"요청자 없음"));
@@ -42,6 +43,8 @@ public class FriendRequestService {
         friendRequestRepository.save(fr);
         return FriendRequestResponse.fromEntity(fr);
     }
+
+    // 친구 요청에 대한 수락/거부
     @Transactional
     public void respondToFriendRequest(Long friendRequestId, Long userId, String action) {
         FriendRequest fr = friendRequestRepository.findById(friendRequestId)
@@ -51,13 +54,10 @@ public class FriendRequestService {
         if (!fr.getReceiver().getUserId().equals(userId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_REQUEST); // 403 Forbidden
         }
-        FriendRequest updatedFr;
-
         // action 처리
         if ("ACCEPT".equalsIgnoreCase(action)) {
             // 수락: 상태 변경
-            updatedFr = fr.accept(); // status를 accep로 변경
-            friendRequestRepository.save(updatedFr);
+            fr.accept(); // status를 accep로 변경
         } else if ("DECLINE".equalsIgnoreCase(action)) {
             // 거부: 레코드 삭제
             friendRequestRepository.delete(fr);
