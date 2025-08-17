@@ -3,8 +3,7 @@ package hello.typing_game_be.friendRequest.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.friendRequest.dto.FriendRequestCreateRequest;
-import hello.typing_game_be.friendRequest.dto.FriendRequestResponse;
 import hello.typing_game_be.friendRequest.dto.FriendRequestUpdateRequest;
 import hello.typing_game_be.friendRequest.service.FriendRequestService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,13 +27,14 @@ public class FriendRequestController {
 
     // 친구 요청 생성
     @PostMapping
-    public ResponseEntity<FriendRequestResponse> createFriendRequest(
+    public ResponseEntity<FriendRequestIdResponse> createFriendRequest(
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @RequestBody FriendRequestCreateRequest request
     ){
         Long requesterId = userDetails.getUserId();
-        FriendRequestResponse response = friendRequestService.sendFriendRequest(requesterId, request.getReceiverId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        Long friendRequestId = friendRequestService.sendFriendRequest(requesterId, request.getReceiverId());
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(new FriendRequestIdResponse(friendRequestId));
     }
 
     // 친구 요청 응답 (수락/거부)
@@ -51,4 +52,11 @@ public class FriendRequestController {
         return ResponseEntity.ok().build();
     }
 
+
+
+    @Data
+    @AllArgsConstructor
+    public class FriendRequestIdResponse {
+        private Long friendRequestId;
+    }
 }

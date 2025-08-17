@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
-import hello.typing_game_be.friendRequest.dto.FriendRequestResponse;
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
@@ -20,7 +19,7 @@ public class FriendRequestService {
     private final UserRepository userRepository;
 
     // 친구 요청 생성
-    public FriendRequestResponse sendFriendRequest(Long requesterId, Long receiverId) {
+    public Long sendFriendRequest(Long requesterId, Long receiverId) {
         User requester = userRepository.findById(requesterId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND,"요청자 없음"));
         User receiver = userRepository.findById(receiverId)
@@ -41,7 +40,8 @@ public class FriendRequestService {
             .status(FriendRequestStatus.PENDING)
             .build();
         friendRequestRepository.save(fr);
-        return FriendRequestResponse.fromEntity(fr);
+
+        return fr.getFriendRequestId();
     }
 
     // 친구 요청에 대한 수락/거부
