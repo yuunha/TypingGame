@@ -151,7 +151,7 @@ const Key = styled.div<{
 const KeyCap = styled.div<{
   $color?: 'blue' | 'red';
 }>`
-  width: 100%;
+  width: 99%;
   height: 90%;
   padding: 6px;
   border-radius: 5px;

@@ -193,7 +193,6 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
             const typedChar = inputValue[i];
             let color = "var(--default-text)";
             let backgroundColor = "transparent";
-
             if (typedChar !== undefined) {
               if (typedChar === char) {
                 color = "var(--color-correct)";

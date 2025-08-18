@@ -117,7 +117,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         {[...lyricsList].map((song, index) => {
           const title = song.title;
           const longTextId = song.longTextId;
-          const isSelected = selectedSong.longTextId === longTextId && selectedSong.title === title;
+          const isSelected =
+                selectedSong?.longTextId === longTextId &&
+                selectedSong?.title === title;
+          
           const isFirstUserFile = song.isUserFile && !lyricsList.slice(0, index).some(s => s.isUserFile);
           const isLastUserFile = song.isUserFile && !lyricsList.slice(index + 1).some(s => s.isUserFile);
 
@@ -130,9 +133,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               >
                 {title}
               </a>
-              {(isLastUserFile && selectedSong.isUserFile)  &&
+              {(isLastUserFile && selectedSong?.isUserFile) && (
                 <ButtonDelete onClick={() => handleDelete(song.longTextId)}>삭제하기</ButtonDelete>
-              }
+              )}
             </React.Fragment>
           );
         })}
