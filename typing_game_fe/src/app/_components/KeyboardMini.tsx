@@ -78,16 +78,17 @@ const KeyboardMini: React.FC<KeyboardProps> = ({ keys }) => {
 export default KeyboardMini;
 
 const KeyboardFrame = styled.div`
-  display: inline-block;
-  padding : 20px 10px;
-  background-color: var(--keyboard-bg);
-  box-shadow: 0 0 10px;
-  border-radius : 10px;
+  // display: inline-block;
+  // padding : 20px 10px;
+  // background-color: var(--keyboard-bg);
+  // border-radius : 10px;
+  // border : 3px solid var(--keyboard-border);
+  // box-shadow:4px 4px 1px -1px #0000001a, 0 2px 4px -2px #0000001a;
 `;
 const KeyboardWrapper = styled.div`
   display:flex;
-  background-color: var(--keyboard-row-bg);
-  box-shadow: 0 0 2px;
+  // background-color: var(--keyboard-row-bg);
+  // box-shadow: 0 0 2px;
 `;
 
 
@@ -96,14 +97,15 @@ const Key = styled.div<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
 }>`
+  height: 55px;
+  margin: 2px;
+  font-size : 13px;
+  border-radius: 5px;
   width: ${({ $widthLevel }) =>
     $widthLevel === 3 ? '120px' :
     $widthLevel === 2 ? '90px' :
     $widthLevel === 1 ? '70px' : '50px'};
   flex-grow: ${({ $widthLevel }) => ($widthLevel === 0 ? 1 : 0)};
-  height: 55px;
-  margin: 2px;
-  border: 7px solid;
   border-color: ${({ $color }) =>
     $color === 'blue' ? 'var(--key-border-blue)' :
     $color === 'red' ? 'var(--key-border-red)' :
@@ -114,29 +116,31 @@ const Key = styled.div<{
     'var(--key-fill-default)'};
   color: ${({ $color }) => ($color ? 'white' : 'black')};
   &:hover{
-    transform: scale(0.95);
-    border-color: var(--key-pressed-border);
     color: var(--key-pressed-text);
+    background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
+    box-shadow: 0 0 5px 1px ${({ $color }) =>
+      $color === 'blue' ? 'var(--key-led-blue)' :
+      $color === 'red' ? 'var(--key-led-red)' :
+      'var(--key-led-red)'};
+     color :  var(--key-led-red);
   }
-  transition: transform 0.05s ease, box-shadow 0.05s ease;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
   &.pressed {
-    transform: scale(0.95) translateY(1px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    animation: press 0.15s ease;
-    border-color: var(--key-pressed-border);
     color: var(--key-pressed-text);
-  }
+    background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
+    box-shadow: 0 0 5px 1px ${({ $color }) =>
+      $color === 'blue' ? 'var(--key-led-blue)' :
+      $color === 'red' ? 'var(--key-led-red)' :
+      'var(--key-led-red)'};
+     color :  var(--key-led-red);
+    }
 `;
 
 const KeyCap = styled.div<{
   $color?: 'blue' | 'red';
 }>`
   width: 100%;
-  height: 41px;
-  font-size: 13px;
-  padding: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  height: 90%;
+  padding: 6px;
   border-radius: 5px;
   line-height: 1;
   background-color: ${({ $color }) =>

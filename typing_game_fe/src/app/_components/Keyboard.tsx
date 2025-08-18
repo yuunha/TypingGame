@@ -91,18 +91,17 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
 export default Keyboard;
 
 const KeyboardFrame = styled.div`
-  display: inline-block;
-  padding : 20px 10px;
-  background-color: var(--keyboard-bg);
-  box-shadow: 0 0 10px;
-  border-radius : 10px;
-  box-shadow:4px 4px 1px -1px #0000001a, 0 2px 4px -2px #0000001a;
-  border : 1px solid var(--keyboard-border);
+  // display: inline-block;
+  // padding : 20px 10px;
+  // background-color: var(--keyboard-bg);
+  // border-radius : 10px;
+  // border : 3px solid var(--keyboard-border);
+  // box-shadow:4px 4px 1px -1px #0000001a, 0 2px 4px -2px #0000001a;
 `;
 const KeyboardWrapper = styled.div`
   display:flex;
-  background-color: var(--keyboard-row-bg);
-  box-shadow: 0 0 2px;
+  // background-color: var(--keyboard-row-bg);
+  // box-shadow: 0 0 2px;
 `;
 
 
@@ -110,16 +109,16 @@ const KeyboardWrapper = styled.div`
 const Key = styled.div<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
-  $href?: string;
 }>`
+  height: 55px;
+  margin: 2px;
+  font-size : 13px;
+  border-radius: 5px;
   width: ${({ $widthLevel }) =>
     $widthLevel === 3 ? '120px' :
     $widthLevel === 2 ? '90px' :
     $widthLevel === 1 ? '70px' : '50px'};
   flex-grow: ${({ $widthLevel }) => ($widthLevel === 0 ? 1 : 0)};
-  height: 55px;
-  margin: 2px;
-  border: 7px solid;
   border-color: ${({ $color }) =>
     $color === 'blue' ? 'var(--key-border-blue)' :
     $color === 'red' ? 'var(--key-border-red)' :
@@ -128,65 +127,37 @@ const Key = styled.div<{
     $color === 'blue' ? 'var(--key-fill-blue)' :
     $color === 'red' ? 'var(--key-fill-red)' :
     'var(--key-fill-default)'};
-  color: ${({ $color }) => ($color ? 'white' : 'var(--keyboard-text)')};
+  color: ${({ $color }) => ($color ? 'white' : 'black')};
   &:hover{
-    transform: scale(0.95);
-    border-color: var(--key-pressed-border);
     color: var(--key-pressed-text);
     background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
-    animation: ledGlow 0.3s ease-in-out;
-    box-shadow: 0 0 10px 1px ${({ $color }) =>
+    box-shadow: 0 0 5px 1px ${({ $color }) =>
       $color === 'blue' ? 'var(--key-led-blue)' :
       $color === 'red' ? 'var(--key-led-red)' :
       'var(--key-led-red)'};
      color :  var(--key-led-red);
   }
-  transition: transform 0.05s ease, box-shadow 0.05s ease;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
   &.pressed {
-    transform: scale(0.95) translateY(1px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    animation: press 0.15s ease;
-    border-color: var(--key-pressed-border);
     color: var(--key-pressed-text);
     background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
-    animation: ledGlow 0.3s ease-in-out;
-    box-shadow: 0 0 10px 1px ${({ $color }) =>
+    box-shadow: 0 0 5px 1px ${({ $color }) =>
       $color === 'blue' ? 'var(--key-led-blue)' :
       $color === 'red' ? 'var(--key-led-red)' :
       'var(--key-led-red)'};
      color :  var(--key-led-red);
-  }
-  font-size : 13px;
-  @keyframes ledGlow {
-    0% { box-shadow: 0 0 5px rgba(0,0,0,0.2); }
-    50% { box-shadow: 0 0 10px 5px var(--key-led-red); }
-    100% { box-shadow: 0 0 5px rgba(0,0,0,0.2); }
-  }
+    }
 `;
 
 const KeyCap = styled.div<{
   $color?: 'blue' | 'red';
-  $href?: string;
 }>`
   width: 100%;
-  height: 41px;
-  padding: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  height: 90%;
+  padding: 6px;
   border-radius: 5px;
   line-height: 1;
   background-color: ${({ $color }) =>
     $color === 'blue' ? 'var(--key-fill-blue)' :
     $color === 'red' ? 'var(--key-fill-red)' :
     'var(--key-fill-default)'};
-  white-space: pre-line;
-  ${Key}:hover &{
-    background-color: ${({ $href }) => $href ? 'var(--key-linked-fill)' : '' };
-  }
-  ${Key}.pressed &{
-    background-color: ${({ $href }) => $href ? 'var(--key-linked-fill)' : '' };
-  }
-
-
 `;
-

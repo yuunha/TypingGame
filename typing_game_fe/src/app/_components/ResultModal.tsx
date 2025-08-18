@@ -73,6 +73,9 @@ const ResultModal: React.FC<ResultModalProps> = ({
       
   },[longTextId]);
 
+
+
+
   // 점수 기록하기
   const handleRecord = async (e: React.FormEvent) => {
      e.preventDefault();

@@ -203,7 +203,6 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
                 backgroundColor = "var(--color-wrong-bg)";
               }
             }
-
             
             return (
               <CharSpan key={i} style={{ color, backgroundColor }}>

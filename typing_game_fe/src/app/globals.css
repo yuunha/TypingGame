@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: rgb(255, 255, 255);
+  /* --background: linear-gradient(135deg, #fdfcfb, #c0b8b2); */
   --foreground: #171717;
   --color-point: #0033a1ff;
   --color-white: #FFFFFF;
@@ -12,7 +12,7 @@
   --keyboard-text: black;
   --keyboard-bg: #fdfdfe;
   --keyboard-row-bg: #b2b7b9;
-  --keyboard-border: #d4d5d8;
+  --keyboard-border: #ccc;
   
   --key-border-default: rgb(231, 231, 231) rgb(194, 194, 194);
   --key-fill-default: rgb(238, 238, 238);

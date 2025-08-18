@@ -30,7 +30,7 @@ const keys = [
     { code: "KeyC", label: "" },
     { code: "KeyV", },
     { code: "Period", },
-    { code: "Slash", label: "회원㋛", href: '/authmenu' },
+    { code: "Slash", label: "회원㋛", href: '/profile' },
     { code: "Enter", label: "⏎ Enter", widthLevel: 0 },
   ],
   [

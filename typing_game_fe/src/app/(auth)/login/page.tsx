@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
-import Link from 'next/link';
+import KeyboardMini from "@/app/_components/KeyboardMini";
+import authKeys from "../../_components/keyboard/authKeys";
 
 
 const LoginPage: React.FC = () => {
@@ -36,38 +37,43 @@ const LoginPage: React.FC = () => {
       }
     }
     return (
-        <>
-            <Box>
-                <MainWrapper>
-                    <Title>로그인</Title>
-                    <form onSubmit={handleLogin}>
-                    <InputBox>
-                    <Input placeholder="아이디" value={loginId} onChange={e => setLoginId(e.target.value)}/>
-                    <Input placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)} type="password"/>
-                    </InputBox>
-                    <button type="submit"/>
-                    </form>
-                  {message && <White>{message}</White>}
-                </MainWrapper>
-
-            </Box>
-        </>
-        
-        
+    <Box>
+      <Content>
+        <KeyboardMini keys={authKeys} />
+        <MainWrapper>
+          <Title>로그인</Title>
+          <form onSubmit={handleLogin}>
+          <InputBox>
+          <Input placeholder="아이디" value={loginId} onChange={e => setLoginId(e.target.value)}/>
+          <Input placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)} type="password"/>
+          </InputBox>
+          <button type="submit"/>
+          </form>
+        {message && <White>{message}</White>}
+      </MainWrapper>
+      </Content>
+    </Box>
       );
     };
     
 export default LoginPage;
 
-
 const Box = styled.div`
-  flex-direction: column;  // 수직 정렬 추가
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
   height: 100vh;
-  position: relative;
-  z-index: 1;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--background);
+`;
+
+
+const Content = styled.div`
+  margin-top : 100px;
+  flex-direction: column;
+  align-items: center;
+  display:flex;
 `;
 
 const MainWrapper = styled.div`
@@ -77,7 +83,7 @@ const MainWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   position:relative;
-  top:-20px;
+  margin-top : 100px;
 `;
 
 
