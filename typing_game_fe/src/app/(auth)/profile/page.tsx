@@ -85,13 +85,15 @@ useEffect(() => {
 
   const fetchLyrics = async () => {
     try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      
       const [allRes, myRes, scoreRes] = await Promise.all([
-        axios.get("http://localhost:8080/long-text"),
-        axios.get("http://localhost:8080/my-long-text", {
+        axios.get(`${baseUrl}/long-text`),
+        axios.get(`${baseUrl}/my-long-text`, {
           headers: { Authorization: authHeader },
           withCredentials: true,
         }),
-        axios.get("http://localhost:8080/long-text/scores", {
+        axios.get(`${baseUrl}/long-text/scores`, {
           withCredentials: true,
         }),
       ]);

@@ -16,7 +16,9 @@ export const useAuth = () => {
 
     const checkLogin = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/user", {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+        const res = await axios.get(`${baseUrl}/user`, {
           headers: { Authorization: authHeader },
           withCredentials: true,
         });

@@ -28,13 +28,14 @@ export const useLyrics = () => {
     if (!isLoggedIn) return;
 
     const fetchLyrics = async () => {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
       const authHeader = sessionStorage.getItem("authHeader");
       if (!authHeader) return;
 
       try {
         const [allRes, myRes] = await Promise.all([
-          axios.get("http://localhost:8080/long-text"),
-          axios.get("http://localhost:8080/my-long-text", {
+          axios.get(`${baseUrl}/long-text`),
+          axios.get(`${baseUrl}/my-long-text`, {
             headers: { Authorization: authHeader },
             withCredentials: true,
           }),
