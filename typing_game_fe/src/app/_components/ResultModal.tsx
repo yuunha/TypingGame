@@ -6,6 +6,10 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
+interface ScoreItem {
+  score: number;
+}
+
 interface ResultModalProps {
   accuracy: number;
   cpm: number;
@@ -27,7 +31,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
   lineCount,
   onRetry,
   longTextId,
-  isUserFile,
+  isUserFile = false,
 }) => {
   const [mounted, setMounted] = useState(false);
   const [score, setScore] = useState(0);
@@ -39,7 +43,6 @@ const ResultModal: React.FC<ResultModalProps> = ({
   
 // 특정 긴글의 점수목록 조회
   useEffect(() => {
-    console.log('isUserFile?'+isUserFile)
     if(isUserFile){
       axios.get(`http://localhost:8080/my-long-text/${longTextId}/score`, {
         withCredentials: true,
@@ -59,19 +62,18 @@ const ResultModal: React.FC<ResultModalProps> = ({
         withCredentials: true,
       })
       .then(res => {
-        const scores = res.data.data;
+        const scores: ScoreItem[] = res.data.data;
         console.log("점수 목록", scores)
-        const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
-        setScore(score)
-        console.log("최고 점수", score)
+        // const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
+        const maxScore = scores.reduce((max, cur) => Math.max(max, cur.score), 0);
+        setScore(maxScore);
+        console.log("최고 점수", maxScore);
       })
       .catch(err => {
         console.error("API 호출 실패", err);
       });
     }
-    
-      
-  },[longTextId]);
+  },[longTextId, isUserFile]);
 
 
 
@@ -140,9 +142,9 @@ const ResultModal: React.FC<ResultModalProps> = ({
           <StatBox>평균 {cpm}타</StatBox>
           <StatBox>시간 {(elapsedTime / 1000).toFixed(1)}초</StatBox>
         </ResultStats>
-        <h2>🎉 타자 연습 완료!</h2>
+        <p>🎉 타자 연습 완료!</p>
         {accuracy===100 && (
-        <RecordButton onClick={handleRecord}><h2>📍 내 타수 기록하기</h2></RecordButton>
+        <RecordButton onClick={handleRecord}><p>📍 내 타수 기록하기</p></RecordButton>
         )}
         <p>*정확도 100%시 기록 가능</p>
         <h2>이전 최고 기록 : {score} </h2>

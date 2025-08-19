@@ -8,7 +8,7 @@ import '../globals.css';
 interface KeyItem {
   code: string;
   label: string;
-  color?: string;
+  color?: 'blue' | 'red';
   widthLevel?: number;
   href?: string;
 }
@@ -30,12 +30,12 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
   };
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       const key = document.querySelector(`.key--${e.code}`);
       if (key) key.classList.add("pressed");
     };
 
-    const handleKeyUp = (e) => {
+    const handleKeyUp = (e: KeyboardEvent) => {
       const key = document.querySelector(`.key--${e.code}`);
       if (key) key.classList.remove("pressed");
     };
@@ -54,12 +54,8 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
         <KeyboardWrapper key={rowIndex}>
           {row.map(({ code, label, color, widthLevel, href }) => {
             const handleClick = () => {
-                if (code === "CapsLock") {
-                onToggleSidebar?.();
-                }
-                if (code === "Backspace") {
-                toggleTheme();
-                }
+                if (code === "CapsLock") { onToggleSidebar?.()}
+                if (code === "Backspace") { toggleTheme();}
             };
           const keyElement = (
             <Key
@@ -75,7 +71,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
           );
 
           return href ? (
-            <Link href={href} passHref key={code}>
+            <Link href={href} key={code}>
               {keyElement}
             </Link>
           ) : (
@@ -109,6 +105,7 @@ const KeyboardWrapper = styled.div`
 const Key = styled.div<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
+  $href?: string;
 }>`
   height: 55px;
   margin: 2px;
@@ -150,6 +147,7 @@ const Key = styled.div<{
 
 const KeyCap = styled.div<{
   $color?: 'blue' | 'red';
+  $href?: string;
 }>`
   width: 99%;
   height: 90%;

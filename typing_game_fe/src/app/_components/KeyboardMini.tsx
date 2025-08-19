@@ -21,12 +21,12 @@ interface KeyboardProps {
 
 const KeyboardMini: React.FC<KeyboardProps> = ({ keys }) => {
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       const key = document.querySelector(`.key--${e.code}`);
       if (key) key.classList.add("pressed");
     };
 
-    const handleKeyUp = (e) => {
+    const handleKeyUp = (e: KeyboardEvent) => {
       const key = document.querySelector(`.key--${e.code}`);
       if (key) key.classList.remove("pressed");
     };
@@ -62,7 +62,7 @@ const KeyboardMini: React.FC<KeyboardProps> = ({ keys }) => {
           );
 
           return href ? (
-            <Link href={href} passHref key={code}>
+            <Link href={href} key={code}>
               {keyElement}
             </Link>
           ) : (
@@ -96,6 +96,7 @@ const KeyboardWrapper = styled.div`
 const Key = styled.div<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
+  $href?: string;
 }>`
   height: 55px;
   margin: 2px;
