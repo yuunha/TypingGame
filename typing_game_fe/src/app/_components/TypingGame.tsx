@@ -6,17 +6,6 @@ import * as Hangul from "hangul-js";
 import ResultModal from "./ResultModal";
 import axios from "axios";
 
-interface LongText {
-  longTextId: number;
-  title: string;
-  content: string;
-}
-
-interface Song {
-  longTextId: number;
-  title: string;
-  lyrics: string[];
-}
 
 interface TypingGameProps {
   longTextId: number;

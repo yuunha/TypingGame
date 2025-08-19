@@ -4,17 +4,16 @@ import styled from "styled-components";
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
-interface SongLike {
-  longTextId : number;
+interface LongText {
+  longTextId: number;
   title: string;
-  lyrics: string[];
   isUserFile?: boolean;
 }
 
 interface SidebarProps {
-  lyricsList: SongLike[];                    // 기본 제공 글
-  selectedSong: SongLike;                    // 현재 선택된 글
-  onSelectSong: (song: SongLike) => void;    // 글 선택 콜백
+  lyricsList: LongText[];                    // 기본 제공 글
+  selectedSong: LongText | null;                    // 현재 선택된 글
+  onSelectSong: (song: LongText) => void;    // 글 선택 콜백
 }
 
 const Sidebar: React.FC<SidebarProps> = ({

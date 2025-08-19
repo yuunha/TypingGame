@@ -139,7 +139,7 @@ useEffect(() => {
         <ProfileCard>
           <SearchContainer>
             <LogoContainer >
-              <Image src="/defaultprofile.png" alt="Logo" height={40}/>
+              <Image src="/defaultprofile.png" alt="Logo" width={40} height={40}/>
               <input value={localUsername} onChange={e => setUsername(e.target.value)} />
             </LogoContainer>
             <nav>
