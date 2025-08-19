@@ -6,9 +6,9 @@ interface KeyItem {
   href?: string;
 }
 
-type MiniKeys = KeyItem[][];
+type Keys = KeyItem[][];
 
-const typingKeys: MiniKeys = [
+const typingKeys: Keys = [
   [
     { code: "Escape", label: "Esc", color: 'red' },
     { code: "KeyQ", label: "ㅂ" },

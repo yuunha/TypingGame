@@ -6,9 +6,9 @@ interface KeyItem {
   href?: string;
 }
 
-type MiniKeys = KeyItem[][];
+type Keys = KeyItem[][];
 
-const authKeys: MiniKeys = [
+const authKeys: Keys = [
   [
     { code: "ControlLeft", label: "Home", color: 'blue', widthLevel: 2, href: '/' },
     { code: "KeyF", label: "친구", href: '/friend' },
