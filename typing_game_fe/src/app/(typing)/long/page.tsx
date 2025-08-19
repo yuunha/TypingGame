@@ -20,9 +20,11 @@ const TypingPage: React.FC = () => {
     if (!isLoggedIn) promptLogin();
   }, [isLoggedIn]);
 
+    // selectedSong이 이미 있으면 바뀌지 않도록
   useEffect(() => {
-    if (lyricsList.length > 0) setSelectedSong(lyricsList[0]);
+    if (lyricsList.length > 0 && !selectedSong) setSelectedSong(lyricsList[0]);
   }, [lyricsList]);
+
 
   return (
     <Box>
@@ -46,9 +48,9 @@ const TypingPage: React.FC = () => {
         {selectedSong && (
           <MainWrapper>
             <TypingGame
-              longTextId={selectedSong.longTextId}
+              longTextId={selectedSong.longTextId ?? 0}
               isLoggedIn={isLoggedIn}
-              isUserFile={selectedSong.isUserFile}
+              isUserFile={selectedSong.isUserFile ?? false}
             />
           </MainWrapper>
         )}
