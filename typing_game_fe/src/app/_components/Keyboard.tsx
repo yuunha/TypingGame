@@ -56,10 +56,9 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
                   className={`key--${code}`}
                   $color={color}
                   $widthLevel={widthLevel}
-                  $href={href}
                   onClick={handleClick}  
                 >
-                  <KeyCap $color={color} $href={href}>{label}</KeyCap>
+                  <KeyCap $color={color}>{label}</KeyCap>
                 </KeyLink>
               </Link>
             ) : (
@@ -144,7 +143,6 @@ const Key = styled.div<{
 
 const KeyCap = styled.div<{
   $color?: 'blue' | 'red';
-  $href?: string;
 }>`
   width: 99%;
   height: 90%;
@@ -161,7 +159,6 @@ const KeyCap = styled.div<{
 const KeyLink = styled.a<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
-  $href?: string;
 }>`
   height: 55px;
   margin: 2px;
@@ -187,7 +184,7 @@ const KeyLink = styled.a<{
   color: ${({ $color }) => ($color ? 'white' : 'black')};
   &:hover{
     color: var(--key-pressed-text);
-    background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
+    background-color: var(--key-linked-pressed);
     box-shadow: 0 0 5px 1px ${({ $color }) =>
       $color === 'blue' ? 'var(--key-led-blue)' :
       $color === 'red' ? 'var(--key-led-red)' :
@@ -196,7 +193,7 @@ const KeyLink = styled.a<{
   }
   &.pressed {
     color: var(--key-pressed-text);
-    background-color: ${({ $href }) => $href ? 'var(--key-linked-pressed)' : '' };
+    background-color: var(--key-linked-pressed);
     box-shadow: 0 0 5px 1px ${({ $color }) =>
       $color === 'blue' ? 'var(--key-led-blue)' :
       $color === 'red' ? 'var(--key-led-red)' :
