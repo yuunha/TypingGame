@@ -26,10 +26,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState("");
   const [error, setError] = useState<string | null>(null);
-  // 파일 input을 다시 선택할 수 있게 ref 사용 (같은 파일 재업로드 대비)
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   
-  /** 파일 선택 핸들러 */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
     const file = e.target.files?.[0];
@@ -61,7 +59,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       return;
     }
 
-    // 제목: 파일명(확장자 제거) 또는 자동카운트
     const baseTitle =
       (fileName?.replace(/\.[^.]+$/, "") || `내 파일 ${fileName.length + 1}`).trim() ||
       `내 파일 ${fileName.length + 1}`;
@@ -84,8 +81,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       console.error(error);
     });
 
-
-    // UI 리셋
     setShowUpload(false);
     setFileName(null);
     setFileContent("");
@@ -108,8 +103,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
 
-
-  // 내 파일 불러오기
   return (
   <Aside>
     <ContentWrapper>
