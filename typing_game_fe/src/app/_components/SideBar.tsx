@@ -62,8 +62,9 @@ const Sidebar: React.FC<SidebarProps> = ({
       (fileName?.replace(/\.[^.]+$/, "") || `내 파일 ${fileName.length + 1}`).trim() ||
       `내 파일 ${fileName.length + 1}`;
 
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     axios.post(
-      "http://localhost:8080/my-long-text",
+      `${baseUrl}/my-long-text`,
       {
         title: baseTitle,
         content: (fileContent || ""),
@@ -88,8 +89,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const handleDelete = (longTextId: number) => {
     if (!confirm("정말 이 파일을 삭제하시겠습니까?")) return;
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-    axios.delete(`http://localhost:8080/my-long-text/${longTextId}`, {
+    axios.delete(`${baseUrl}/my-long-text/${longTextId}`, {
       withCredentials: true,
     })
     .then(res => {

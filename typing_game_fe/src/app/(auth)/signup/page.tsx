@@ -18,7 +18,8 @@ const SignupPage: React.FC = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    axios.post(`http://localhost:8080/user`, 
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    axios.post(`${baseUrl}/user`, 
       { username,
         loginId,
         password,

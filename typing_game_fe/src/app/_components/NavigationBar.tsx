@@ -11,7 +11,8 @@ const NavigationBar: React.FC = () => {
     useEffect(() => {
         const fetchUser = async () => {
         try {
-            const res = await fetch("http://localhost:8080/auth/me", {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            const res = await fetch(`${baseUrl}/auth/me`, {
             method: "GET",
             credentials: "include", // 세션 쿠키 유지
             });

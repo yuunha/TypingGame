@@ -44,7 +44,8 @@ const ResultModal: React.FC<ResultModalProps> = ({
 // 특정 긴글의 점수목록 조회
   useEffect(() => {
     if(isUserFile){
-      axios.get(`http://localhost:8080/my-long-text/${longTextId}/score`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      axios.get(`${baseUrl}/my-long-text/${longTextId}/score`, {
         withCredentials: true,
       })
       .then(res => {
@@ -58,13 +59,13 @@ const ResultModal: React.FC<ResultModalProps> = ({
         console.error("API 호출 실패", err);
       });
     }else{
-      axios.get(`http://localhost:8080/long-text/${longTextId}/scores`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      axios.get(`${baseUrl}/long-text/${longTextId}/scores`, {
         withCredentials: true,
       })
       .then(res => {
         const scores: ScoreItem[] = res.data.data;
         console.log("점수 목록", scores)
-        // const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
         const maxScore = scores.reduce((max, cur) => Math.max(max, cur.score), 0);
         setScore(maxScore);
         console.log("최고 점수", maxScore);
@@ -84,7 +85,8 @@ const ResultModal: React.FC<ResultModalProps> = ({
     console.log("점수 기록 요청..."); 
     if(isUserFile){
       try{
-      const res = await fetch(`http://localhost:8080/my-long-text/${longTextId}/score`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      const res = await fetch(`${baseUrl}/my-long-text/${longTextId}/score`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
@@ -107,7 +109,8 @@ const ResultModal: React.FC<ResultModalProps> = ({
       }
     }else{
   try{
-      const res = await fetch(`http://localhost:8080/long-text/${longTextId}/score`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      const res = await fetch(`${baseUrl}/long-text/${longTextId}/score`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 

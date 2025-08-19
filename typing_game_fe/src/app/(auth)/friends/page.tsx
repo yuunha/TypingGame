@@ -6,7 +6,9 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import KeyboardMini from "@/app/_components/KeyboardMini";
 import authKeys from "../../_components/keyboard/authKeys";
-import { text } from "stream/consumers";
+import { useAuth } from "@/app/hooks/useAuth"
+import Image from "next/image";
+
 
 
 interface LongText {
@@ -17,58 +19,12 @@ interface LongText {
 }
 
 const Friend: React.FC = () => {
-  // 로그인 상태 확인 (basicAuth)
-  const [authHeader, setAuthHeader] = useState<string>(
-    typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : ""
-  );
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!authHeader);
+  const { isLoggedIn, promptLogin } = useAuth();
+  const router = useRouter();
 
-  const [username, setUsername] = useState("");
-  const [userId, setUserId] = useState("");
-
-    const router = useRouter();
-  
-  const [selectedPost, setSelectedPost] = useState<LongText | null>(null);
-  
-  
-  // 로그인 유지 확인 (로그인 상태 조회)
   useEffect(() => {
-    if (!authHeader) {
-      setIsLoggedIn(false);
-      return;
-    }
-
-    const checkLogin = async () => {
-      try {
-        const res = await axios.get("http://localhost:8080/user", {
-          headers: { Authorization: authHeader },
-          withCredentials: true,
-        });
-        if (res.status === 200) {
-          console.log("로그인 성공 ", res.data)
-          setIsLoggedIn(true);
-          setUsername(res.data.username);
-          setUserId(res.data.userId);
-        }
-      } catch (err) {
-        console.error("로그인 실패", err);
-        sessionStorage.removeItem("authHeader");
-        setAuthHeader("");
-        setIsLoggedIn(false);
-      }
-    };
-
-    checkLogin();
-  }, [authHeader]);
-
-  // 로그인 안 되어 있으면 prompt 띄우기
-  useEffect(() => {
-      if (!isLoggedIn) {
-        router.push("/");
-      }
+      if (!isLoggedIn) promptLogin();
     }, [isLoggedIn]);
-
-
 
   return (
     <Box>
@@ -81,11 +37,7 @@ const Friend: React.FC = () => {
               <ol>
                 <li>
                     <LogoContainer >
-                        <img src="/defaultprofile.png" alt="Logo" />
-                        <input 
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                        />
+                        <Image src="/defaultprofile.png" alt="Logo" />
                     </LogoContainer>
                 </li>
               </ol>

@@ -37,7 +37,8 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
   useEffect(() => {
     if (!isLoggedIn) return;
     if(isUserFile){
-      axios.get(`http://localhost:8080/my-long-text/${longTextId}`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      axios.get(`${baseUrl}/my-long-text/${longTextId}`, {
       withCredentials: true,
     })
       .then(res => {
@@ -48,7 +49,8 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
         console.error("가사 불러오기 실패", err);
       })
     }else{
-      axios.get(`http://localhost:8080/long-text/${longTextId}`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      axios.get(`${baseUrl}/${longTextId}`, {
         withCredentials: true,
       })
         .then(res => {

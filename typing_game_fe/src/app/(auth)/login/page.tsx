@@ -18,7 +18,8 @@ const LoginPage: React.FC = () => {
       e.preventDefault();
       console.log("로그인 요청 시작..."); 
       try{
-        const res = await fetch("http://localhost:8080/user", {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        const res = await fetch(`${baseUrl}/user`, {
           method: "GET",
         });
 
