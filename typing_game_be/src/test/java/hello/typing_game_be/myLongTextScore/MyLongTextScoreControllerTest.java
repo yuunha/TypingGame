@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.myLongText.entity.MyLongText;
@@ -50,6 +51,8 @@ public class MyLongTextScoreControllerTest {
     @Autowired
     private MyLongTextRepository myLongTextRepository;
     @Autowired
+    private FriendRequestRepository friendRequestRepository;
+    @Autowired
     private ObjectMapper objectMapper;
 
     private User user;
@@ -60,6 +63,7 @@ public class MyLongTextScoreControllerTest {
     @BeforeEach
     void beforeEach() {
         //1. DB 초기화
+        friendRequestRepository.deleteAll();
         myLongTextScoreRepository.deleteAll();
         myLongTextRepository.deleteAll();
         userRepository.deleteAll();

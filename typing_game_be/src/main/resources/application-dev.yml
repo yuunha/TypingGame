@@ -5,12 +5,12 @@ spring:
       path: /h2-console
   # JDBC URL
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
-  # JPA
+    url: jdbc:mysql://localhost:3306/typing_game
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:961210}
+  #JPA
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+      show-sql: true

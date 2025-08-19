@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 import hello.typing_game_be.myLongText.dto.MyLongTextRequest;
 import hello.typing_game_be.myLongText.entity.MyLongText;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
@@ -39,12 +40,15 @@ public class MyLongTextControllerTest {
 
     @Autowired
     MyLongTextRepository myLongTextRepository;
+    @Autowired
+    private FriendRequestRepository friendRequestRepository;
 
     @Autowired
     ObjectMapper objectMapper;
 
     @BeforeEach
     void beforeEach() {
+        friendRequestRepository.deleteAll();
         myLongTextRepository.deleteAll();
         userRepository.deleteAll();
 

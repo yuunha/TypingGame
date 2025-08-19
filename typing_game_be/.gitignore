@@ -6,7 +6,9 @@ build/
 !**/src/test/**/build/
 data/
 
-.env
+../.env
+Dockerfile
+fly.toml
 
 ### STS ###
 .apt_generated

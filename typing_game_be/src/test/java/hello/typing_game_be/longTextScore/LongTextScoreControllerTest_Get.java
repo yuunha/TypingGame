@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
@@ -49,13 +50,18 @@ public class LongTextScoreControllerTest_Get {
     @Autowired
     private LongTextRepository longTextRepository;
 
+    @Autowired
+    private FriendRequestRepository friendRequestRepository;
+
     private Long longTextId1;
     private Long longTextId2;
+
 
     @BeforeEach
     void beforeEach() {
 
         //1. DB 초기화
+        friendRequestRepository.deleteAll();
         longTextScoreRepository.deleteAll();
         userRepository.deleteAll();
         longTextRepository.deleteAll();
