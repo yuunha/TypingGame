@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import Image from "next/image";
 import styled from "styled-components";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import KeyboardMini from "@/app/_components/KeyboardMini";
 import authKeys from "../../_components/keyboard/authKeys";
-import { text } from "stream/consumers";
 import { useAuth } from "@/app/hooks/useAuth"
 import { useUserActions } from "@/app/hooks/useUserActions"
 
@@ -15,6 +15,21 @@ interface LongText {
   title: string;
   isUserFile?: boolean;
   score?: number;
+}
+
+interface AllTextItem {
+  longTextId: number;
+  title: string;
+}
+
+interface MyTextItem {
+  myLongTextId: number;
+  title: string;
+}
+
+interface ScoreItem {
+  longScoreId: number;
+  score: number;
 }
 
 const Profile: React.FC = () => {
@@ -81,13 +96,14 @@ useEffect(() => {
         }),
       ]);
 
-      const allText: LongText[] = allRes.data.data.map((item: any) => ({
+      // any 타입 XX
+      const allText: LongText[] = allRes.data.data.map((item: AllTextItem) => ({
         longTextId: item.longTextId,
         title: item.title,
         isUserFile: false,
       }));
 
-      const myText: LongText[] = myRes.data.map((item: any) => ({
+      const myText: LongText[] = myRes.data.map((item: MyTextItem) => ({
         longTextId: item.myLongTextId,
         title: item.title,
         isUserFile: true,
@@ -98,7 +114,7 @@ useEffect(() => {
       const scoreMap: Record<number, number> = {};
 
       // TODO : myfile일때 어케할지
-      scoreRes.data.data.forEach((s: any) => {
+      scoreRes.data.data.forEach((s: ScoreItem) => {
         scoreMap[s.longScoreId] = s.score;
       });
       // 글 + 점수 합치기
@@ -123,7 +139,7 @@ useEffect(() => {
         <ProfileCard>
           <SearchContainer>
             <LogoContainer >
-              <img src="/defaultprofile.png" alt="Logo" />
+              <Image src="/defaultprofile.png" alt="Logo" height={40}/>
               <input value={localUsername} onChange={e => setUsername(e.target.value)} />
             </LogoContainer>
             <nav>
@@ -186,10 +202,6 @@ const LogoContainer = styled.div`
   gap : 10px;
   margin-bottom : 10px;
   line-height: 2;
-  img{
-    height: 40px;
-    width: auto;
-  }
 `
 
 

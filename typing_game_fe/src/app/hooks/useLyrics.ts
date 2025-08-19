@@ -9,6 +9,17 @@ export interface LongText {
   isUserFile?: boolean;
 }
 
+interface AllLyricsItem {
+  longTextId: number;
+  title: string;
+}
+
+interface MyLyricsItem {
+  myLongTextId: number;
+  title: string;
+}
+
+
 export const useLyrics = () => {
   const { isLoggedIn } = useAuth();
   const [lyricsList, setLyricsList] = useState<LongText[]>([]);
@@ -28,14 +39,15 @@ export const useLyrics = () => {
             withCredentials: true,
           }),
         ]);
-
-        const allLyrics: LongText[] = allRes.data.data.map((item: any) => ({
+        
+        // any XX
+        const allLyrics: LongText[] = allRes.data.data.map((item: AllLyricsItem) => ({
           longTextId: item.longTextId,
           title: item.title,
           isUserFile: false,
         }));
 
-        const myLyrics: LongText[] = myRes.data.map((item: any) => ({
+        const myLyrics: LongText[] = myRes.data.map((item: MyLyricsItem) => ({
           longTextId: item.myLongTextId,
           title: item.title,
           isUserFile: true,
