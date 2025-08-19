@@ -1,5 +1,14 @@
+interface KeyItem {
+  code: string;
+  label?: string;
+  color?: 'blue' | 'red';
+  widthLevel?: 0 | 1 | 2 | 3;
+  href?: string;
+}
 
-const authKeys = [
+type MiniKeys = KeyItem[][];
+
+const authKeys: MiniKeys = [
   [
     { code: "ControlLeft", label: "Home", color: 'blue', widthLevel: 2, href: '/' },
     { code: "KeyF", label: "친구", href: '/friend' },
@@ -10,4 +19,3 @@ const authKeys = [
 ];
 
 export default authKeys;
-

@@ -1,5 +1,14 @@
+export interface KeyItem {
+  code: string;
+  label?: string;
+  color?: 'blue' | 'red';
+  widthLevel?: 0 | 1 | 2 | 3;
+  href?: string;
+}
 
-const keys = [
+export type Keys = KeyItem[][];
+
+const keys: Keys = [
   [
     { code: "Escape", label: "Esc", color: 'red' },
     { code: "KeyQ", label: "" },
@@ -10,14 +19,14 @@ const keys = [
     { code: "KeyI", label: "" },
     { code: "KeyO", label: "" },
     { code: "KeyP", label: "❤︎" },
-    { code: "Home", label: "Home", color: 'red', widthLevel: 2, href: '/'},
+    { code: "Home", label: "Home", color: 'red', widthLevel: 2, href: '/' },
   ],
   [
     { code: "CapsLock", label: "Caps", widthLevel: 2 },
-    { code: "KeyA", label: "ㅁ" , href: '/long'},
-    { code: "KeyS", label: "ㄴ" , href: '/short'},
-    { code: "KeyD", label: "ㅇ" , href: '/word'},
-    { code: "KeyF", label: "ㄹ" , href: '/rank'},
+    { code: "KeyA", label: "ㅁ", href: '/long' },
+    { code: "KeyS", label: "ㄴ", href: '/short' },
+    { code: "KeyD", label: "ㅇ", href: '/word' },
+    { code: "KeyF", label: "ㄹ", href: '/rank' },
     { code: "KeyJ", label: "ㅓ" },
     { code: "KeyK", label: "ㅏ" },
     { code: "KeyL", label: "ㅣ" },
@@ -28,8 +37,8 @@ const keys = [
     { code: "KeyZ", label: "" },
     { code: "KeyX", label: "" },
     { code: "KeyC", label: "" },
-    { code: "KeyV", },
-    { code: "Period", },
+    { code: "KeyV", label: "" },
+    { code: "Period", label: "" },
     { code: "Slash", label: "회원㋛", href: '/profile' },
     { code: "Enter", label: "⏎ Enter", widthLevel: 0 },
   ],
@@ -39,10 +48,9 @@ const keys = [
     { code: "AltLeft", label: "Alt" },
     { code: "Space", label: "", widthLevel: 0 },
     { code: "Lang1", label: "한/영", widthLevel: 1 },
-    { code: "ArrowLeft", label: "<" , color: 'red'},
-    { code: "ArrowRight", label: ">" , color: 'red'},
+    { code: "ArrowLeft", label: "<", color: 'red' },
+    { code: "ArrowRight", label: ">", color: 'red' },
   ],
 ];
 
 export default keys;
-
