@@ -1,3 +1,6 @@
+const Page = () => <div>준비 중...</div>;
+export default Page;
+
 // "use client";
 // import React, { useState } from "react";
 // import { wordList } from "../../../data/word"; // 여러 가사 목록 데이터
