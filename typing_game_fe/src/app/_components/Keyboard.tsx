@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Link from 'next/link';
 import '../globals.css';
-import { Keys } from './keyboard/types';
+import { Keys } from '../types/key-item';
 
 interface KeyboardProps {
   keys: Keys;
@@ -49,26 +49,30 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
                 if (code === "CapsLock") { onToggleSidebar?.()}
                 if (code === "Backspace") { toggleTheme();}
             };
-          const keyElement = (
-            <Key
-              key={code}
-              className={`key--${code}`}
-              $color={color}
-              $widthLevel={widthLevel}
-              $href={href}
-              onClick={handleClick}
-            >
-              <KeyCap $color={color} $href={href}>{label}</KeyCap>
-            </Key>
-          );
-
-          return href ? (
-            <Link href={href} key={code}>
-              {keyElement}
-            </Link>
-          ) : (
-            keyElement
-          );
+            return href ? (
+              <Link href={href} key={code} passHref>
+                <KeyLink 
+                  key={code}
+                  className={`key--${code}`}
+                  $color={color}
+                  $widthLevel={widthLevel}
+                  $href={href}
+                  onClick={handleClick}  
+                >
+                  <KeyCap $color={color} $href={href}>{label}</KeyCap>
+                </KeyLink>
+              </Link>
+            ) : (
+              <Key
+                key={code}
+                className={`key--${code}`}
+                $color={color}
+                $widthLevel={widthLevel}
+                onClick={handleClick}
+              >
+                <KeyCap $color={color}>{label}</KeyCap>
+              </Key>
+            );
         })}
         </KeyboardWrapper>
       ))}
@@ -97,12 +101,76 @@ const KeyboardWrapper = styled.div`
 const Key = styled.div<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
+}>`
+  height: 55px;
+  margin: 2px;
+  font-size : 13px;
+  border-radius: 5px;
+  display:flex;
+  justify-content:center;
+  align-items: flex-start;
+
+  width: ${({ $widthLevel }) =>
+    $widthLevel === 3 ? '120px' :
+    $widthLevel === 2 ? '90px' :
+    $widthLevel === 1 ? '70px' : '50px'};
+  flex-grow: ${({ $widthLevel }) => ($widthLevel === 0 ? 1 : 0)};
+  border-color: ${({ $color }) =>
+    $color === 'blue' ? 'var(--key-border-blue)' :
+    $color === 'red' ? 'var(--key-border-red)' :
+    'var(--key-border-default)'};
+  background-color: ${({ $color }) =>
+    $color === 'blue' ? 'var(--key-fill-blue)' :
+    $color === 'red' ? 'var(--key-fill-red)' :
+    'var(--key-fill-default)'};
+  color: ${({ $color }) => ($color ? 'white' : 'black')};
+  &:hover{
+    color: var(--key-pressed-text);
+    box-shadow: 0 0 5px 1px ${({ $color }) =>
+      $color === 'blue' ? 'var(--key-led-blue)' :
+      $color === 'red' ? 'var(--key-led-red)' :
+      'var(--key-led-red)'};
+     color :  var(--key-led-red);
+  }
+  &.pressed {
+    color: var(--key-pressed-text);
+    box-shadow: 0 0 5px 1px ${({ $color }) =>
+      $color === 'blue' ? 'var(--key-led-blue)' :
+      $color === 'red' ? 'var(--key-led-red)' :
+      'var(--key-led-red)'};
+     color :  var(--key-led-red);
+    }
+`;
+
+const KeyCap = styled.div<{
+  $color?: 'blue' | 'red';
+  $href?: string;
+}>`
+  width: 99%;
+  height: 90%;
+  padding: 6px;
+  border-radius: 5px;
+  line-height: 1;
+  background-color: ${({ $color }) =>
+    $color === 'blue' ? 'var(--key-fill-blue)' :
+    $color === 'red' ? 'var(--key-fill-red)' :
+    'var(--key-fill-default)'};
+`;
+
+
+const KeyLink = styled.a<{
+  $widthLevel?: number;
+  $color?: 'blue' | 'red';
   $href?: string;
 }>`
   height: 55px;
   margin: 2px;
   font-size : 13px;
   border-radius: 5px;
+  display:flex;
+  justify-content:center;
+  align-items: flex-start;
+
   width: ${({ $widthLevel }) =>
     $widthLevel === 3 ? '120px' :
     $widthLevel === 2 ? '90px' :
@@ -135,19 +203,4 @@ const Key = styled.div<{
       'var(--key-led-red)'};
      color :  var(--key-led-red);
     }
-`;
-
-const KeyCap = styled.div<{
-  $color?: 'blue' | 'red';
-  $href?: string;
-}>`
-  width: 99%;
-  height: 90%;
-  padding: 6px;
-  border-radius: 5px;
-  line-height: 1;
-  background-color: ${({ $color }) =>
-    $color === 'blue' ? 'var(--key-fill-blue)' :
-    $color === 'red' ? 'var(--key-fill-red)' :
-    'var(--key-fill-default)'};
 `;

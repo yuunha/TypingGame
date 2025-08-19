@@ -9,13 +9,7 @@ import KeyboardMini from "@/app/_components/KeyboardMini";
 import authKeys from "../../_components/keyboard/authKeys";
 import { useAuth } from "@/app/hooks/useAuth"
 import { useUserActions } from "@/app/hooks/useUserActions"
-
-interface LongText {
-  longTextId: number;
-  title: string;
-  isUserFile?: boolean;
-  score?: number;
-}
+import { LongText } from "../../types/long-text";
 
 interface AllTextItem {
   longTextId: number;

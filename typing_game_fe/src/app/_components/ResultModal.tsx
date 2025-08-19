@@ -41,40 +41,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
   }, []);
   const authHeader = typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : "";
   
-// 특정 긴글의 점수목록 조회
-  useEffect(() => {
-    if(isUserFile){
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-      axios.get(`${baseUrl}/my-long-text/${longTextId}/score`, {
-        withCredentials: true,
-      })
-      .then(res => {
-        const scores = res.data;
-        // console.log("점수 목록", scores)
-        // const score = scores.reduce((max,cur)=>Math.max(max, cur.score), 0)
-        // setScore(score)
-        console.log("최고 점수", scores)
-      })
-      .catch(err => {
-        console.error("API 호출 실패", err);
-      });
-    }else{
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-      axios.get(`${baseUrl}/long-text/${longTextId}/scores`, {
-        withCredentials: true,
-      })
-      .then(res => {
-        const scores: ScoreItem[] = res.data.data;
-        console.log("점수 목록", scores)
-        const maxScore = scores.reduce((max, cur) => Math.max(max, cur.score), 0);
-        setScore(maxScore);
-        console.log("최고 점수", maxScore);
-      })
-      .catch(err => {
-        console.error("API 호출 실패", err);
-      });
-    }
-  },[longTextId, isUserFile]);
+
 
 
 

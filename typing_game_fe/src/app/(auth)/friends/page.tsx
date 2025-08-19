@@ -9,15 +9,6 @@ import authKeys from "../../_components/keyboard/authKeys";
 import { useAuth } from "@/app/hooks/useAuth"
 import Image from "next/image";
 
-
-
-interface LongText {
-  longTextId: number;
-  title: string;
-  isUserFile?: boolean;
-  score?: number;
-}
-
 const Friend: React.FC = () => {
   const { isLoggedIn, promptLogin } = useAuth();
   const router = useRouter();

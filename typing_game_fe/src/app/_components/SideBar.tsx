@@ -3,17 +3,12 @@
 import styled from "styled-components";
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-
-interface LongText {
-  longTextId: number;
-  title: string;
-  isUserFile?: boolean;
-}
+import { LongText } from "../types/long-text";
 
 interface SidebarProps {
-  lyricsList: LongText[];                    // 기본 제공 글
-  selectedSong: LongText | null;                    // 현재 선택된 글
-  onSelectSong: (song: LongText) => void;    // 글 선택 콜백
+  lyricsList: LongText[];
+  selectedSong: LongText | null;
+  onSelectSong: (song: LongText) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
