@@ -1,12 +1,4 @@
-interface KeyItem {
-  code: string;
-  label: string;
-  color?: 'blue' | 'red';
-  widthLevel?: 0 | 1 | 2 | 3;
-  href?: string;
-}
-
-type Keys = KeyItem[][];
+import { Keys } from './types';
 
 const typingKeys: Keys = [
   [

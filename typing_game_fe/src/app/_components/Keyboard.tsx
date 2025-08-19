@@ -4,21 +4,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Link from 'next/link';
 import '../globals.css';
-
-interface KeyItem {
-  code: string;
-  label: string;
-  color?: 'blue' | 'red';
-  widthLevel?: number;
-  href?: string;
-}
-
-type Keys = KeyItem[][];
+import { Keys } from './keyboard/types';
 
 interface KeyboardProps {
   keys: Keys;
   onToggleSidebar?: () => void;
 }
+
 
 const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');

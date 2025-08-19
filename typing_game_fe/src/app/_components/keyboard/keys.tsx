@@ -1,12 +1,5 @@
-export interface KeyItem {
-  code: string;
-  label?: string;
-  color?: 'blue' | 'red';
-  widthLevel?: 0 | 1 | 2 | 3;
-  href?: string;
-}
+import { Keys } from './types';
 
-export type Keys = KeyItem[][];
 
 const keys: Keys = [
   [

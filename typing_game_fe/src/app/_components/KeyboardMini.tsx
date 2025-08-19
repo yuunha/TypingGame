@@ -4,16 +4,8 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import Link from 'next/link';
 import '../globals.css';
+import { Keys } from './types';
 
-interface KeyItem {
-  code: string;
-  label: string;
-  color?: string;
-  widthLevel?: number;
-  href?: string;
-}
-
-type Keys = KeyItem[][];
 
 interface KeyboardProps {
   keys: Keys;

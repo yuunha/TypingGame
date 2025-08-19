@@ -1,12 +1,5 @@
-interface KeyItem {
-  code: string;
-  label?: string;
-  color?: 'blue' | 'red';
-  widthLevel?: 0 | 1 | 2 | 3;
-  href?: string;
-}
+import { Keys } from './types';
 
-type Keys = KeyItem[][];
 
 const authKeys: Keys = [
   [
