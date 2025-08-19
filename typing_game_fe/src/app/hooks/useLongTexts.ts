@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "./useAuth";
 
 export interface LongText {
   longTextId: number;
@@ -19,28 +18,27 @@ interface MyLyricsItem {
   title: string;
 }
 
-
-export const useLyrics = () => {
-  const { isLoggedIn } = useAuth();
+// 긴글 불러오기
+// 로그인 - 비로그인 구분
+export const useLongTexts = () => {
   const [lyricsList, setLyricsList] = useState<LongText[]>([]);
 
   useEffect(() => {
-    if (!isLoggedIn) return;
 
     const fetchLyrics = async () => {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL;
       const authHeader = sessionStorage.getItem("authHeader");
-      if (!authHeader) return;
 
       try {
-        const [allRes, myRes] = await Promise.all([
+        if(authHeader){
+            const [allRes, myRes] = await Promise.all([
           axios.get(`${baseUrl}/long-text`),
           axios.get(`${baseUrl}/my-long-text`, {
             headers: { Authorization: authHeader },
             withCredentials: true,
           }),
         ]);
-        
+
         // any XX
         const allLyrics: LongText[] = allRes.data.data.map((item: AllLyricsItem) => ({
           longTextId: item.longTextId,
@@ -53,15 +51,25 @@ export const useLyrics = () => {
           title: item.title,
           isUserFile: true,
         }));
+        setLyricsList([...allLyrics, ...myLyrics]); 
+        } else {
+          const allRes = await axios.get(`${baseUrl}/long-text`);
+          const allLyrics: LongText[] = allRes.data.data.map((item: AllLyricsItem) => ({
+            longTextId: item.longTextId,
+            title: item.title,
+            isUserFile: false,
+          }));
 
-        setLyricsList([...allLyrics, ...myLyrics]);
+          setLyricsList(allLyrics);
+        }
+        
       } catch (err) {
         console.error("긴글 불러오기 실패", err);
       }
     };
 
     fetchLyrics();
-  }, [isLoggedIn]);
+  }, []);
 
   return lyricsList;
 };

@@ -6,13 +6,14 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import KeyboardMini from "@/app/_components/KeyboardMini";
 import authKeys from "../../_components/keyboard/authKeys";
-
+import { useAuth } from "@/app/hooks/useAuth";
 
 const LoginPage: React.FC = () => {
     const [loginId, setLoginId] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const router = useRouter();
+    const { promptLogin } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -43,7 +44,7 @@ const LoginPage: React.FC = () => {
         <KeyboardMini keys={authKeys} />
         <MainWrapper>
           <Title>로그인</Title>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={promptLogin}>
           <InputBox>
           <Input placeholder="아이디" value={loginId} onChange={e => setLoginId(e.target.value)}/>
           <Input placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)} type="password"/>

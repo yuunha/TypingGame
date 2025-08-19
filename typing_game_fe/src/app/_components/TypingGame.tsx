@@ -4,64 +4,31 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
 import ResultModal from "./ResultModal";
-import axios from "axios";
+import { useTexts } from "../hooks/useTexts";
 
 
 interface TypingGameProps {
   longTextId: number;
-  isLoggedIn: boolean;
   isUserFile: boolean;
 }
 
 
-const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserFile }) => {
+const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isUserFile }) => {
+  
+  const lyrics = useTexts(longTextId, isUserFile);
+
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [elapsedTime, setElapsedTime] = useState(0); // 누적 시간
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [cpm, setCpm] = useState(0);
   const [correctChars, setCorrectChars] = useState(0);
   const [totalChars, setTotalChars] = useState(0);
 
-
-  //가사 관련
-  const [lyrics, setLyrics] = useState<string[]>([]);
-
   const currentLine = lyrics[currentLineIndex];
-  const p1Line = currentLineIndex + 1 < lyrics.length ? lyrics[currentLineIndex + 1] : null;
-  const p2Line = currentLineIndex + 2 < lyrics.length ? lyrics[currentLineIndex + 2] : null;
+  const nextLines = lyrics.slice(currentLineIndex + 1, currentLineIndex + 3);
 
-
-  // 가사 불러오기
-  useEffect(() => {
-    if (!isLoggedIn) return;
-    if(isUserFile){
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-      axios.get(`${baseUrl}/my-long-text/${longTextId}`, {
-      withCredentials: true,
-    })
-      .then(res => {
-        const data = res.data;
-        setLyrics((data.content || "").split("\n"));
-      })
-      .catch(err => {
-        console.error("가사 불러오기 실패", err);
-      })
-    }else{
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-      axios.get(`${baseUrl}/${longTextId}`, {
-        withCredentials: true,
-      })
-        .then(res => {
-          const data = res.data;
-          setLyrics((data.content || "").split("\n"));
-        })
-        .catch(err => {
-          console.error("가사 불러오기 실패", err);
-        })
-    }
-  }, [longTextId, isLoggedIn, isUserFile]);
   
   const totalTypedChars = () => {
     // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기
@@ -119,13 +86,10 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
     setInputValue("");
     setStartTime(null);
     setElapsedTime(0);
-    setCompleted(false);
     setCpm(0);
     setCorrectChars(0);
     setTotalChars(0);
   }
-
- 
 
   // 실시간 CPM 계산
   useEffect(() => {
@@ -202,8 +166,9 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isLoggedIn, isUserF
           })}
         </CurrentLine>
 
-        {p1Line && <SubLine>{p1Line}</SubLine>}
-        {p2Line && <SubLine>{p2Line}</SubLine>}
+        {nextLines.map((line, idx) => (
+          <SubLine key={idx}>{line}</SubLine>
+        ))}
       </TypingLine>
         <Input
           type="text"

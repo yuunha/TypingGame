@@ -9,12 +9,14 @@ interface SidebarProps {
   lyricsList: LongText[];
   selectedSong: LongText | null;
   onSelectSong: (song: LongText) => void;
+  isLoggedIn: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   lyricsList,
   selectedSong,
   onSelectSong,
+  isLoggedIn,
 }) => {
   const [showUpload, setShowUpload] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);

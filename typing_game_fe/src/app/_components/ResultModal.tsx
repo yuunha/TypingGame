@@ -1,7 +1,6 @@
 // components/ResultModal.tsx
 "use client";
 
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";

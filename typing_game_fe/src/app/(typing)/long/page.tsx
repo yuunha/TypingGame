@@ -6,19 +6,15 @@ import Keyboard from "../../_components/Keyboard";
 import typingKeys from "../../_components/keyboard/typingKeys";
 import styled from "styled-components";
 import { useAuth } from "@/app/hooks/useAuth";
-import { useLyrics, LongText } from "@/app/hooks/useLyrics";
+import { useLongTexts, LongText } from "@/app/hooks/useLongTexts";
 
 const TypingPage: React.FC = () => {
-  const { username, isLoggedIn, promptLogin } = useAuth();
-  const lyricsList = useLyrics();
+  const { isLoggedIn } = useAuth();
+  const lyricsList = useLongTexts();
   const [selectedSong, setSelectedSong] = useState<LongText | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
-
-  useEffect(() => {
-    if (!isLoggedIn) promptLogin();
-  }, [isLoggedIn]);
 
     // selectedSong이 이미 있으면 바뀌지 않도록
   useEffect(() => {
@@ -34,6 +30,7 @@ const TypingPage: React.FC = () => {
             lyricsList={lyricsList}
             selectedSong={selectedSong}
             onSelectSong={setSelectedSong}
+            isLoggedIn={isLoggedIn}
           />
         </SidebarWrapper>
       )}
@@ -49,7 +46,6 @@ const TypingPage: React.FC = () => {
           <MainWrapper>
             <TypingGame
               longTextId={selectedSong.longTextId ?? 0}
-              isLoggedIn={isLoggedIn}
               isUserFile={selectedSong.isUserFile ?? false}
             />
           </MainWrapper>

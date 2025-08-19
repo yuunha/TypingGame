@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import KeyboardMini from "@/app/_components/KeyboardMini";
 import authKeys from "../../_components/keyboard/authKeys";
