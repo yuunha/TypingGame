@@ -4,8 +4,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import Link from 'next/link';
 import '../globals.css';
-import { Keys } from './types';
-
+import { Keys } from './keyboard/types';
 
 interface KeyboardProps {
   keys: Keys;
