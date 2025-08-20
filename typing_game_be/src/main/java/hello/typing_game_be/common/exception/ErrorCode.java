@@ -21,6 +21,8 @@ public enum ErrorCode {
     //friend-request
     FRIEND_REQEUST_NOT_FOUND(HttpStatus.NOT_FOUND,"FRIEND-REQEUST-001","존재하지 않는 친구 요청입니다."),
     INVALID_ACTION(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-002","유효하지 않은 action입니다." ),
+    FRIEND_REQUEST_ALREADY_SENT(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-003","이미 보낸 친구 요청이 존재합니다."),
+    FRIEND_REQUEST_ALREADY_RECEIVED(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-004", "상대방이 이미 친구 요청을 보냈습니다."),
     //DB
     DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반"),
     //기타

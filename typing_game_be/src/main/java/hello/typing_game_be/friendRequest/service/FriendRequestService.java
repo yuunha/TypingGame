@@ -30,13 +30,13 @@ public class FriendRequestService {
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND,"수신자 없음"));
 
         // 중복 검증 (양방향)
-        boolean exists = friendRequestRepository.existsByRequesterAndReceiver(requester, receiver)
-            || friendRequestRepository.existsByRequesterAndReceiver(receiver, requester);
-
-
-        if (exists) {
-            throw new IllegalStateException("이미 친구 요청이 존재합니다.");
+        if(friendRequestRepository.existsByRequesterAndReceiver(requester, receiver)){
+            throw new BusinessException(ErrorCode.FRIEND_REQUEST_ALREADY_SENT);
         }
+        if(friendRequestRepository.existsByRequesterAndReceiver(receiver, requester)){
+            throw new BusinessException(ErrorCode.FRIEND_REQUEST_ALREADY_RECEIVED);
+        }
+
 
         FriendRequest fr = FriendRequest.builder()
             .requester(requester)

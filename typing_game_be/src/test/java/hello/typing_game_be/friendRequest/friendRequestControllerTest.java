@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ import jakarta.persistence.EntityManager;
 @SpringBootTest
 @AutoConfigureMockMvc
 // @Transactional
+@ActiveProfiles("test")
 public class friendRequestControllerTest {
 
     @Autowired
@@ -109,6 +111,41 @@ public class friendRequestControllerTest {
         assertEquals(user1Id, fr.getRequester().getUserId());
         assertEquals(user2Id, fr.getReceiver().getUserId());
         assertEquals(FriendRequestStatus.PENDING, fr.getStatus());
+
+    }
+    @Test
+    void 친구요청_실패_이미존재하는요청() throws Exception {
+        //given
+        //유저1 -> 유저2 친구 신청
+        User user1 = userRepository.findById(user1Id).orElseThrow();
+        User user2 = userRepository.findById(user2Id).orElseThrow();
+        friendRequestRepository.save(
+            FriendRequest.builder()
+                .requester(user1)
+                .receiver(user2)
+                .status(FriendRequestStatus.PENDING)
+                .build()
+        );
+
+        //유저1 -> 유저2 친구 신청
+        FriendRequestCreateRequest request1 = new FriendRequestCreateRequest(user2Id);
+        mockMvc.perform(post("/friend-requests")
+                .with(httpBasic("user1", "1111" ))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request1)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("이미 보낸 친구 요청이 존재합니다."));
+
+        //유저2 -> 유저1 친구 신청
+        FriendRequestCreateRequest request2 = new FriendRequestCreateRequest(user1Id);
+        mockMvc.perform(post("/friend-requests")
+                .with(httpBasic("user2", "2222" ))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request2)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value( "상대방이 이미 친구 요청을 보냈습니다."));
+
+
 
     }
 
