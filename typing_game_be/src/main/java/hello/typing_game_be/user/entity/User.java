@@ -31,13 +31,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 20)
     private String username;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 20)
     private String loginId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String password;
 
     // 유저가 작성한 긴 글 점수들

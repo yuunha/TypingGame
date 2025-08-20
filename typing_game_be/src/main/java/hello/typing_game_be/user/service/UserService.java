@@ -26,9 +26,17 @@ public class UserService {
     @Transactional
     public Long register(UserCreateRequest request) {
 
+        // loginId 중복 검증
+
         if (userRepository.existsByLoginId(request.getLoginId())) { //중복 유저 검증
             throw new BusinessException(ErrorCode.DUPLICATE_LOGINID);
         }
+
+        // username 중복 검증
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new BusinessException(ErrorCode.DUPLICATE_USERNAME);
+        }
+
         User user = User.builder()
             .username(request.getUsername())
             .loginId(request.getLoginId())

@@ -92,7 +92,7 @@ public class UserControllerTest {
             .andExpect(jsonPath("$.loginId").value("아이디는 필수입니다."));
     }
     @Test
-    void 회원가입_실패_아이디중복() throws Exception {
+    void 회원가입_실패_loginId중복() throws Exception {
 
         UserCreateRequest request = UserCreateRequest.builder()
             .username(username)
@@ -111,6 +111,29 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request1)))
             .andExpect(status().isConflict());
+    }
+    @Test
+    void 회원가입_실패_username중복() throws Exception {
+
+        UserCreateRequest request = UserCreateRequest.builder()
+            .username(username)
+            .loginId(loginId)
+            .password(password)
+            .build();
+        UserCreateRequest request1= UserCreateRequest.builder()
+            .username(username)
+            .loginId("bbbb")
+            .password("111")
+            .build();
+        //given
+        userService.register(request); //통합테스트에서는 서비스 호출
+        // when & then
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request1)))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.message").value("이미 존재하는 username입니다."));
+
     }
     @Test
     void 회원조회_성공() throws Exception {

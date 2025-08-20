@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import hello.typing_game_be.user.entity.User;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -21,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // ContainingIgnoreCase : 대소문자 구분 없이 부분 일치 검색
     Page<User> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
+
+    boolean existsByUsername(String username);
 }
