@@ -1,2 +1,4 @@
 .idea
 data/
+.env
+typing_game_be/

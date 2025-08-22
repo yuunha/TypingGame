@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../_components/SideBar";
-import TypingGame from "../../_components/TypingGame";
+import Typing from "../../_components/Typing";
 import Keyboard from "../../_components/Keyboard";
 import typingKeys from "../../_components/keyboard/typingKeys";
 import styled from "styled-components";
@@ -44,7 +44,7 @@ const TypingPage: React.FC = () => {
         )}
         {selectedSong && (
           <MainWrapper>
-            <TypingGame
+            <Typing
               longTextId={selectedSong.longTextId ?? 0}
               isUserFile={selectedSong.isUserFile ?? false}
             />

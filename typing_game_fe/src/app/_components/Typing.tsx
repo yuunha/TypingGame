@@ -7,13 +7,13 @@ import ResultModal from "./ResultModal";
 import { useTexts } from "../hooks/useTexts";
 
 
-interface TypingGameProps {
+interface TypingProps {
   longTextId: number;
   isUserFile: boolean;
 }
 
 
-const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isUserFile }) => {
+const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
   
   const lyrics = useTexts(longTextId, isUserFile);
 
@@ -148,18 +148,20 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isUserFile }) => {
             const typedChar = inputValue[i];
             let color = "var(--default-text)";
             let backgroundColor = "transparent";
+            let textDecoration = "transparent";
             if (typedChar !== undefined) {
-              if (typedChar === char) {
-                color = "var(--color-correct)";
-                backgroundColor = "var(--color-correct-bg)";
+              if (i === inputValue.length - 1) {
+                color = 'black';
               } else {
-                color = "var(--color-wrong)";
-                backgroundColor = "var(--color-wrong-bg)";
+                color = typedChar === char ? "var(--color-correct)" : "var(--color-wrong)";
+                if (typedChar !== char) {
+                  textDecoration = 'underline'; // 틀린 경우 밑줄
+                }
               }
             }
             
             return (
-              <CharSpan key={i} style={{ color, backgroundColor }}>
+              <CharSpan key={i} style={{ color, backgroundColor, textDecoration }}>
                 {char}
               </CharSpan>
             );
@@ -191,7 +193,7 @@ const TypingGame: React.FC<TypingGameProps> = ({ longTextId, isUserFile }) => {
   );
 };
 
-export default TypingGame;
+export default Typing;
 
 const TypingLine = styled.div`
   min-height: 140px;
@@ -242,6 +244,7 @@ const CurrentLine = styled.p`
 const CharSpan = styled.span`
   transition: color 0.1s;
   font-size: var(--typing-size);
+  text-underline-position : under;
 `;
 
 const Input = styled.input`

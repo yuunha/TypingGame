@@ -9,12 +9,12 @@ import { useAuth } from "@/app/hooks/useAuth"
 import Image from "next/image";
 
 const Friend: React.FC = () => {
-  const { isLoggedIn, promptLogin } = useAuth();
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-      if (!isLoggedIn) promptLogin();
-    }, [isLoggedIn]);
+    // if (!isLoggedIn) router.push("/login");
+  }, []);
 
   return (
     <Box>
@@ -27,7 +27,7 @@ const Friend: React.FC = () => {
               <ol>
                 <li>
                     <LogoContainer >
-                        <Image src="/defaultprofile.png" alt="Logo" />
+                        <Image src="/defaultprofile.png" alt="Logo" width={40} height={40}/>
                     </LogoContainer>
                 </li>
               </ol>

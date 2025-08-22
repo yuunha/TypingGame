@@ -38,6 +38,7 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     if (username) setLocalUsername(username);
+    // if (!isLoggedIn) router.push("/login");
   }, [username]);
 
   const handleLogout = () => {
