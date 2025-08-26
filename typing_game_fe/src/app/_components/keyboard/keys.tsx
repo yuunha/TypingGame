@@ -16,8 +16,8 @@ const keys: Keys = [
   ],
   [
     { code: "CapsLock", label: "Caps", widthLevel: 2 },
-    { code: "KeyA", label: "ㅁ", href: '/long' },
-    { code: "KeyS", label: "ㄴ", href: '/short' },
+    { code: "KeyA", label: "긴글", href: '/long' },
+    { code: "KeyS", label: "게임", href: '/game' },
     { code: "KeyD", label: "ㅇ", href: '/word' },
     { code: "KeyF", label: "ㄹ", href: '/rank' },
     { code: "KeyJ", label: "ㅓ" },
