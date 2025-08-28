@@ -10,21 +10,13 @@ export function useRecordScore(longTextId: number, isUserFile: boolean, authHead
       ? `${baseUrl}/my-long-text/${longTextId}/score`
       : `${baseUrl}/long-text/${longTextId}/score`;
 
-    try {
-      const res = await axios.post(
-        url,
-        { score }, // 여기서 실제 보낼 데이터
-        {
-          headers: { Authorization: authHeader },
-          withCredentials: true,
-        }
-      );
-      console.log("성공", res.data);
-      return res.data;
-    } catch (err) {
-      console.log("실패", err);
-      throw err; // 필요하면 호출한 곳에서 catch 가능
-    }
+    fetch(url,{
+      headers: { Authorization: authHeader },
+      credentials: "include",
+      body : JSON.stringify({ score })
+    })
+    .then((res)=> res.json())
+    .catch((err)=> console.error(err))
   };
 
   return { recordScore };

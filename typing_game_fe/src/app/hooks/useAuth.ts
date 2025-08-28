@@ -13,27 +13,22 @@ export const useAuth = () => {
       setIsLoggedIn(false);
       return;
     }
-
-    const checkLogin = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
-        const res = await axios.get(`${baseUrl}/user`, {
-          headers: { Authorization: authHeader },
-          withCredentials: true,
-        });
-        if (res.status === 200) {
-          setIsLoggedIn(true);
-          setUsername(res.data.username);
-          setUserId(res.data.userId);
-        }
-      } catch {
-        sessionStorage.removeItem("authHeader");
-        setIsLoggedIn(false);
-      }
-    };
-
-    checkLogin();
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL
+    
+    fetch(`${baseUrl}/user`,{
+      headers: { Authorization: authHeader },
+      credentials: "include",
+    })
+    .then((response)=>{
+      if(!response.ok) throw new Error(`에러 발생 : ${response.status}`);
+      return response.json();
+    })
+    .then((data)=>{
+      setIsLoggedIn(true);
+      setUsername(data.username);
+      setUserId(data.userId)
+    })
+    .catch((error)=> console.error(error))
   }, []);
 
   const promptLogin = async () => {

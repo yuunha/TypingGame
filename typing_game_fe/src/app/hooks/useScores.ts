@@ -1,4 +1,3 @@
-import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
 
@@ -10,38 +9,26 @@ interface ScoreItem {
 export function useScores(longTextId:number, isUserFile:boolean){
     const [score, setScore] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<AxiosError | null>(null);
 
     useEffect(()=>{
         const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-        const fetchScores = async () => {
-            setLoading(true);
-            setError(null);
+        const url = isUserFile
+            ? `${baseUrl}/my-long-text/${longTextId}/score`
+            : `${baseUrl}/long-text/${longTextId}/score`;
+        setLoading(true);
 
-            try {
-                if(isUserFile){
-                    const res = await axios.get(`${baseUrl}/my-long-text/${longTextId}/score`, {
-                        withCredentials: true,
-                    })
-                    const scores: ScoreItem[] = res.data.data;
-                    const maxScore = scores.reduce((max, cur) => Math.max(max,cur.score), 0);
-                    setScore(maxScore)
-                }else{
-                    const res = await axios.get(`${baseUrl}/long-text/${longTextId}/score`, {
-                        withCredentials: true,
-                    })
-                    const scores: ScoreItem[] = res.data.data;
-                    const maxScore = scores.reduce((max, cur) => Math.max(max,cur.score), 0);
-                    setScore(maxScore);
-                }
-            } catch (err){
-                setError(err as AxiosError);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchScores();
+        fetch(url,{
+            credentials: "include",
+        })
+        .then((res)=>res.json())
+        .then((data)=> {
+            const scores:ScoreItem[] = data.data;
+            const maxScore = scores.reduce((max, cur) => Math.max(max,cur.score), 0);
+            setScore(maxScore)
+        })
+        .finally(() => setLoading(false));
+
     }, [longTextId, isUserFile]);
-    return {score, loading, error, setScore}
+    return {score, loading, setScore}
 }

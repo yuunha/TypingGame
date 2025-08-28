@@ -91,8 +91,6 @@ const TypingGame: React.FC = () => {
     }
   };
 
-
-
   return (
     <Box>
       <GameContainer>
