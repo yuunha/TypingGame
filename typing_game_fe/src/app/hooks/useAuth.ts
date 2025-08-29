@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 export const useAuth = () => {
   const [username, setUsername] = useState<string | null>(null);
@@ -14,7 +13,7 @@ export const useAuth = () => {
       return;
     }
     const baseUrl = process.env.NEXT_PUBLIC_API_URL
-    
+
     fetch(`${baseUrl}/user`,{
       headers: { Authorization: authHeader },
       credentials: "include",

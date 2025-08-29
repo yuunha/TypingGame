@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import Keyboard from "../../_components/Keyboard";
 import typingKeys from "../../_components/keyboard/typingKeys";
 import styled from "styled-components";
-
+import Keyboard from "../../_components/Keyboard";
 
 //TODO : words 받아오기, 난이도별 설정
 const WORDS = [
@@ -28,11 +27,25 @@ const TypingGame: React.FC = () => {
   const [score, setScore] = useState(0);
   const [isGameStarted, setGameStarted] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const generateRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const dropRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  useEffect(()=>{
+    const handleVisibilityChange = () => {
+      if (document.hidden && isGameStarted) {
+        //다른창으로가면 게임종료
+        endGame();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isGameStarted]);
 
   const startGame = () => {
     setGameStarted(true);
@@ -52,9 +65,9 @@ const TypingGame: React.FC = () => {
     dropRef.current = setInterval(() => {
       setFallingChars(prev => 
         prev
-          .map(c => ({ ...c, y: c.y + 2 }))
+          .map(c => ({ ...c, y: c.y + 3 }))
           .filter(c => {
-            if (c.y > 450) {
+            if (c.y > 460) {
               endGame();
               return false;
             }
@@ -75,15 +88,17 @@ const TypingGame: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isComposing) return;
     if (e.key === "Enter") {
-      const value = inputRef.current?.value;
-      if (!value) return;
+      if (!inputValue) return;
 
       setFallingChars(prev => {
-        const matched = prev.find(c => c.char.startsWith(value));
-        if (matched && matched.char === value) {
-          setScore(s => s + 1);
-          if (inputRef.current) inputRef.current.value = "";
+        const matched = prev.find(c => c.char === inputValue);
+        if (matched) {
+          //글자수만큼점수
+          setScore(s => s + inputValue.length);
+          setInputValue(""); 
+          console.log(inputValue.length)
           return prev.filter(c => c !== matched);
         }
         return prev;
@@ -98,23 +113,28 @@ const TypingGame: React.FC = () => {
         {fallingChars.map((c, i) => (
           <Word
             key={i} x={c.x} y={c.y}
-            color={inputRef.current?.value && c.char.startsWith(inputRef.current.value) ? "green" : "red"}
+            color={inputValue && c.char.startsWith(inputValue) ? "green" : "red"}
           >{c.char}
           </Word>
         ))}
         <Input
-          type="text"
+          type="text"          
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}           
           ref={inputRef}
           disabled={!isGameStarted}
-          onKeyDown={handleKeyDown} 
           autoFocus
           spellCheck={false}
           onPaste={(e) => {e.preventDefault()}}
           onDrop={(e) => e.preventDefault()}
           placeholder="단어를 입력하세요"
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={() => setIsComposing(false)}
         />
         <ScoreBoard>점수: {score}</ScoreBoard>
       </GameContainer>
+      <Keyboard keys={typingKeys} />
     </Box>
   );
 }
@@ -128,9 +148,9 @@ const Box = styled.div`
 `;
 
 const GameContainer = styled.div`
-  width: 30rem;
+  width: 100%;
   height: 30rem;
-  border: 2px solid black;
+  // border: 2px solid black;
   position: relative;
   overflow: hidden;
   margin: 0 auto;
@@ -154,9 +174,9 @@ const Word = styled.div<WordProps>`
   position: absolute;
   left: ${(props) => props.x}px;
   top: ${(props) => props.y}px;
-  font-weight: bold;
-  font-size: 1rem;
+  font-size: var(--typing-size);
   color: ${(props) => props.color};
+  letter-spacing: 2px;
 `;
 
 const Input = styled.input`
