@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -57,13 +58,16 @@ public class UserController {
     // }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<UserResponse> update(@PathVariable("id") Long id,@Valid @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserResponse> update(@PathVariable("id") Long id,@Valid @RequestBody UserUpdateRequest request,
+        @AuthenticationPrincipal CustomUserDetails userDetails) {
+
         userService.update(id,request.getUsername());
-        User user = userService.getUserById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(
-            new UserResponse(user.getUserId(),user.getLoginId(),user.getUsername()));
+        String loginId = userDetails.getUsername(); // 현재 로그인 사용자 ID
+        UserResponse userResponse = userService.getUserByLoginId(loginId);
+        return ResponseEntity.ok(userResponse);
     }
 
+    //TODO: Authentication -> CustomUserDetail 객체로 바꾸기
     @GetMapping("/user")
     public ResponseEntity<UserResponse> getUser(Authentication authentication) {
         String loginId = authentication.getName(); // 현재 로그인 사용자 ID
@@ -71,6 +75,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+    //TODO: Authentication -> CustomUserDetail 객체로 바꾸기
     @DeleteMapping("/user")
     public ResponseEntity<String> deleteUser(Authentication authentication) {
         String loginId = authentication.getName();
@@ -80,13 +85,13 @@ public class UserController {
 
     // username으로 유저 검색 : GET GET /users?username=홍길&page=0&size=5
     @GetMapping("/users")
-    public ResponseEntity<List<UserResponse>> searchUsers(
+    public ResponseEntity<Page<UserResponse>> searchUsers(
         @RequestParam String username,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
-        List<UserResponse> users = userService.searchUsersByUsername(username,pageable);
+        Page<UserResponse> users = userService.searchUsersByUsername(username,pageable);
         return ResponseEntity.ok(users);
     }
 

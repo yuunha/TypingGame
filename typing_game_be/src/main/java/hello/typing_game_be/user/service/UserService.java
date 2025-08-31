@@ -2,9 +2,12 @@ package hello.typing_game_be.user.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,7 +40,6 @@ public class UserService {
     public Long register(UserCreateRequest request) {
 
         // loginId 중복 검증
-
         if (userRepository.existsByLoginId(request.getLoginId())) { //중복 유저 검증
             throw new BusinessException(ErrorCode.DUPLICATE_LOGINID);
         }
@@ -81,10 +83,24 @@ public class UserService {
         user.setUsername(name);
     }
 
+    /**
+     * 유저 정보 조회 + 서명된 URL 생성
+     */
     public UserResponse getUserByLoginId(String loginId) {
         User user = userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        return new UserResponse(user.getUserId(),user.getLoginId(), user.getUsername());
+
+        String profileImageUrl = null;
+        if (user.getProfileImageKey() != null) {
+            // 서명된 URL 생성, 만료 60분
+            profileImageUrl = s3Template.createSignedGetURL(bucket, user.getProfileImageKey(), Duration.ofMinutes(30)).toString();;
+        }
+
+        return UserResponse.builder()
+            .username(user.getUsername())
+            .loginId(user.getLoginId())
+            .profileImageUrl(profileImageUrl)
+            .build();
     }
 
     @Transactional
@@ -103,10 +119,23 @@ public class UserService {
         });
     }
 
-    public List<UserResponse> searchUsersByUsername(String username, Pageable pageable) {
-        return userRepository.findByUsernameContainingIgnoreCase(username,pageable).stream()
-            .map(UserResponse::fromEntity)
-            .toList();
+    public Page<UserResponse> searchUsersByUsername(String username, Pageable pageable) {
+        Page<User> usersPage = userRepository.findByUsernameContainingIgnoreCase(username, pageable);
+
+        return usersPage.map(user -> {
+            String profileImageUrl = null;
+            if (user.getProfileImageKey() != null) {
+                profileImageUrl = s3Template.createSignedGetURL(
+                    bucket, user.getProfileImageKey(), Duration.ofMinutes(30))
+                    .toString();
+            }
+
+            return UserResponse.builder()
+                .username(user.getUsername())
+                .loginId(user.getLoginId())
+                .profileImageUrl(profileImageUrl)
+                .build();
+        });
     }
 
 
