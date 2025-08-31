@@ -1,5 +1,6 @@
 package hello.typing_game_be.common.exception;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
 
         return buildErrorResponse(ErrorCode.DB_CONSTRAINT_VIOLATION, ErrorCode.DB_CONSTRAINT_VIOLATION.getMessage());
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ErrorDetails> handleIOException(IOException e) {
+        return buildErrorResponse(ErrorCode.FILE_UPLOAD_ERROR, "파일 업로드 중 오류가 발생했습니다.");
     }
 
     // 공통 응답 생성 메서드

@@ -3,4 +3,15 @@ spring:
   profiles:
     active: test  # 기본은 dev 환경
 
-
+  cloud:
+    aws:
+      s3:
+        bucket: typinggame-profile
+        region: ${AWS_REGION}
+      stack:
+        auto: false
+      region:
+        static: ${AWS_REGION}
+      credentials:
+        accessKey: ${AWS_ACCESS_KEY}
+        secretKey: ${AWS_SECRET_KEY}

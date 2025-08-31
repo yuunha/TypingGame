@@ -25,8 +25,13 @@ public enum ErrorCode {
     FRIEND_REQUEST_ALREADY_RECEIVED(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-004", "상대방이 이미 친구 요청을 보냈습니다."),
     //DB
     DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반"),
+
     //기타
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND,"COMMON-002","요청하신 리소스를 찾을 수 없습니다."),
+
+    //IO
+    FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE-001", "파일 업로드 중 오류가 발생했습니다."),
+
     //권한
     FORBIDDEN_REQUEST(HttpStatus.FORBIDDEN, "COMMON-003","권한이 없습니다." );
 

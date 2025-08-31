@@ -73,7 +73,7 @@ public class UserControllerTest {
             .andExpect(status().isCreated());
 
 
-        User savedUser = userRepository.findByUsername(username);
+        User savedUser = userRepository.findByUsername(username).orElse(null);
         assertThat(savedUser.getLoginId()).isEqualTo(loginId);
         assertThat(passwordEncoder.matches(password, savedUser.getPassword())).isTrue();
     }

@@ -40,6 +40,9 @@ public class User {
     @Column(nullable = false, length = 100)
     private String password;
 
+    @Column(name = "profile_image_key")
+    private String profileImageKey; // S3 key만 저장
+
     // 유저가 작성한 긴 글 점수들
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

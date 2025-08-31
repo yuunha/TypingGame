@@ -1,12 +1,15 @@
 package hello.typing_game_be.user.service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.multipart.MultipartFile;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
@@ -14,6 +17,8 @@ import hello.typing_game_be.user.dto.UserResponse;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
+import io.awspring.cloud.s3.ObjectMetadata;
+import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,6 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String bucket;
+
+    private final S3Template s3Template;
 
     //회원가입
     @Transactional
@@ -98,4 +108,43 @@ public class UserService {
             .map(UserResponse::fromEntity)
             .toList();
     }
+
+
+    // 프로필 업로드
+    @Transactional
+    public String uploadProfileImage(MultipartFile file, String username) throws IOException {
+
+        //유저 조회
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        // TODO: 기존 프로필 이미지가 있다면 삭제
+
+        // 파일 확장자 추출
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+
+        // S3 key 설정 (username 기준, 확장자 포함)
+        String key = "profile/" + username + extension;
+
+        // ObjectMetadata 설정
+        ObjectMetadata metadata = ObjectMetadata.builder()
+            .contentType(file.getContentType())
+            .contentLength(file.getSize())
+            .build();
+
+        try (InputStream inputStream = file.getInputStream()) {
+            s3Template.upload(bucket, key, inputStream, metadata);
+        }
+
+        // DB에 S3 key 저장
+        user.setProfileImageKey(key);
+        userRepository.save(user);
+
+        return key; // 필요시 key 반환
+    }
+
 }

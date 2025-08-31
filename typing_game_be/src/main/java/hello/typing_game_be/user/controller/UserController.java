@@ -1,14 +1,19 @@
 package hello.typing_game_be.user.controller;
 
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +23,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.dto.UserResponse;
 import hello.typing_game_be.user.dto.UserUpdateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.service.UserService;
+import io.awspring.cloud.s3.ObjectMetadata;
+import io.awspring.cloud.s3.S3Template;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +42,8 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+
+
     @PostMapping("/user")
     public ResponseEntity<Long> register(@Valid @RequestBody UserCreateRequest request) {
         Long userId = userService.register(request);
@@ -79,5 +90,15 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @PostMapping("/user/profile")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails)
+        throws IOException {
+
+            String key = userService.uploadProfileImage(file, userDetails.getUsername());
+            return ResponseEntity.ok("Uploaded with key: " + key);
+    }
 
 }
+
+
+
