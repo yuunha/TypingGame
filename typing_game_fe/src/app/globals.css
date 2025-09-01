@@ -33,8 +33,9 @@
   --key-led-blue: #7ea8c269;
 
   /* typing */
-  --color-correct: rgb(0, 0, 255);
-  --color-wrong: rgb(255, 0, 0);
+  --color-basic: rgb(151, 151, 151);
+  --color-correct: rgb(0, 0, 0);
+  --color-wrong: #e67f74;
 
   --color-correct-bg: rgba(58, 105, 134, 0.5);
   --color-wrong-bg: rgba(175, 88, 79, 0.493);

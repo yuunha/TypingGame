@@ -6,16 +6,11 @@ import * as Hangul from "hangul-js";
 import ResultModal from "./ResultModal";
 import { useTexts } from "../hooks/useTexts";
 
-
-interface TypingProps {
-  longTextId: number;
-  isUserFile: boolean;
+interface TypingLocalProps {
+  lyrics: string;
 }
 
-
-const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
-  
-  const lyrics = useTexts(longTextId, isUserFile);
+const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
 
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
@@ -26,14 +21,13 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
   const [correctChars, setCorrectChars] = useState(0);
   const [totalChars, setTotalChars] = useState(0);
 
-  const currentLine = lyrics[currentLineIndex];
-  const nextLines = lyrics.slice(currentLineIndex + 1, currentLineIndex + 3);
+  const currentLine = lyrics;
 
   
   const totalTypedChars = () => {
     // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기
     const pastChars = Hangul
-      .disassemble(lyrics.slice(0, currentLineIndex).join(""), true)
+      .disassemble(lyrics.slice(0, currentLineIndex), true)
       .flat().length;
 
     // 현재 입력값 자모 분리 후 길이
@@ -55,26 +49,16 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
         if (startTime !== null) {
           const timeTaken = Date.now() - startTime;
           setElapsedTime(prev => prev + timeTaken);
-          setStartTime(null); // 다음 줄부터 다시 시작
         }
-
         let correct = 0;
         for (let i = 0; i < currentLine.length; i++) {
           if (inputValue[i] === currentLine[i]) {
             correct++;
           }
         }
-
         setCorrectChars(prev => prev + correct);
         setTotalChars(prev => prev + currentLine.length);
-
-
-        if (currentLineIndex < lyrics.length - 1) {
-          setCurrentLineIndex(prev => prev + 1);
-          setInputValue("");
-        } else {
-          setCompleted(true);
-        }
+        setCompleted(true);
       }
     }
   };
@@ -120,7 +104,7 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
 
   const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
   const totalLyricsChars = Hangul
-    .disassemble(lyrics.join(""), true)
+    .disassemble(lyrics, true)
     .flat().length;
   return (
     <>
@@ -134,13 +118,11 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
             correctChars={correctChars}
             lineCount={lyrics.length}
             onRetry={handleRetry}
-            longTextId = {longTextId}
-            isUserFile = {isUserFile}
           />
         )}
-        <ProgressBarContainer>
+         <ProgressBarContainer>
           <ProgressBarFill progress={totalTypedChars() / totalLyricsChars * 100} />
-        </ProgressBarContainer>
+        </ProgressBarContainer> 
       <TypingLine>
 
         <CurrentLine>
@@ -168,9 +150,6 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
           })}
         </CurrentLine>
 
-        {nextLines.map((line, idx) => (
-          <SubLine key={idx}>{line}</SubLine>
-        ))}
       </TypingLine>
         <Input
           type="text"
@@ -193,7 +172,7 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
   );
 };
 
-export default Typing;
+export default TypingLocal;
 
 const TypingLine = styled.div`
   min-height: 140px;
@@ -201,16 +180,15 @@ const TypingLine = styled.div`
 
 const ProgressBarContainer = styled.div`
   width: 100%;
-  height: 8px;
-  background-color: var(--progress-bg);
-  border-radius: 6px;
+  height: 2px;
+  background-color: black;
   overflow: hidden;
   margin-bottom: 1.5rem;
 `;
 
 const ProgressBarFill = styled.div<{ progress: number }>`
   height: 100%;
-  background-color: var(--progress-fill);
+  background-color: var(--key-fill-red);
   width: ${({ progress }) => progress}%;
   transition: width 0.3s ease;
 `;
@@ -219,7 +197,6 @@ const ProgressBarFill = styled.div<{ progress: number }>`
 const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
-  margin-top: 2rem;
   height : 370px;
   min-width: 600px;
   p {
@@ -227,13 +204,6 @@ const Wrapper = styled.div`
   }
 `;
 
-
-const SubLine = styled.div`
-  margin-bottom: 1rem;
-  width: 100%;
-  font-size: var(--typing-size);
-  color: var(--typing-line-sub);
-`;
 
 const CurrentLine = styled.p`
   margin-bottom: 1rem;
