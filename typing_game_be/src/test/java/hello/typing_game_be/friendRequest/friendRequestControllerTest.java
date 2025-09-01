@@ -213,8 +213,8 @@ public class friendRequestControllerTest {
                 .with(httpBasic("user1", "1111" )))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(2))
-            .andExpect(jsonPath("$[0].receiverName").value(user3.getUsername()))
-            .andExpect(jsonPath("$[1].receiverName").value(user2.getUsername()));
+            .andExpect(jsonPath("$[0].receiverName").value(user3.getNickname()))
+            .andExpect(jsonPath("$[1].receiverName").value(user2.getNickname()));
 
     }
 
@@ -248,8 +248,8 @@ public class friendRequestControllerTest {
                 .with(httpBasic("user1", "1111" )))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(2))
-            .andExpect(jsonPath("$[0].requesterName").value(user3.getUsername()))
-            .andExpect(jsonPath("$[1].requesterName").value(user2.getUsername()));
+            .andExpect(jsonPath("$[0].requesterName").value(user3.getNickname()))
+            .andExpect(jsonPath("$[1].requesterName").value(user2.getNickname()));
 
     }
 

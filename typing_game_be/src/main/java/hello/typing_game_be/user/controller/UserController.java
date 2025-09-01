@@ -31,9 +31,8 @@ import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.dto.UserResponse;
 import hello.typing_game_be.user.dto.UserUpdateRequest;
 import hello.typing_game_be.user.entity.User;
+import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
-import io.awspring.cloud.s3.ObjectMetadata;
-import io.awspring.cloud.s3.S3Template;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
-
+    private final UserRepository userRepository;
 
     @PostMapping("/user")
     public ResponseEntity<Long> register(@Valid @RequestBody UserCreateRequest request) {
@@ -58,13 +57,13 @@ public class UserController {
     // }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<UserResponse> update(@PathVariable("id") Long id,@Valid @RequestBody UserUpdateRequest request,
+    public ResponseEntity<Void> update(@PathVariable("id") Long id,@Valid @RequestBody UserUpdateRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         userService.update(id,request.getUsername());
-        String loginId = userDetails.getUsername(); // 현재 로그인 사용자 ID
-        UserResponse userResponse = userService.getUserByLoginId(loginId);
-        return ResponseEntity.ok(userResponse);
+        //String loginId = userDetails.getUsername(); // 현재 로그인 사용자 ID
+        //UserResponse userResponse = userService.getUserByLoginId(loginId);
+        return ResponseEntity.ok().build();
     }
 
     //TODO: Authentication -> CustomUserDetail 객체로 바꾸기
@@ -90,8 +89,8 @@ public class UserController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
-        Page<UserResponse> users = userService.searchUsersByUsername(username,pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("nickname").ascending());
+        Page<UserResponse> users = userService.searchUsersByNickname(username,pageable);
         return ResponseEntity.ok(users);
     }
 

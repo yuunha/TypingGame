@@ -47,11 +47,15 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())); // 적용
         return http.build();
     }
-    @Bean //인증관리자를 Bean으로 등록
+    @Bean //인증관리자(AuthenticationManager)를 Bean으로 등록
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        //UserDetailsService와 PasswordEncoder 등록
+        //인증을 시도하면 → UserDetailsService에서 유저를 찾고 → PasswordEncoder로 비밀번호 검증
         builder.userDetailsService(userDetailsService)
             .passwordEncoder(passwordEncoder());
+
         return builder.build();
     }
     //사용자 정보를 로드하는 서비스 지정, 비밀번호 비교 시 사용할 인코더 지정

@@ -19,8 +19,8 @@ public class FriendRequestListResponse {
 
     public static FriendRequestListResponse fromEntity(FriendRequest fr) {
         return new FriendRequestListResponse(
-            fr.getRequester().getUsername(),
-            fr.getReceiver().getUsername(),
+            fr.getRequester().getNickname(),
+            fr.getReceiver().getNickname(),
             fr.getCreatedAt()
         );
     }

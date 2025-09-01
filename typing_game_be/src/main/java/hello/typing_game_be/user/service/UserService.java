@@ -2,9 +2,8 @@ package hello.typing_game_be.user.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.time.Duration;
-import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -45,12 +44,12 @@ public class UserService {
         }
 
         // username 중복 검증
-        if (userRepository.existsByUsername(request.getUsername())) {
+        if (userRepository.existsByNickname(request.getUsername())) {
             throw new BusinessException(ErrorCode.DUPLICATE_USERNAME);
         }
 
         User user = User.builder()
-            .username(request.getUsername())
+            .nickname(request.getUsername())
             .loginId(request.getLoginId())
             .password(passwordEncoder.encode(request.getPassword())) // 인코딩
             .build();
@@ -80,7 +79,7 @@ public class UserService {
     public void update(Long userId, String name) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        user.setUsername(name);
+        user.setNickname(name);
     }
 
     /**
@@ -97,7 +96,8 @@ public class UserService {
         }
 
         return UserResponse.builder()
-            .username(user.getUsername())
+            .userId(user.getUserId())
+            .username(user.getNickname())
             .loginId(user.getLoginId())
             .profileImageUrl(profileImageUrl)
             .build();
@@ -119,8 +119,8 @@ public class UserService {
         });
     }
 
-    public Page<UserResponse> searchUsersByUsername(String username, Pageable pageable) {
-        Page<User> usersPage = userRepository.findByUsernameContainingIgnoreCase(username, pageable);
+    public Page<UserResponse> searchUsersByNickname(String nickname, Pageable pageable) {
+        Page<User> usersPage = userRepository.findByNicknameContainingIgnoreCase(nickname, pageable);
 
         return usersPage.map(user -> {
             String profileImageUrl = null;
@@ -131,7 +131,7 @@ public class UserService {
             }
 
             return UserResponse.builder()
-                .username(user.getUsername())
+                .username(user.getNickname())
                 .loginId(user.getLoginId())
                 .profileImageUrl(profileImageUrl)
                 .build();
@@ -144,7 +144,7 @@ public class UserService {
     public String uploadProfileImage(MultipartFile file, String username) throws IOException {
 
         //유저 조회
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByNickname(username)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         // TODO: 기존 프로필 이미지가 있다면 삭제

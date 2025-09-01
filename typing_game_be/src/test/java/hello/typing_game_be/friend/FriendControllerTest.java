@@ -105,7 +105,7 @@ public class FriendControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].userId").value(user2.getUserId()))
-            .andExpect(jsonPath("$[0].username").value(user2.getUsername()));
+            .andExpect(jsonPath("$[0].username").value(user2.getNickname()));
 
     }
     @Test

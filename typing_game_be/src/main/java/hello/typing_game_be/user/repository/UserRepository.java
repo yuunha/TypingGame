@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Size;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+    Optional<User> findByNickname(String nickname);
 
     Optional<User> findByLoginId(String loginId);
     boolean existsByLoginId(String loginId);
@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteByLoginId(String loginId);
 
     // ContainingIgnoreCase : 대소문자 구분 없이 부분 일치 검색
-    Page<User> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
+    Page<User> findByNicknameContainingIgnoreCase(String nickname, Pageable pageable);
 
-    boolean existsByUsername(String username);
+    boolean existsByNickname(String username);
 }

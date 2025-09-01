@@ -10,6 +10,6 @@ public class UserListResponse {
     private Long userId;
     private String username;
     public static UserListResponse fromEntity(User user) {
-        return new UserListResponse(user.getUserId(), user.getUsername());
+        return new UserListResponse(user.getUserId(), user.getNickname());
     }
 }
