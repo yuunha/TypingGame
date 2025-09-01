@@ -1,5 +1,8 @@
 
 spring:
+  # .env import
+  config:
+    import: optional:file:.env[.properties]
   profiles:
     active: test  # 기본은 dev 환경
 
