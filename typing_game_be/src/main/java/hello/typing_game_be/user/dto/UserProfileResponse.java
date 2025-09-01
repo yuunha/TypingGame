@@ -7,9 +7,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserResponse {
-    private Long userId;
-    private String loginId;
-    private String username;
+public class UserProfileResponse {
     private String profileImageUrl;
 }

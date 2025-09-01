@@ -2,18 +2,13 @@ package hello.typing_game_be.user.controller;
 
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.user.dto.UserCreateRequest;
+import hello.typing_game_be.user.dto.UserProfileResponse;
 import hello.typing_game_be.user.dto.UserResponse;
 import hello.typing_game_be.user.dto.UserUpdateRequest;
-import hello.typing_game_be.user.entity.User;
-import hello.typing_game_be.user.repository.UserRepository;
+
 import hello.typing_game_be.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -42,8 +39,11 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
+    @Operation( summary = "회원가입", responses = {
+        @ApiResponse(responseCode = "201", description = "회원가입 성공"),
+        @ApiResponse(responseCode = "409", description = "loginId 중복 또는 username 중복")
+    })
     @PostMapping("/user")
     public ResponseEntity<Long> register(@Valid @RequestBody UserCreateRequest request) {
         Long userId = userService.register(request);
@@ -56,33 +56,46 @@ public class UserController {
     //     return ResponseEntity.status(HttpStatus.OK).build();
     // }
 
+    @Operation( summary = "회원정보(이름) 수정", responses = {
+        @ApiResponse(responseCode = "200", description = "회원정보(이름) 수정 성공"),
+        @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+    })
     @PutMapping("/user/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") Long id,@Valid @RequestBody UserUpdateRequest request,
-        @AuthenticationPrincipal CustomUserDetails userDetails) {
-
+    public ResponseEntity<Void> update(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateRequest request
+    ) {
         userService.update(id,request.getUsername());
-        //String loginId = userDetails.getUsername(); // 현재 로그인 사용자 ID
-        //UserResponse userResponse = userService.getUserByLoginId(loginId);
         return ResponseEntity.ok().build();
     }
 
-    //TODO: Authentication -> CustomUserDetail 객체로 바꾸기
+
+    @Operation( summary = "회원정보 조회", responses = {
+        @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),
+        @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+    })
     @GetMapping("/user")
-    public ResponseEntity<UserResponse> getUser(Authentication authentication) {
-        String loginId = authentication.getName(); // 현재 로그인 사용자 ID
+    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String loginId = userDetails.getUsername(); // 현재 로그인 사용자 ID
         UserResponse userResponse = userService.getUserByLoginId(loginId);
         return ResponseEntity.ok(userResponse);
     }
 
-    //TODO: Authentication -> CustomUserDetail 객체로 바꾸기
+
+    @Operation( summary = "회원 삭제", responses = {
+        @ApiResponse(responseCode = "200", description = "회원 삭제 성공"),
+        @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+    })
     @DeleteMapping("/user")
-    public ResponseEntity<String> deleteUser(Authentication authentication) {
-        String loginId = authentication.getName();
+    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String loginId = userDetails.getUsername();
         userService.deleteUserByLoginId(loginId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // username으로 유저 검색 : GET GET /users?username=홍길&page=0&size=5
+
+    @Operation( summary = "username으로 유저 검색", description = "GET /users?username=홍길&page=0&size=5", responses = {
+            @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+    })
     @GetMapping("/users")
     public ResponseEntity<Page<UserResponse>> searchUsers(
         @RequestParam String username,
@@ -94,12 +107,16 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/user/profile")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails)
-        throws IOException {
 
+    @Operation( summary = "프로필 사진 업로드", description = "content-type : multipart/form-data, 속성이름 : file ", responses = {
+            @ApiResponse(responseCode = "200", description = "파일 업로드 성공, 사진 url 반환 ")
+    })
+    @PostMapping("/user/profile")
+    public ResponseEntity<UserProfileResponse> uploadFile(
+        @RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails
+    ) throws IOException {
             String key = userService.uploadProfileImage(file, userDetails.getUsername());
-            return ResponseEntity.ok("Uploaded with key: " + key);
+            return ResponseEntity.ok(new UserProfileResponse(key));
     }
 
 }
