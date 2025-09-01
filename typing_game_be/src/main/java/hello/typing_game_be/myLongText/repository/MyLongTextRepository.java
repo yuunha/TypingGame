@@ -18,4 +18,6 @@ public interface MyLongTextRepository extends JpaRepository<MyLongText, Long> {
     MyLongText findByUser_UserIdAndMyLongTextId(Long userId, Long myLongTextId);
 
     Optional<MyLongText> findByTitle(String title);
+
+    boolean existsByTitle(String title);
 }

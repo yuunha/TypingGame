@@ -4,9 +4,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import hello.typing_game_be.common.exception.BusinessException;
+import hello.typing_game_be.common.exception.ErrorCode;
+import hello.typing_game_be.friendRequest.entity.FriendRequest;
+import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
+import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
+import hello.typing_game_be.myLongText.entity.MyLongText;
+import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
+import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +26,9 @@ public class DataInitConfig {
 
     private final UserService userService;
     private final LongTextRepository longTextRepository;
+    private final MyLongTextRepository myLongTextRepository;
     private final UserRepository userRepository;
+    private final FriendRequestRepository friendRequestRepository;
     String content1="동해물과 백두산이 마르고 닳도록\n"
         + "하느님이 보우하사 우리나라 만세\n"
         + "무궁화 삼천리 화려 강산\n"
@@ -32,10 +42,12 @@ public class DataInitConfig {
     String content3 =
         "제1조\n"
         + "1. 대한민국은 민주공화국이다.\n"
-        + "2. 대한민국의 주권은 국민에게 있고, 모든 권력은 국민으로부터 나온다.\n"
-        + "제2조\n"
-        + "1. 대한민국의 국민이 되는 요건은 법률로 정한다.\n"
-        + "2. 국가는 법률이 정하는 바에 의하여 재외국민을 보호할 의무를 진다.";
+        + "2. 대한민국의 주권은 국민에게 있고, 모든 권력은 국민으로부터 나온다.\n";
+    String content4 =
+        "제2조\n"
+            + "1. 대한민국의 국민이 되는 요건은 법률로 정한다.\n"
+            + "2. 국가는 법률이 정하는 바에 의하여 재외국민을 보호할 의무를 진다.\n";
+
 
 
 
@@ -54,9 +66,43 @@ public class DataInitConfig {
         return args -> {
             createLongTextIfNotExists("애국가",content1);
             createLongTextIfNotExists("메밀꽃 필 무렵",content2);
-            createLongTextIfNotExists("헌법",content3);
         };
     }
+
+    @Bean
+    CommandLineRunner initMyLongTexts() {
+        return args -> {
+            User user = userRepository.findByLoginId("admin").orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+            );
+
+            createMyLongTextIfNotExists("헌법1조", content3, user);
+            createMyLongTextIfNotExists("헌법2조", content4, user);
+
+        };
+    }
+
+    @Bean
+    CommandLineRunner initFriendRequests() {
+        return args -> {
+            User user1 = userRepository.findByLoginId("admin").orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+            );
+            User user2 = userRepository.findByLoginId("dong").orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+            );
+            User user3 = userRepository.findByLoginId("soon").orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+            );
+            //user1 - user2 친구 (accepted)
+            createFriendRequestIfNotExists(user1,user2,true);
+            //user1 <- user3 친구 신청 (pending)
+            createFriendRequestIfNotExists(user3,user1,false);
+        };
+    }
+
+
+
 
     private void createUserIfNotExists(String username, String loginId, String password) {
         if (!userRepository.existsByLoginId(loginId)) {
@@ -78,4 +124,43 @@ public class DataInitConfig {
             );
         }
     }
+
+    private void createMyLongTextIfNotExists(String title, String content,User user) {
+        if (!myLongTextRepository.existsByTitle(title)) {
+            myLongTextRepository.save(
+                MyLongText.builder()
+                    .title(title)
+                    .content(content)
+                    .user(user)
+                    .build()
+            );
+        }
+    }
+
+    private void createFriendRequestIfNotExists(User user1, User user2, boolean isAccepted) {
+
+        if (!friendRequestRepository.existsByRequesterAndReceiver(user1, user2)&&
+            !friendRequestRepository.existsByRequesterAndReceiver(user2, user1)){
+
+            if(isAccepted) {
+                friendRequestRepository.save(
+                    FriendRequest.builder()
+                        .requester(user2)
+                        .receiver(user1)
+                        .status(FriendRequestStatus.ACCEPTED)
+                        .build());
+            }else {
+                friendRequestRepository.save(
+                    FriendRequest.builder()
+                        .requester(user2)
+                        .receiver(user1)
+                        .status(FriendRequestStatus.PENDING)
+                        .build());
+            }
+
+        }
+
+    }
+
+
 }

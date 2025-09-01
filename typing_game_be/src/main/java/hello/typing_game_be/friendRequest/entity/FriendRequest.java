@@ -38,6 +38,7 @@ public class FriendRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long friendRequestId;
+
     @ManyToOne(fetch = FetchType.LAZY)   // 요청 보낸 사람
     @JoinColumn(name = "requester_id", nullable = false)
     private User requester;
