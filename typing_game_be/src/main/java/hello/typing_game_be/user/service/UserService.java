@@ -147,7 +147,10 @@ public class UserService {
         User user = userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        // TODO: 기존 프로필 이미지가 있다면 삭제
+        // 기존 프로필 이미지가 있다면 삭제
+        if(user.getProfileImageKey() != null){
+            deleteProfileImage(loginId);
+        }
 
         // 파일 확장자 추출
         String originalFilename = file.getOriginalFilename();
