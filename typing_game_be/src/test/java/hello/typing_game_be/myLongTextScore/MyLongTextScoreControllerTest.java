@@ -21,14 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
-import hello.typing_game_be.longText.entity.LongText;
-import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.myLongText.entity.MyLongText;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.myLongTextScore.dto.MyLongTextScoreRequest;
 import hello.typing_game_be.myLongTextScore.entity.MyLongTextScore;
 import hello.typing_game_be.myLongTextScore.repository.MyLongTextScoreRepository;
-import hello.typing_game_be.myLongTextScore.service.MyLongTextScoreService;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
