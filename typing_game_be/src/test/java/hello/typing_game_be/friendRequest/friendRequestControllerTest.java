@@ -27,11 +27,11 @@ import hello.typing_game_be.friendRequest.dto.FriendRequestUpdateRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
+import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
-import jakarta.persistence.EntityManager;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,18 +41,16 @@ public class friendRequestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private FriendRequestRepository friendRequestRepository;
     @Autowired
-    private ObjectMapper objectMapper;
+    private MyLongTextRepository myLongTextRepository;
     @Autowired
-    private EntityManager entityManager;
+    private ObjectMapper objectMapper;
 
     private Long user1Id;
     private Long user2Id;
@@ -61,6 +59,7 @@ public class friendRequestControllerTest {
     @BeforeEach
     void beforeEach() {
         // 테스트 DB 초기화 (flush 생략 가능)
+        myLongTextRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
 

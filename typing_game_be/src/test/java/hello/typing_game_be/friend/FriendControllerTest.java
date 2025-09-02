@@ -16,11 +16,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
+import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
@@ -42,7 +41,7 @@ public class FriendControllerTest {
     @Autowired
     private FriendRequestRepository friendRequestRepository;
     @Autowired
-    private ObjectMapper objectMapper;
+    private MyLongTextRepository myLongTextRepository;
 
     private User user1;
     private User user2;
@@ -51,6 +50,7 @@ public class FriendControllerTest {
 
     @BeforeEach
     void setUp() {
+        myLongTextRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
 

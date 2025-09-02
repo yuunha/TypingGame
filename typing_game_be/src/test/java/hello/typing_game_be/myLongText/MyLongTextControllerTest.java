@@ -33,18 +33,14 @@ public class MyLongTextControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     UserService userService;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     MyLongTextRepository myLongTextRepository;
     @Autowired
     private FriendRequestRepository friendRequestRepository;
-
     @Autowired
     ObjectMapper objectMapper;
 

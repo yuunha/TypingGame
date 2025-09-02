@@ -13,14 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
 import hello.typing_game_be.longTextScore.repository.LongTextScoreRepository;
-import hello.typing_game_be.longTextScore.service.LongTextScoreService;
+import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
@@ -33,27 +31,18 @@ public class LongTextScoreControllerTest_Get {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private LongTextScoreRepository longTextScoreRepository;
-
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private LongTextScoreService longTextScoreService;
-
     @Autowired
     private LongTextRepository longTextRepository;
-
     @Autowired
     private FriendRequestRepository friendRequestRepository;
+    @Autowired
+    private MyLongTextRepository myLongTextRepository;
 
     private Long longTextId1;
     private Long longTextId2;
@@ -64,6 +53,7 @@ public class LongTextScoreControllerTest_Get {
 
         //1. DB 초기화
         friendRequestRepository.deleteAll();
+        myLongTextRepository.deleteAll();
         longTextScoreRepository.deleteAll();
         userRepository.deleteAll();
         longTextRepository.deleteAll();

@@ -45,8 +45,6 @@ public class MyLongTextScoreControllerTest {
     @Autowired
     private MyLongTextScoreRepository myLongTextScoreRepository;
     @Autowired
-    private MyLongTextScoreService myLongTextScoreService;
-    @Autowired
     private UserService userService;
     @Autowired
     private UserRepository userRepository;

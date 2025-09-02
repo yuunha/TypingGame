@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
+import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.rainingGameScore.dto.RainingGameScoreRequest;
 import hello.typing_game_be.rainingGameScore.entity.RainingGameScore;
 import hello.typing_game_be.rainingGameScore.repository.RainingGameScoreRepository;
@@ -43,6 +45,10 @@ public class RainigGameScoreControllerTest {
     private UserRepository userRepository;
     @Autowired
     private RainingGameScoreRepository rainingGameScoreRepository;
+    @Autowired
+    private FriendRequestRepository friendRequestRepository;
+    @Autowired
+    private MyLongTextRepository myLongTextRepository;
 
     private User user;
     private Long userId;
@@ -50,6 +56,8 @@ public class RainigGameScoreControllerTest {
     @BeforeEach
     void beforeEach() {
         //1. DB 초기화
+        myLongTextRepository.deleteAll();
+        friendRequestRepository.deleteAll();
         rainingGameScoreRepository.deleteAll();
         userRepository.deleteAll();
 
