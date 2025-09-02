@@ -57,7 +57,7 @@ public class DataInitConfig {
     @Order(1)
     CommandLineRunner initUsers() {
         return args -> {
-            createUserIfNotExists("admin", "admin", "12345");
+            createUserIfNotExists("admin_name", "admin", "12345");
             createUserIfNotExists("홍길동", "dong", "1111");
             createUserIfNotExists("홍길순", "soon", "2222");
         };
