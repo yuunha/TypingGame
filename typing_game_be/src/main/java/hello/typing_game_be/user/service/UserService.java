@@ -141,10 +141,10 @@ public class UserService {
 
     // 프로필 업로드
     @Transactional
-    public String uploadProfileImage(MultipartFile file, String username) throws IOException {
+    public String uploadProfileImage(MultipartFile file, String loginId) throws IOException {
 
         //유저 조회
-        User user = userRepository.findByNickname(username)
+        User user = userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         // TODO: 기존 프로필 이미지가 있다면 삭제
@@ -157,7 +157,7 @@ public class UserService {
         }
 
         // S3 key 설정 (username 기준, 확장자 포함)
-        String key = "profile/" + username + extension;
+        String key = "profile/" + loginId + extension;
 
         // ObjectMetadata 설정
         ObjectMetadata metadata = ObjectMetadata.builder()
@@ -176,4 +176,16 @@ public class UserService {
         return key; // 필요시 key 반환
     }
 
+    @Transactional
+    public void deleteProfileImage(String loginId) {
+        User user = userRepository.findByLoginId(loginId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        //s3 객체 삭제
+        s3Template.deleteObject(bucket, user.getProfileImageKey());
+
+        //user객체의 profileImageKey 제거
+        user.setProfileImageKey(null);
+        userRepository.save(user);
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -115,8 +116,17 @@ public class UserController {
     public ResponseEntity<UserProfileResponse> uploadFile(
         @RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws IOException {
-            String key = userService.uploadProfileImage(file, userDetails.getUsername());
+            String key = userService.uploadProfileImage(file, userDetails.getUsername()); // username = loginId
             return ResponseEntity.ok(new UserProfileResponse(key));
+    }
+
+    @Operation( summary = "프로필 사진 삭제", responses = {
+        @ApiResponse(responseCode = "200", description = "파일 삭제 성공")
+    })
+    @DeleteMapping("/user/profile")
+    public ResponseEntity<Void> deleteFile(@AuthenticationPrincipal CustomUserDetails userDetails){
+        userService.deleteProfileImage(userDetails.getUsername()); // username = loginId
+        return ResponseEntity.ok().build();
     }
 
 }
