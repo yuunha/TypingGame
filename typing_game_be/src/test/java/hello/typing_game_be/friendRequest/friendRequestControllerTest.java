@@ -66,22 +66,9 @@ public class friendRequestControllerTest {
 
         //1. 테스트용 유저1,2 저장
         //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
-        userService.register(UserCreateRequest.builder()
-                .username("홍길동")
-                .loginId("user1")
-                .password("1111")
-                .build());
-
-        userService.register(UserCreateRequest.builder()
-            .username("홍길순")
-            .loginId("user2")
-            .password("2222")
-            .build());
-        userService.register(UserCreateRequest.builder()
-            .username("홍길자")
-            .loginId("user3")
-            .password("3333")
-            .build());
+        userService.register( new UserCreateRequest("홍길동","user1","1111"));
+        userService.register( new UserCreateRequest("홍길순","user2","2222"));
+        userService.register( new UserCreateRequest("홍길자","user3","3333"));
 
         User user1 = userRepository.findByLoginId("user1").orElseThrow();
         User user2 = userRepository.findByLoginId("user2").orElseThrow();
@@ -185,7 +172,6 @@ public class friendRequestControllerTest {
     @Test
     void 보낸친구요청목록_조회_성공() throws Exception {
         //given
-
         User user1 = userRepository.findById(user1Id).orElseThrow();
         User user2 = userRepository.findById(user2Id).orElseThrow();
         User user3 = userRepository.findById(user3Id).orElseThrow();

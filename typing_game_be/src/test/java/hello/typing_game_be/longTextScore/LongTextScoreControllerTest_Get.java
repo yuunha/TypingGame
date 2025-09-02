@@ -58,45 +58,31 @@ public class LongTextScoreControllerTest_Get {
         userRepository.deleteAll();
         longTextRepository.deleteAll();
 
-        //2. 테스트용 유저1 저장
-        userService.register(   //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
-            UserCreateRequest.builder()
-                .username("admin1")
-                .loginId("testid1")
-                .password("1111")
-                .build()
-        );
-        User user1 = userRepository.findByLoginId("testid1").orElseThrow();
+        //2. 테스트용 유저1,2 저장
+        userService.register( new UserCreateRequest("admin1","testid1","1111"));
+        userService.register( new UserCreateRequest("admin2","testid2","2222"));
 
-        //2. 테스트용 유저2 저장
-        userService.register(   //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
-            UserCreateRequest.builder()
-                .username("admin2")
-                .loginId("testid2")
-                .password("2222")
-                .build()
-        );
+        User user1 = userRepository.findByLoginId("testid1").orElseThrow();
         User user2 = userRepository.findByLoginId("testid2").orElseThrow();
 
-        //3.1) 긴글1 저장
+        //3. 긴글1,2 저장
         longTextRepository.save(LongText.builder()
             .title("애국가1")
             .content("동해물과 백두산이1")
             .build()
         );
-        LongText longText1 = longTextRepository.findByTitle("애국가1").orElseThrow();
-        longTextId1 = longText1.getLongTextId();
-
-        //3.2) 긴글2 저장
         longTextRepository.save(LongText.builder()
             .title("애국가2")
             .content("동해물과 백두산이2")
             .build()
         );
+        LongText longText1 = longTextRepository.findByTitle("애국가1").orElseThrow();
         LongText longText2 = longTextRepository.findByTitle("애국가2").orElseThrow();
+        longTextId1 = longText1.getLongTextId();
         longTextId2 = longText2.getLongTextId();
 
-        //4.1) 유저1 - 긴글1의 점수 저장
+        //4.유저1 - 긴글1의 점수(100,200) 저장
+        //  유저2 - 긴글1,2의 점수 저장
         longTextScoreRepository.save(
             LongTextScore.builder()
                 .user(user1)
@@ -104,7 +90,6 @@ public class LongTextScoreControllerTest_Get {
                 .score(100)
                 .build()
         );
-        //4.2) 유저1 - 긴글1의 점수 저장
         longTextScoreRepository.save(
             LongTextScore.builder()
                 .user(user1)
@@ -112,7 +97,6 @@ public class LongTextScoreControllerTest_Get {
                 .score(200)
                 .build()
         );
-        //4.3)유저2 - 긴글1의 점수 저장
         longTextScoreRepository.save(
             LongTextScore.builder()
                 .user(user2)
@@ -120,7 +104,6 @@ public class LongTextScoreControllerTest_Get {
                 .score(300)
                 .build()
         );
-        //4.4)유저2 - 긴글2의 점수 저장
         longTextScoreRepository.save(
             LongTextScore.builder()
                 .user(user2)

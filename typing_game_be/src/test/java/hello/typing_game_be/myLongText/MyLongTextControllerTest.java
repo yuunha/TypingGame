@@ -51,13 +51,7 @@ public class MyLongTextControllerTest {
         userRepository.deleteAll();
 
         //테스트용 유저 저장
-        userService.register(   //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
-            UserCreateRequest.builder()
-                .username("admin1")
-                .loginId("testid")
-                .password("1111")
-                .build()
-        );
+        userService.register(   new UserCreateRequest("admin1","testid","1111"));
     }
     @AfterEach
     void afterEach() {
@@ -120,13 +114,7 @@ public class MyLongTextControllerTest {
                 .build()
         );
         //유저2 저장
-        userService.register(   //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
-            UserCreateRequest.builder()
-                .username("admin2")
-                .loginId("testid2")
-                .password("11112")
-                .build()
-        );
+        userService.register(new UserCreateRequest("admin2","testid2","11112"));
 
         //when&then
         mockMvc.perform(delete("/my-long-text/100",myLongText.getMyLongTextId())

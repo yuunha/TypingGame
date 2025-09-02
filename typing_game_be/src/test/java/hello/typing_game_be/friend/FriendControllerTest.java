@@ -49,28 +49,14 @@ public class FriendControllerTest {
     private FriendRequest friendRequest1;
 
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         myLongTextRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
 
-        userService.register(UserCreateRequest.builder()
-            .username("홍길동")
-            .loginId("user1")
-            .password("1111")
-            .build());
-
-        userService.register(UserCreateRequest.builder()
-            .username("홍길순")
-            .loginId("user2")
-            .password("2222")
-            .build());
-
-        userService.register(UserCreateRequest.builder()
-            .username("홍길자")
-            .loginId("user3")
-            .password("3333")
-            .build());
+        userService.register( new UserCreateRequest("홍길동","user1","1111"));
+        userService.register( new UserCreateRequest("홍길순","user2","2222"));
+        userService.register( new UserCreateRequest("홍길자","user3","3333"));
 
         user1 = userRepository.findByLoginId("user1").orElseThrow();
         user2 = userRepository.findByLoginId("user2").orElseThrow();
@@ -93,7 +79,7 @@ public class FriendControllerTest {
 
     @AfterEach
     void tearDown() {
-        friendRequestRepository.deleteAll();
+         friendRequestRepository.deleteAll();
          userRepository.deleteAll();
     }
 
