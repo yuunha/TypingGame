@@ -1,24 +1,18 @@
 package hello.typing_game_be.friendRequest;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.Optional;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,11 +21,11 @@ import hello.typing_game_be.friendRequest.dto.FriendRequestUpdateRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
+import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
-import jakarta.persistence.EntityManager;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,18 +35,16 @@ public class friendRequestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private FriendRequestRepository friendRequestRepository;
     @Autowired
-    private ObjectMapper objectMapper;
+    private MyLongTextRepository myLongTextRepository;
     @Autowired
-    private EntityManager entityManager;
+    private ObjectMapper objectMapper;
 
     private Long user1Id;
     private Long user2Id;
@@ -61,28 +53,16 @@ public class friendRequestControllerTest {
     @BeforeEach
     void beforeEach() {
         // 테스트 DB 초기화 (flush 생략 가능)
+        myLongTextRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
 
 
         //1. 테스트용 유저1,2 저장
         //패스워드 인코딩 과정이 필요하므로 userRepository 대신 userService 호출
-        userService.register(UserCreateRequest.builder()
-                .username("홍길동")
-                .loginId("user1")
-                .password("1111")
-                .build());
-
-        userService.register(UserCreateRequest.builder()
-            .username("홍길순")
-            .loginId("user2")
-            .password("2222")
-            .build());
-        userService.register(UserCreateRequest.builder()
-            .username("홍길자")
-            .loginId("user3")
-            .password("3333")
-            .build());
+        userService.register( new UserCreateRequest("홍길동","user1","1111"));
+        userService.register( new UserCreateRequest("홍길순","user2","2222"));
+        userService.register( new UserCreateRequest("홍길자","user3","3333"));
 
         User user1 = userRepository.findByLoginId("user1").orElseThrow();
         User user2 = userRepository.findByLoginId("user2").orElseThrow();
@@ -186,7 +166,6 @@ public class friendRequestControllerTest {
     @Test
     void 보낸친구요청목록_조회_성공() throws Exception {
         //given
-
         User user1 = userRepository.findById(user1Id).orElseThrow();
         User user2 = userRepository.findById(user2Id).orElseThrow();
         User user3 = userRepository.findById(user3Id).orElseThrow();

@@ -3,6 +3,7 @@ package hello.typing_game_be.common.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
@@ -53,6 +54,7 @@ public class DataInitConfig {
 
 
     @Bean
+    @Order(1)
     CommandLineRunner initUsers() {
         return args -> {
             createUserIfNotExists("admin", "admin", "12345");
@@ -62,6 +64,7 @@ public class DataInitConfig {
     }
 
     @Bean
+    @Order(2)
     CommandLineRunner initLongTexts() {
         return args -> {
             createLongTextIfNotExists("애국가",content1);
@@ -70,6 +73,7 @@ public class DataInitConfig {
     }
 
     @Bean
+    @Order(3)
     CommandLineRunner initMyLongTexts() {
         return args -> {
             User user = userRepository.findByLoginId("admin").orElseThrow(
@@ -83,6 +87,7 @@ public class DataInitConfig {
     }
 
     @Bean
+    @Order(4)
     CommandLineRunner initFriendRequests() {
         return args -> {
             User user1 = userRepository.findByLoginId("admin").orElseThrow(
