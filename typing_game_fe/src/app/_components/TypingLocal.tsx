@@ -124,12 +124,11 @@ const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
           <ProgressBarFill progress={totalTypedChars() / totalLyricsChars * 100} />
         </ProgressBarContainer> 
       <TypingLine>
-
         <CurrentLine>
           {(currentLine ?? "").split("").map((char, i) => {
             const typedChar = inputValue[i];
             let color = "var(--color-basic)";
-            let backgroundColor = "transparent";
+          
             let textDecoration = "transparent";
             if (typedChar !== undefined) {
               if (i === inputValue.length - 1) {
@@ -143,31 +142,25 @@ const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
             }
             
             return (
-              <CharSpan key={i} style={{ color, backgroundColor, textDecoration }}>
+              <CharSpan key={i} style={{ color, textDecoration }}>
                 {char}
               </CharSpan>
             );
           })}
         </CurrentLine>
-
       </TypingLine>
-        <Input
-          type="text"
-          value={inputValue}
-          spellCheck={false} // 맞춤법
-          disabled={completed}
-          onChange={(e) => setInputValue(e.target.value)}
-          onPaste={(e) => {e.preventDefault()}} //붙여넣기 막기
-          onDrop={(e) => e.preventDefault()} // 드래그앤드롭막기
-          onKeyDown={handleKeyDown}
-          placeholder="여기에 입력하세요"
-        />
-
-        <InfoBox>
-          <p>평균 {cpm} 타</p>
-        </InfoBox>
+      <Input
+        type="text"
+        value={inputValue}
+        spellCheck={false} // 맞춤법
+        disabled={completed}
+        onChange={(e) => setInputValue(e.target.value)}
+        onPaste={(e) => {e.preventDefault()}} //붙여넣기 막기
+        onDrop={(e) => e.preventDefault()} // 드래그앤드롭막기
+        onKeyDown={handleKeyDown}
+        placeholder="여기에 입력하세요"
+      />
       </Wrapper>
-    
     </>
   );
 };
@@ -175,14 +168,13 @@ const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
 export default TypingLocal;
 
 const TypingLine = styled.div`
-  min-height: 140px;
+  min-height: 300px;
 `;
 
 const ProgressBarContainer = styled.div`
-  width: 100%;
+  // width: 100%;
   height: 2px;
-  background-color: black;
-  overflow: hidden;
+  background-color: var(--progress-bg);
   margin-bottom: 1.5rem;
 `;
 
@@ -195,15 +187,9 @@ const ProgressBarFill = styled.div<{ progress: number }>`
 
 
 const Wrapper = styled.div`
-  flex-direction: column;
-  align-items: center;
   height : 370px;
-  min-width: 600px;
-  p {
-    font-size: 15px;
-  }
+  min-width: var(--tpg-basic-width);
 `;
-
 
 const CurrentLine = styled.p`
   margin-bottom: 1rem;
@@ -223,11 +209,3 @@ const Input = styled.input`
   outline: none;
   user-select: none;  // 드래그 선택 막기
 `;
-
-const InfoBox = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 3rem;
-  font-size: 1.125rem;
-`;
-

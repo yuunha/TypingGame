@@ -2,6 +2,7 @@
 
 import "./globals.css";
 import styled from "styled-components";
+import NavHeader from "./_components/NavHeader";
 
 export default function RootLayout({
   children,
@@ -11,9 +12,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-      <Container>
-        {children}
-      </Container>
+        <NavHeader></NavHeader>
+        <Container>
+          {children}
+        </Container>
       </body>
     </html>
   );
@@ -24,6 +26,5 @@ const Container = styled.div`
   display:flex;
   align-items:center;
   justify-content: center;
-  min-height:100vh;
   background-color : var(--background);
 `;

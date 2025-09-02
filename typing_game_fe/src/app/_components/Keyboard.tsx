@@ -51,7 +51,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
             };
             return href ? (
               <Link href={href} key={code} passHref>
-                <KeyLink 
+                <Key 
                   key={code}
                   className={`key--${code}`}
                   $color={color}
@@ -59,7 +59,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
                   onClick={handleClick}  
                 >
                   <KeyCap $color={color}>{label}</KeyCap>
-                </KeyLink>
+                </Key>
               </Link>
             ) : (
               <Key
@@ -80,31 +80,26 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
 };
 
 export default Keyboard;
-
 const KeyboardFrame = styled.div`
-  // display: inline-block;
-  // padding : 20px 10px;
-  // background-color: var(--keyboard-bg);
-  // border-radius : 10px;
-  // border : 3px solid var(--keyboard-border);
-  // box-shadow:4px 4px 1px -1px #0000001a, 0 2px 4px -2px #0000001a;
+  width:100%;
 `;
 const KeyboardWrapper = styled.div`
   display:flex;
+  width:100%;
   // background-color: var(--keyboard-row-bg);
   // box-shadow: 0 0 2px;
 `;
 
 
 
-const Key = styled.div<{
+const Key = styled.a<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
 }>`
   height: 55px;
   margin: 2px;
   font-size : 13px;
-  border-radius: 5px;
+  border-radius: 4px;
   display:flex;
   justify-content:center;
   align-items: flex-start;
@@ -118,6 +113,7 @@ const Key = styled.div<{
     $color === 'blue' ? 'var(--key-border-blue)' :
     $color === 'red' ? 'var(--key-border-red)' :
     'var(--key-border-default)'};
+  border : 1px solid black;
   background-color: ${({ $color }) =>
     $color === 'blue' ? 'var(--key-fill-blue)' :
     $color === 'red' ? 'var(--key-fill-red)' :
@@ -125,6 +121,7 @@ const Key = styled.div<{
   color: ${({ $color }) => ($color ? 'white' : 'black')};
   &:hover{
     color: var(--key-pressed-text);
+    background-color: var(--key-linked-pressed);
     box-shadow: 0 0 5px 1px ${({ $color }) =>
       $color === 'blue' ? 'var(--key-led-blue)' :
       $color === 'red' ? 'var(--key-led-red)' :
@@ -133,6 +130,7 @@ const Key = styled.div<{
   }
   &.pressed {
     color: var(--key-pressed-text);
+    background-color: var(--key-linked-pressed);
     box-shadow: 0 0 5px 1px ${({ $color }) =>
       $color === 'blue' ? 'var(--key-led-blue)' :
       $color === 'red' ? 'var(--key-led-red)' :
@@ -147,57 +145,5 @@ const KeyCap = styled.div<{
   width: 99%;
   height: 90%;
   padding: 6px;
-  border-radius: 5px;
   line-height: 1;
-  background-color: ${({ $color }) =>
-    $color === 'blue' ? 'var(--key-fill-blue)' :
-    $color === 'red' ? 'var(--key-fill-red)' :
-    'var(--key-fill-default)'};
-`;
-
-
-const KeyLink = styled.a<{
-  $widthLevel?: number;
-  $color?: 'blue' | 'red';
-}>`
-  height: 55px;
-  margin: 2px;
-  font-size : 13px;
-  border-radius: 5px;
-  display:flex;
-  justify-content:center;
-  align-items: flex-start;
-
-  width: ${({ $widthLevel }) =>
-    $widthLevel === 3 ? '120px' :
-    $widthLevel === 2 ? '90px' :
-    $widthLevel === 1 ? '70px' : '50px'};
-  flex-grow: ${({ $widthLevel }) => ($widthLevel === 0 ? 1 : 0)};
-  border-color: ${({ $color }) =>
-    $color === 'blue' ? 'var(--key-border-blue)' :
-    $color === 'red' ? 'var(--key-border-red)' :
-    'var(--key-border-default)'};
-  background-color: ${({ $color }) =>
-    $color === 'blue' ? 'var(--key-fill-blue)' :
-    $color === 'red' ? 'var(--key-fill-red)' :
-    'var(--key-fill-default)'};
-  color: ${({ $color }) => ($color ? 'white' : 'black')};
-  &:hover{
-    color: var(--key-pressed-text);
-    background-color: var(--key-linked-pressed);
-    box-shadow: 0 0 5px 1px ${({ $color }) =>
-      $color === 'blue' ? 'var(--key-led-blue)' :
-      $color === 'red' ? 'var(--key-led-red)' :
-      'var(--key-led-red)'};
-     color :  var(--key-led-red);
-  }
-  &.pressed {
-    color: var(--key-pressed-text);
-    background-color: var(--key-linked-pressed);
-    box-shadow: 0 0 5px 1px ${({ $color }) =>
-      $color === 'blue' ? 'var(--key-led-blue)' :
-      $color === 'red' ? 'var(--key-led-red)' :
-      'var(--key-led-red)'};
-     color :  var(--key-led-red);
-    }
 `;

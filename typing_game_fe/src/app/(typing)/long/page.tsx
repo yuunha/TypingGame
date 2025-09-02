@@ -37,9 +37,8 @@ const TypingPage: React.FC = () => {
       <Content>
         {selectedSong && (
           <Header>
-            <span> </span>
-            <Title>{selectedSong.title}</Title>
-            <RightInfo> </RightInfo>
+            <Title>긴글연습</Title>
+            <Title>〈{selectedSong.title}〉</Title>
           </Header>
         )}
         {selectedSong && (
@@ -89,21 +88,13 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
   text-align: center;
 `;
 
-const RightInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  z-index: 1;
-`;
-
 const MainWrapper = styled.div`
-  width: 600px;
+  width: var(--tpg-basic-with);
   color: black;
   border-radius: 0 20px 20px 0;
 `;

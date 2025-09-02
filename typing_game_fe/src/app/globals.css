@@ -1,10 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  /* --background: linear-gradient(135deg, #fdfcfb, #c0b8b2); */
+  --background : #F8F8F8;
   --foreground: #171717;
   --color-point: #0033a1ff;
   --color-white: #FFFFFF;
+
+  --tpg-basic-width : 580px;
+
+  /* main */
+  --tpg-header-font-size : 0.8rem;
+  
+  /* progress bar */
+  --progress-bg:rgb(73, 73, 73);
+  --progress-fill: #7ea8c2ff;
+
   /* auth */
   
   --auth-beigie-title: rgb(117, 117, 115);
@@ -15,19 +25,19 @@
   --keyboard-border: #ccc;
   
   --key-border-default: rgb(231, 231, 231) rgb(194, 194, 194);
-  --key-fill-default: rgb(238, 238, 238);
+  --key-fill-default: transparent;
 
   --key-border-blue: rgb(126, 164, 187) rgb(74, 120, 148);
   --key-fill-blue: rgb(141, 179, 202);
 
   --key-border-red: #f29288  #af594fff;
-  --key-fill-red: #e67f74;
+  --key-fill-red: #e2b6b6;
 
   --key-pressed-text: #ffffff44;
   --key-pressed-border: #00000010;
 
-  --key-linked-pressed : #e67f749c;
-  --key-linked-fill : #e67f7488;
+  --key-linked-pressed : #e2b6b6;
+  --key-linked-fill : #e2b6b6;
 
   --key-led-red : #e2685a75;
   --key-led-blue: #7ea8c269;
@@ -41,8 +51,6 @@
   --color-wrong-bg: rgba(175, 88, 79, 0.493);
 
 
-  --progress-bg:#a1a1a1ff;
-  --progress-fill: #7ea8c2ff;
 
   --typing-line-sub: #6d6d6d;
 

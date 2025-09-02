@@ -17,51 +17,38 @@ export default function Home() {
 
 return (
   <Content>
-      <Header>
-        <Title>오늘의 글</Title>
-        <Title>{lyricsList.author}〈{lyricsList.title}〉</Title>
-      </Header>
-    
-      <MainWrapper>
-        <TypingLocal lyrics={lyricsList.content}/>
-      </MainWrapper>
-      <Keyboard keys={keys} />
-    </Content>
+    <Header>
+      <Title>오늘의 글</Title>
+      <Title>{lyricsList.author}〈{lyricsList.title}〉</Title>
+    </Header>
+    <MainWrapper>
+      <TypingLocal lyrics={lyricsList.content}/>
+    </MainWrapper>
+    <Keyboard keys={keys} />
+  </Content>
   );
 };
-
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
-  color: black;
-  font-size: 0.8rem;
-  margin-top: 3rem;
+  font-size: var(--tpg-header-font-size);
+  // margin-top: 3rem;
+  padding : 0 2px ;
 `;
+
 
 const Title = styled.h1`
   font-weight: bold;
-  margin-bottom: 1rem;
-  text-align: center;
-`;
-
-const RightInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  z-index: 1;
+  margin-bottom: 0.5rem;
 `;
 
 const MainWrapper = styled.div`
-  width: 600px;
-  color: black;
-  border-radius: 0 20px 20px 0;
+  width: var(--tpg-basic-with);
 `;

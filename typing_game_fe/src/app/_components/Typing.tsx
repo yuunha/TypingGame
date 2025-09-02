@@ -147,7 +147,6 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
           {(currentLine ?? "").split("").map((char, i) => {
             const typedChar = inputValue[i];
             let color = "var(--color-basic)";
-            let backgroundColor = "transparent";
             let textDecoration = "transparent";
             if (typedChar !== undefined) {
               if (i === inputValue.length - 1) {
@@ -161,7 +160,7 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
             }
             
             return (
-              <CharSpan key={i} style={{ color, backgroundColor, textDecoration }}>
+              <CharSpan key={i} style={{ color, textDecoration }}>
                 {char}
               </CharSpan>
             );
@@ -221,7 +220,7 @@ const Wrapper = styled.div`
   align-items: center;
   margin-top: 2rem;
   height : 370px;
-  min-width: 600px;
+  min-width: var(--tpg-basic-with);
   p {
     font-size: 15px;
   }
