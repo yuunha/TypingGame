@@ -25,7 +25,8 @@ public enum ErrorCode {
     FRIEND_REQUEST_ALREADY_RECEIVED(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-004", "상대방이 이미 친구 요청을 보냈습니다."),
     //quote
     QUOTE_NOT_FOUND(HttpStatus.NOT_FOUND,"QUOTE-001","존재하지 않는 명언입니다."),
-
+    //constitution-progress
+    CONSTITUTION_PROGRESS_NOT_FOUND(HttpStatus.NOT_FOUND,"CONSTITUTION-PROGRESS","헌법따라치기 진행상황이 존재하지 않습니다"),
 
     //DB
     DB_CONSTRAINT_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-001", "데이터 무결성 제약조건 위반"),

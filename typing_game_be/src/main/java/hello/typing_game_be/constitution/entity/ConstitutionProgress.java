@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -27,7 +28,8 @@ public class ConstitutionProgress {
     private Long constitutionProgressId;
 
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "user_id", unique = true)
+    private User user; //유저는 하나의 진행상황만 가질 수 있음
 
     private Integer articleIndex; // 조
 

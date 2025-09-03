@@ -3,6 +3,7 @@ package hello.typing_game_be.constitution;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +20,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hello.typing_game_be.constitution.dto.ProgressRequest;
 import hello.typing_game_be.constitution.entity.ConstitutionProgress;
-import hello.typing_game_be.constitution.repository.ConsitutionProgressRepository;
+import hello.typing_game_be.constitution.repository.ConstitutionProgressRepository;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
+import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
 
@@ -45,7 +47,7 @@ public class ConstitutionProgressControllerTest {
     @Autowired
     private MyLongTextRepository myLongTextRepository;
     @Autowired
-    private ConsitutionProgressRepository consitutionProgressRepository;
+    private ConstitutionProgressRepository constitutionProgressRepository;
 
     @BeforeEach
     void beforeEach() {
@@ -57,7 +59,7 @@ public class ConstitutionProgressControllerTest {
         userService.register( new UserCreateRequest("홍길동","user1","1111"));
     }
     @Test
-    void 유저의_헌법_진행상황_저장() throws Exception {
+    void 유저의_헌법_진행상황_저장_성공() throws Exception {
 
         ProgressRequest request = new ProgressRequest(3,40); //3조 40번째 글자
 
@@ -67,9 +69,33 @@ public class ConstitutionProgressControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk());
 
-        ConstitutionProgress progress = consitutionProgressRepository.findByUser_LoginId("user1").orElseThrow();
+        ConstitutionProgress progress = constitutionProgressRepository.findByUser_LoginId("user1").orElseThrow();
         assertThat(progress.getArticleIndex()).isEqualTo(3);
         assertThat(progress.getLastPosition()).isEqualTo(40);
+
+    }
+    @Test
+    void 유저의_헌법_진행상황_조회_성공() throws Exception {
+
+        //given
+        User user = userRepository.findByLoginId("user1").get();
+
+        //유저1의 진행상황(1,100) 저장
+        constitutionProgressRepository.save(
+            ConstitutionProgress.builder()
+                .user(user)
+                .articleIndex(1)
+                .lastPosition(100)
+                .build()
+        );
+
+        //when&then
+        mockMvc.perform(get("/constitution/progress")
+                .with(httpBasic("user1", "1111")))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.articleIndex").value(1))
+            .andExpect(jsonPath("$.lastPosition").value(100));
 
     }
 }
