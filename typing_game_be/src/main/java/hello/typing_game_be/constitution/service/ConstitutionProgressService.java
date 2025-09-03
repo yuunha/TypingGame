@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.constitution.entity.ConstitutionProgress;
-import hello.typing_game_be.constitution.repository.ConsitutionProgressRepository;
+import hello.typing_game_be.constitution.repository.ConstitutionProgressRepository;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +14,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ConstitutionProgressService {
 
-    private final ConsitutionProgressRepository consitutionProgressRepository;
+    private final ConstitutionProgressRepository constitutionProgressRepository;
     private final UserRepository userRepository;
 
     public void saveProgress(Long userId, Integer articleIndex, Integer lastPosition) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        consitutionProgressRepository.save(
+        constitutionProgressRepository.save(
             ConstitutionProgress.builder()
                 .user(user)
                 .articleIndex(articleIndex)
