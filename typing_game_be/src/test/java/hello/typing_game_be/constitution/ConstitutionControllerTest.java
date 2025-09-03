@@ -1,6 +1,5 @@
 package hello.typing_game_be.constitution;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -10,18 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hello.typing_game_be.constitution.dto.ProgressRequest;
-import hello.typing_game_be.constitution.entity.ConstitutionProgress;
-import hello.typing_game_be.constitution.repository.ConstitutionProgressRepository;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
-import hello.typing_game_be.longTextScore.controller.LongTextScoreContoller;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.repository.UserRepository;
