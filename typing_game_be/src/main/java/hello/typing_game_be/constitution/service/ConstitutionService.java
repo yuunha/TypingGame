@@ -1,4 +1,4 @@
-package hello.typing_game_be.constitution;
+package hello.typing_game_be.constitution.service;
 
 import org.springframework.stereotype.Service;
 
