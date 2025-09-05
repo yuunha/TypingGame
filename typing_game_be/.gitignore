@@ -7,7 +7,6 @@ build/
 data/
 
 .env
-Dockerfile
 fly.toml
 
 ### STS ###
