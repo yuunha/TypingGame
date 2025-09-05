@@ -1,20 +1,22 @@
+server:
+  address: 0.0.0.0
 
 spring:
   # .env import
   config:
     import: optional:file:.env[.properties]
   profiles:
-    active: test  # 기본은 dev 환경
+    active: prod  # 기본은 dev 환경
 
   cloud:
     aws:
       s3:
         bucket: typinggame-profile
-        region: ${AWS_REGION}
+        region: ap-northeast-2
       stack:
         auto: false
       region:
-        static: ${AWS_REGION}
+        static: ap-northeast-2
       credentials:
         accessKey: ${AWS_ACCESS_KEY}
         secretKey: ${AWS_SECRET_KEY}

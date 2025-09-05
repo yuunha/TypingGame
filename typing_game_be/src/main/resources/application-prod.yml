@@ -1,8 +1,8 @@
-server:
-  address: 0.0.0.0
-  port: ${PORT:8080}
 
 spring:
+    # .env import
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     url:  jdbc:mysql://typing-game.chgc06cgchah.ap-southeast-2.rds.amazonaws.com:3306/typing_game?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -10,7 +10,7 @@ spring:
     password: ${AWS_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: validate    # 개발용: update / 운영: validate 또는 none
+      ddl-auto: update    # 개발용: update / 운영: validate 또는 none
 
     show-sql: true           # 필요하면 true로 SQL 로그 확인 가능
     properties:
