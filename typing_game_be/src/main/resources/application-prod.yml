@@ -1,8 +1,8 @@
 
 spring:
     # .env import
-  config:
-    import: optional:file:.env[.properties]
+  #config:
+    #import: optional:file:.env[.properties]
   datasource:
     url:  jdbc:mysql://typing-game.chgc06cgchah.ap-southeast-2.rds.amazonaws.com:3306/typing_game?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver

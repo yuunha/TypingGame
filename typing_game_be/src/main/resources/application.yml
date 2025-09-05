@@ -1,11 +1,11 @@
 server:
   address: 0.0.0.0
-  port : ${PORT:8080}
+  port : ${PORT}
 
 spring:
   # .env import
-  config:
-    import: optional:file:.env[.properties]
+  #config:
+    #import: optional:file:.env[.properties]
   profiles:
     active: prod  # 기본은 dev 환경
 
