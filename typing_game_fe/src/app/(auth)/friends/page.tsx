@@ -2,114 +2,134 @@
 import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
-import KeyboardMini from "@/app/_components/SubMenu";
-import authKeys from "../../_components/keyboard/authKeys";
-import { useAuth } from "@/app/hooks/useAuth"
-import Image from "next/image";
+import { useFriend } from "@/app/hooks/useFriend";
+import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus } from "react-icons/fi";
 
-const Friend: React.FC = () => {
-  const { isLoggedIn } = useAuth();
-  const router = useRouter();
+const FriendPage: React.FC = () => {
+
+  const [activeTab, setActiveTab] = useState<"list" | "add" | "sent" | "received">("list");
+  const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests } = useFriend();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    // if (!isLoggedIn) router.push("/login");
-  }, []);
+    if (activeTab === "list") fetchFriends();
+    else if (activeTab === "add") handleSearch(searchQuery);
+    else if (activeTab === "sent") fetchSentRequests();
+    else if (activeTab === "received") fetchReceivedRequests();
+  }, [activeTab]);
+
 
   return (
-    <Box>
       <Content>
-        <KeyboardMini keys={authKeys} />
-        <ProfileCard>
-        <h1>친구 목록</h1>
-          <SearchContainer>
-            <nav>
-              <ol>
-                <li>
-                    <LogoContainer >
-                        <Image src="/defaultprofile.png" alt="Logo" width={40} height={40}/>
-                    </LogoContainer>
-                </li>
-              </ol>
-            </nav>
-          </SearchContainer>
+        <nav>
+          <SubMenu>
+            <li onClick={() => setActiveTab("list")} className={activeTab === "list" ? "active" : ""}>
+              <FiUsers /> 친구 목록
+            </li>
+            <li onClick={() => setActiveTab("add")} className={activeTab === "add" ? "active" : ""}>
+              <FiUserPlus /> 친구 추가
+            </li>
+            <li onClick={() => setActiveTab("sent")} className={activeTab === "sent" ? "active" : ""}>
+              <FiArrowUpCircle /> 보낸 요청
+            </li>
+            <li onClick={() => setActiveTab("received")} className={activeTab === "received" ? "active" : ""}>
+              <FiArrowDownCircle /> 받은 요청
+            </li>
+          </SubMenu>
 
-        </ProfileCard>
+        </nav>
+        <FriendWrapper>
+          {activeTab === "list" && (
+            <>
+              <h2>친구 목록</h2>
+              {friends.length === 0 ? <p>친구가 없습니다.</p> : friends.map(f => (
+              <FriendItem key={f.id}>{f.username}</FriendItem>
+            ))}
+            </>
+          )}
+          {activeTab === "add" && (
+            <>
+              <h2>검색</h2>
+              <input
+                type="text"
+                placeholder="닉네임 입력"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+              <button onClick={() => handleSearch(searchQuery)}>검색</button>
+              <ul>
+                {searchResults.map(user => (
+                  <li key={user.id}>{user.username}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          {activeTab === "sent" && (
+            <>
+              <h2>보낸 요청</h2>
+              {sentRequests.length === 0 ? <p>보낸 요청이 없습니다.</p> : sentRequests.map(r => (
+                <FriendItem key={r.id}>{r.username}</FriendItem>
+              ))}
+            </>
+          )}
+          {activeTab === "received" && (
+            <>
+              <h2>받은 요청</h2>
+              {receivedRequests.length === 0 ? <p>받은 요청이 없습니다.</p> : receivedRequests.map(r => (
+                <FriendItem key={r.id}>{r.username}</FriendItem>
+              ))}
+            </>
+          )}
+
+        </FriendWrapper>
       </Content>
-    </Box>
   );
 };
 
-export default Friend;
-
-const ProfileCard = styled.aside`
-  width : 250px;
-  margin-top : 40px;
-`
-
-const SearchContainer = styled.div`
-  button {
-    font-size : 14px;
-    margin : 0.3rem 0rem;
-    cursor : pointer;
-  }
-  ol{
-    list-style:none;
-  }
-  button:hover{
-    box-shadow: inset 0 -10px 0  #fcf3d9; 
-  }
-`
-
-const LogoContainer = styled.div`
-  display:flex;
-  gap : 10px;
-  margin-bottom : 10px;
-  line-height: 2;
-  img{
-    height: 30px;
-    width: auto;
-  }
-`
-
-
-const Box = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  background: var(--background);
-`;
+export default FriendPage;
 
 
 const Content = styled.div`
-  margin-top : 100px;
-  flex-direction: column;
-  align-items: center;
-  display:flex;
+  display: flex;
+  width: var(--tpg-basic-width);
+  gap : 40px;
+  margin-top: 10px;
 `;
 
+const FriendWrapper = styled.div`
+  flex: 1;
+`
 
-const ScoreGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(10, 16px);
-  gap: 4px;
-  margin-top: 20px;
-  cursor:pointer;
+const SubMenu = styled.ul`
+  list-style: none;
+  padding: 0;
+  width : 200px;
 
-  .cell {
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    background: #ebedf0;
-    transition: background 0.3s;
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s;
+    font-size: 14px;
+
+    &:hover {
+      background-color: var(--sub-menu-active);
+    }
+
+    &.active {
+      background-color: var(--sub-menu-active);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
   }
-  .cell[data-score="0"] {
-    background: #ebedf0;
-  }
-  .cell[data-score]:not([data-score="0"]) {
-    background: #c6e48b;
-  }
+`;
+
+const FriendItem = styled.div`
+  padding: 6px 10px;
+  border-bottom: 1px solid #ddd;
 `;

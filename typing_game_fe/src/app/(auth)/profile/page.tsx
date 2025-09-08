@@ -5,11 +5,10 @@ import Image from "next/image";
 import styled from "styled-components";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import KeyboardMini from "@/app/_components/SubMenu";
-import authKeys from "../../_components/keyboard/authKeys";
 import { useAuth } from "@/app/hooks/useAuth"
 import { useUserActions } from "@/app/hooks/useUserActions"
 import { LongText } from "../../types/long-text";
+import { FiUser, FiLogOut, FiTrash2, FiEdit } from "react-icons/fi";
 
 interface AllTextItem {
   longTextId: number;
@@ -130,68 +129,69 @@ useEffect(() => {
 }, [isLoggedIn]);
 
   return (
-    <Box>
-      <Content>
-        <KeyboardMini keys={authKeys} />
-        <ProfileCard>
-          <SearchContainer>
-            <LogoContainer >
-              <Image src="/defaultprofile.png" alt="Logo" width={40} height={40}/>
-              <input value={localUsername} onChange={e => setUsername(e.target.value)} />
-            </LogoContainer>
-            <nav>
-              <ol>
-                <li><button onClick={handleLogout}>로그아웃</button></li>
-                <li><button onClick={handleUpdateProfile}>회원정보수정</button></li>
-                <li><button onClick={handleDeleteProfile}>탈퇴하기</button></li>
-              </ol>
-            </nav>
-          </SearchContainer>
+    <Content>
+      <ProfileCard>
+        <LogoContainer >
+          <Image src="/defaultprofile.png" alt="Logo" width={40} height={40}/>
+          <input value={localUsername} onChange={e => setUsername(e.target.value)} />
+        </LogoContainer>
+        <nav>
+          <SubMenu>
+            <li onClick={() => router.push("/friends")}>
+              <FiUser /> 친구
+            </li>
+            <li onClick={handleLogout}>
+              <FiLogOut /> 로그아웃
+            </li>
+            <li onClick={handleUpdateProfile}>
+              <FiEdit /> 회원정보 수정
+            </li>
+            <li onClick={handleDeleteProfile}>
+              <FiTrash2 /> 탈퇴
+            </li>
+          </SubMenu>
+        </nav>
 
-          <ScoreGrid>
-            {textList.map(post => (
-              <div 
-                key={`${post.isUserFile ? "my" : "all"}-${post.longTextId}`}
-                title={`${post.title} (score: ${post.score ?? "없음"})`}
-                className="cell"
-                data-score={post.score}
-                onClick={() => setSelectedPost(post)}
-              />
-            ))}
-          </ScoreGrid>
-          {selectedPost && (
-          <div className="info-box">
-            <h3>{selectedPost.title}</h3>
-            <p>ID: {selectedPost.longTextId}</p>
-            {selectedPost.isUserFile && <span>내 글🐻‍❄️</span>}
-            <p>점수 {selectedPost.score || "기록 전"}</p>
-          </div>
-        )}
-        </ProfileCard>
-      </Content>
-    </Box>
+        <ScoreGrid>
+          {textList.map(post => (
+            <div 
+              key={`${post.isUserFile ? "my" : "all"}-${post.longTextId}`}
+              title={`${post.title} (score: ${post.score ?? "없음"})`}
+              className="cell"
+              data-score={post.score}
+              onClick={() => setSelectedPost(post)}
+            />
+          ))}
+        </ScoreGrid>
+        {selectedPost && (
+        <div className="info-box">
+          <h3>{selectedPost.title}</h3>
+          <p>ID: {selectedPost.longTextId}</p>
+          {selectedPost.isUserFile && <span>내 글🐻‍❄️</span>}
+          <p>점수 {selectedPost.score || "기록 전"}</p>
+        </div>
+      )}
+      </ProfileCard>
+    </Content>
   );
 };
 
 export default Profile;
 
+
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+
 const ProfileCard = styled.aside`
-  width : 250px;
+  width: var(--tpg-basic-width);
   margin-top : 40px;
 `
 
 const SearchContainer = styled.div`
-  button {
-    font-size : 14px;
-    margin : 0.3rem 0rem;
-    cursor : pointer;
-  }
-  ol{
-    list-style:none;
-  }
-  button:hover{
-    box-shadow: inset 0 -10px 0  #fcf3d9; 
-  }
 `
 
 const LogoContainer = styled.div`
@@ -200,26 +200,6 @@ const LogoContainer = styled.div`
   margin-bottom : 10px;
   line-height: 2;
 `
-
-
-const Box = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  background: var(--background);
-`;
-
-
-const Content = styled.div`
-  margin-top : 100px;
-  flex-direction: column;
-  align-items: center;
-  display:flex;
-`;
-
 
 const ScoreGrid = styled.div`
   display: grid;
@@ -240,5 +220,31 @@ const ScoreGrid = styled.div`
   }
   .cell[data-score]:not([data-score="0"]) {
     background: #c6e48b;
+  }
+`;
+
+
+const SubMenu = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s;
+    font-size: 14px;
+
+    &:hover {
+      background-color: var(--sub-menu-active);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
   }
 `;

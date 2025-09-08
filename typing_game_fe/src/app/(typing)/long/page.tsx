@@ -103,7 +103,7 @@ const Title = styled.h1`
 `;
 
 const MainWrapper = styled.div`
-  width: var(--tpg-basic-with);
+  width: var(--tpg-basic-width);
 `;
 
 const EmptyMessage = styled.h2`
