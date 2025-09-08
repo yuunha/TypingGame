@@ -39,13 +39,12 @@ const Header = styled.div`
   justify-content: space-between;
   width: 100%;
   font-size: var(--tpg-header-font-size);
-  // margin-top: 3rem;
   padding : 0 2px ;
 `;
 
 
 const Title = styled.h1`
-  font-weight: bold;
+  font-family: NunumHumanBold, Helvetica, sans-serif;
   margin-bottom: 0.5rem;
 `;
 

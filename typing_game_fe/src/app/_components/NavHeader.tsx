@@ -7,18 +7,14 @@ const NavHeader: React.FC= () => {
     return(
         <NavContainer>
             <NavBarInner>
-                <NavGrid>
-                <NavBarLogo style={{ gridArea: "logo" }}> 
-                    <a href="/">타.일</a>
+                <NavBarLogo> 
+                    <a href="/">TYLE</a>
                 </NavBarLogo>
-                <NavBarMenu style={{ gridArea: "menu" }}>
-                    <a href="/long">로그인</a>
-                    <a href="/game">게임</a>
+                <NavBarMenu>
+                    <a href="/login">Account</a>
+                    <a href="/rank">Rank</a>
+                    <a href="/profile">Profile</a>
                 </NavBarMenu>
-                {/* <div style={{ gridArea: "profile" }}>
-                    <img src="/profile.png" alt="Profile" />
-                </div> */}
-                </NavGrid>
             </NavBarInner>
         </NavContainer>
     );
@@ -29,38 +25,29 @@ export default NavHeader;
 
 const NavContainer = styled.nav`
     width:100%;
+    margin-bottom : 50px;
     display: flex;
     align-items:center;
     justify-content: center;
-    font-family: NunumHuman, Helvetica, sans-serif;
     font-size : var(--tpg-header-font-size);
-    font-weight : bold;
 `
 
 const NavBarInner = styled.div`
-    width:var(--tpg-basic-width);
-    padding: 10px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    display: flex;
+  width: var(--tpg-basic-width);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 ;
 `
-const NavGrid = styled.div`
-  display: grid;
-  height: 100%;
-  grid-template:
-    ". . ." 30px
-    "logo menu profile" 46px
-    ". . ." / 2fr auto 60px;
-  width: 910px;
-  margin: auto;
-`
-
 const NavBarLogo = styled.div`
+    font-family: Libertinus, Helvetica, sans-serif;
+    font-weight : bold;
 ;
 `
 const NavBarMenu = styled.div`
+    font-family: Montserrat, Helvetica, sans-serif;
     a{
-        padding-left:10px;
+    margin-left: 12px;
     }
 `

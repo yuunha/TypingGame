@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
-import KeyboardMini from "@/app/_components/KeyboardMini";
+import KeyboardMini from "@/app/_components/SubMenu";
 import authKeys from "../../_components/keyboard/authKeys";
 import { useAuth } from "@/app/hooks/useAuth"
 import Image from "next/image";
