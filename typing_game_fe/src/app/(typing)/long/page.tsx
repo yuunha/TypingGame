@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../_components/SideBar";
-import Typing from "../../_components/Typing";
+import Typing from "./Typing";
 import Keyboard from "../../_components/Keyboard";
 import typingKeys from "../../_components/keyboard/typingKeys";
 import styled from "styled-components";
@@ -35,19 +35,33 @@ const TypingPage: React.FC = () => {
         </SidebarWrapper>
       )}
       <Content>
-        {selectedSong && (
-          <Header>
-            <Title>긴글연습</Title>
-            <Title>〈{selectedSong.title}〉</Title>
-          </Header>
-        )}
-        {selectedSong && (
+        {selectedSong ? (
+          <>
+            <Header>
+              <Title>긴글연습</Title>
+              <Title>〈{selectedSong.title}〉</Title>
+            </Header>
+            <MainWrapper>
+              <Typing
+                longTextId={selectedSong.longTextId ?? 0}
+                isUserFile={selectedSong.isUserFile ?? false}
+              />
+            </MainWrapper>
+          </>
+        ) : (
+          <>
+            <Header>
+              <Title>긴글연습</Title>
+              <Title>선택된 글이 없습니다</Title>
+            </Header>
           <MainWrapper>
-            <Typing
-              longTextId={selectedSong.longTextId ?? 0}
-              isUserFile={selectedSong.isUserFile ?? false}
-            />
+            <ProgressBarContainer/>
+            <EmptyMessage>아직 선택된 글이 없습니다.
+              <SubMessage>왼쪽 사이드바에서 글을 선택해주세요!</SubMessage>
+            </EmptyMessage>
+            
           </MainWrapper>
+          </>
         )}
         <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
       </Content>
@@ -61,7 +75,6 @@ const Box = styled.div`
   position: relative;
   align-items: center;
   height: 100vh;
-  width: 100vw;
   overflow: hidden;
 `;
 
@@ -74,27 +87,38 @@ const SidebarWrapper = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
-  color: black;
-  font-size: 0.8rem;
-  margin-top: 3rem;
+  font-size: var(--tpg-header-font-size);
+  padding : 0 2px ;
 `;
 
 const Title = styled.h1`
   font-weight: bold;
-  margin-bottom: 1rem;
-  text-align: center;
+  margin-bottom: 0.5rem;
 `;
 
 const MainWrapper = styled.div`
   width: var(--tpg-basic-with);
-  color: black;
-  border-radius: 0 20px 20px 0;
+`;
+
+const EmptyMessage = styled.h2`
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  min-height: 300px;
+`;
+
+const SubMessage = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+`;
+
+const ProgressBarContainer = styled.div`
+  height: 2px;
+  background-color: var(--progress-bg);
+  margin-bottom: 1.5rem;
 `;

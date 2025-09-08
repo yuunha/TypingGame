@@ -182,21 +182,14 @@ export default Sidebar;
 
 
 const Aside = styled.aside`
-  width: 13rem;
-  min-width: 13rem;
-  left :440px;
-  top: 177px;
-  position:relative;
-  height :100px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
 
-    @media (max-width: 1500px) {
-    position: fixed;
-    left: 0;
-    width: 240px;
-    height: 100vh;
-    z-index: 5;
-    padding : 10px;
-  }
+  z-index: 5;
+  padding: 10px;
 
   @media (max-width: 1100px) {
     display:none;
@@ -205,15 +198,15 @@ const Aside = styled.aside`
 
 const ContentWrapper = styled.div`
   .list {
-    display: flex;
-    overflow: scroll;
-    height:300px;
+    display: block;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
     
     scrollbar-width: none;
     -ms-overflow-style: none;
 
     @media (min-width: 1024px) {
-      display: block;
+      display: none;
     }
 
     a {

@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
-import ResultModal from "./ResultModal";
-import { useTexts } from "../hooks/useTexts";
+import ResultModal from "../../_components/ResultModal";
+import { useTexts } from "../../hooks/useTexts";
 
 
 interface TypingProps {
@@ -195,44 +195,30 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
 export default Typing;
 
 const TypingLine = styled.div`
-  min-height: 140px;
+  min-height: 300px;
 `;
 
 const ProgressBarContainer = styled.div`
-  width: 100%;
-  height: 8px;
+  // width: 100%;
+  height: 2px;
   background-color: var(--progress-bg);
-  border-radius: 6px;
-  overflow: hidden;
   margin-bottom: 1.5rem;
 `;
 
 const ProgressBarFill = styled.div<{ progress: number }>`
   height: 100%;
-  background-color: var(--progress-fill);
+  background-color: var(--key-fill-red);
   width: ${({ progress }) => progress}%;
   transition: width 0.3s ease;
 `;
 
 
 const Wrapper = styled.div`
-  flex-direction: column;
-  align-items: center;
-  margin-top: 2rem;
   height : 370px;
-  min-width: var(--tpg-basic-with);
-  p {
-    font-size: 15px;
-  }
+  min-width: var(--tpg-basic-width);
 `;
 
 
-const SubLine = styled.div`
-  margin-bottom: 1rem;
-  width: 100%;
-  font-size: var(--typing-size);
-  color: var(--typing-line-sub);
-`;
 
 const CurrentLine = styled.p`
   margin-bottom: 1rem;
@@ -253,10 +239,19 @@ const Input = styled.input`
   user-select: none;  // 드래그 선택 막기
 `;
 
+
+// TypingLocal과 다른 부분
 const InfoBox = styled.div`
   display: flex;
   gap: 1rem;
   margin-top: 3rem;
   font-size: 1.125rem;
+`;
+
+const SubLine = styled.div`
+  margin-bottom: 1rem;
+  width: 100%;
+  font-size: var(--typing-size);
+  color: var(--typing-line-sub);
 `;
 
