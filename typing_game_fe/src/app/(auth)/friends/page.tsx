@@ -4,18 +4,32 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useFriend } from "@/app/hooks/useFriend";
 import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus } from "react-icons/fi";
+import { d } from "hangul-js";
+
+interface Friend {
+  id: number;
+  username: string;
+  avatarUrl?: string;
+}
 
 const FriendPage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<"list" | "add" | "sent" | "received">("list");
   const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests } = useFriend();
   const [searchQuery, setSearchQuery] = useState("");
+  const [dfriends, dsetFriends] = useState<Friend[]>([]);
 
   useEffect(() => {
     if (activeTab === "list") fetchFriends();
     else if (activeTab === "add") handleSearch(searchQuery);
     else if (activeTab === "sent") fetchSentRequests();
     else if (activeTab === "received") fetchReceivedRequests();
+
+    dsetFriends([
+      { id: 1, username: "유저1" },
+      { id: 2, username: "유저2" },
+      { id: 3, username: "유저3" },
+    ]);
   }, [activeTab]);
 
 
@@ -42,8 +56,12 @@ const FriendPage: React.FC = () => {
           {activeTab === "list" && (
             <>
               <h2>친구 목록</h2>
-              {friends.length === 0 ? <p>친구가 없습니다.</p> : friends.map(f => (
-              <FriendItem key={f.id}>{f.username}</FriendItem>
+              {dfriends.length === 0 ? <p>친구가 없습니다.</p> : dfriends.map(f => (
+              <FriendItem key={f.id}>
+                <UserProfileImg src='/b3.jpg'/>
+                <UserName>{f.username}</UserName>
+                <DeleteFriendBtn>x</DeleteFriendBtn>
+              </FriendItem>
             ))}
             </>
           )}
@@ -130,6 +148,21 @@ const SubMenu = styled.ul`
 `;
 
 const FriendItem = styled.div`
-  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
   border-bottom: 1px solid #ddd;
+`;
+
+const UserProfileImg = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+const UserName = styled.div`
+`;
+const DeleteFriendBtn = styled.span`
+  cursor:pointer;
 `;
