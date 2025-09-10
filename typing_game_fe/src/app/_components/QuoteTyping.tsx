@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
-import ResultModal from "./ResultModal";
-import { useTexts } from "../hooks/useTexts";
+import QuoteResult from "./QuoteResult";
 
 interface TypingLocalProps {
   lyrics: string;
@@ -12,111 +11,73 @@ interface TypingLocalProps {
 
 const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
 
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [elapsedTime, setElapsedTime] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [cpm, setCpm] = useState(0);
   const [correctChars, setCorrectChars] = useState(0);
   const [totalChars, setTotalChars] = useState(0);
-
-  const currentLine = lyrics;
-
   
-  const totalTypedChars = () => {
-    // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기
-    const pastChars = Hangul
-      .disassemble(lyrics.slice(0, currentLineIndex), true)
-      .flat().length;
-
-    // 현재 입력값 자모 분리 후 길이
-    const currentInputChars = Hangul
-      .disassemble(inputValue, true)
-      .flat().length;
-    return pastChars + currentInputChars;
-  };
+  const totalTypedChars = () => 
+    Hangul.disassemble(inputValue, true).flat().length;
 
   // 입력 이벤트
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (startTime === null) setStartTime(Date.now());
 
-    if (startTime === null) {
-      setStartTime(Date.now());
-    }
-
-    if (e.key === "Enter") {
-      if (inputValue.length === currentLine.length) {
+    if (e.key === "Enter" && inputValue.length === lyrics.length) {
         if (startTime !== null) {
           const timeTaken = Date.now() - startTime;
-          setElapsedTime(prev => prev + timeTaken);
-        }
-        let correct = 0;
-        for (let i = 0; i < currentLine.length; i++) {
-          if (inputValue[i] === currentLine[i]) {
-            correct++;
+          const chars = Hangul.disassemble(inputValue, true).flat();
+          let correct = 0;
+          for (let i = 0; i < lyrics.length; i++) {
+            if (inputValue[i] === lyrics[i]) correct++;
           }
+          setCorrectChars(prev => prev + correct);
+          setTotalChars(prev => prev + lyrics.length);
+          setCpm(Math.round(chars.length / (timeTaken / 60000)));
         }
-        setCorrectChars(prev => prev + correct);
-        setTotalChars(prev => prev + currentLine.length);
         setCompleted(true);
-      }
     }
   };
 
   // 다시하기 버튼
   const handleRetry = () => {
-    setCompleted(false);
-    setCurrentLineIndex(0);
     setInputValue("");
     setStartTime(null);
-    setElapsedTime(0);
+    setCompleted(false);
     setCpm(0);
     setCorrectChars(0);
     setTotalChars(0);
-  }
+  };
 
   // 실시간 CPM 계산
   useEffect(() => {
-    
     if (startTime === null || completed) return;
 
     const interval = setInterval(() => {
-      const now = Date.now();
-      const elapsed = elapsedTime + (now - startTime);
+      const elapsed = Date.now() - startTime;
       const chars = totalTypedChars();
-      const currentCpm = elapsed > 0 ? Math.round(chars / (elapsed / 60000)) : 0;
-      setCpm(currentCpm);
+      setCpm(Math.round(chars / (elapsed / 60000)));
     }, 100);
 
     return () => clearInterval(interval);
-  }, [startTime, inputValue, currentLineIndex, elapsedTime, completed]);
+  }, [startTime, inputValue, completed]);
 
   useEffect(() => {
-    setCurrentLineIndex(0);
-    setInputValue("");
-    setStartTime(null);
-    setElapsedTime(0);
-    setCompleted(false);
-    setCpm(0);
-    setCorrectChars(0);
-    setTotalChars(0);
+    handleRetry();
   }, [lyrics]);
 
   const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
-  const totalLyricsChars = Hangul
-    .disassemble(lyrics, true)
-    .flat().length;
+  const totalLyricsChars = Hangul.disassemble(lyrics, true).flat().length;
+
   return (
     <>
       <Wrapper>
         {completed && (
-          <ResultModal
+          <QuoteResult
             accuracy={accuracy}
             cpm={cpm}
-            elapsedTime={elapsedTime}
-            totalChars={totalChars}
-            correctChars={correctChars}
-            lineCount={lyrics.length}
             onRetry={handleRetry}
           />
         )}
@@ -125,19 +86,16 @@ const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
         </ProgressBarContainer> 
       <TypingLine>
         <CurrentLine>
-          {(currentLine ?? "").split("").map((char, i) => {
+          {lyrics.split("").map((char, i) => {
             const typedChar = inputValue[i];
             let color = "var(--color-basic)";
-          
             let textDecoration = "transparent";
+
             if (typedChar !== undefined) {
-              if (i === inputValue.length - 1) {
-                color = 'black';
-              } else {
+              if (i === inputValue.length - 1) color = "black";
+              else {
                 color = typedChar === char ? "var(--color-correct)" : "var(--color-wrong)";
-                if (typedChar !== char) {
-                  textDecoration = 'underline'; // 틀린 경우 밑줄
-                }
+                if (typedChar !== char) textDecoration = "underline";
               }
             }
             

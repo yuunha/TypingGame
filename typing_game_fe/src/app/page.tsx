@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { useQuote } from "@/app/hooks/useQuote";
 import Keyboard from './_components/Keyboard';
 import keys from './_components/keyboard/keys'
-import TypingLocal from "./_components/TypingLocal";
+import QuoteTyping from "./_components/QuoteTyping";
 
 export default function Home() {
   
@@ -19,7 +19,7 @@ return (
       <Title>{quote.author}</Title>
     </Header>
     <MainWrapper>
-      <TypingLocal lyrics={quote.content ?? ""}/>
+      <QuoteTyping lyrics={quote.content ?? ""}/>
     </MainWrapper>
     <Keyboard keys={keys} />
   </Content>
