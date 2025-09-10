@@ -4,42 +4,63 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
+import html2canvas from "html2canvas";
+import { FiDownload, FiX, fiX } from "react-icons/fi";
 
-interface ScoreItem {
-  score: number;
-}
 
 interface ResultModalProps {
+  lyrics: string;
   accuracy: number;
   cpm: number;
   onRetry: () => void;
 }
 
 const ResultModal: React.FC<ResultModalProps> = ({
+  lyrics,
   accuracy,
   cpm,
   onRetry,
 }) => {
   const [mounted, setMounted] = useState(false);
+  const today = new Date();   
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1; 
+  const date = today.getDate(); 
+
+  const saveAsImage = async () => {
+    const element = document.getElementById("result");
+    if (!element) return;
+    const canvas = await html2canvas(element, {
+      backgroundColor: "#fff",
+      scale: 2, 
+    });
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = "result.png";
+    link.click();
+  };
+
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
   
-
   if (!mounted) return null;
 
   return ReactDOM.createPortal(
     <Backdrop>
-      <ModalBox>
-        <CloseButton onClick={onRetry}>×</CloseButton>
+      <ModalBox id="result">
+        <ButtonWrapper>
+          <Button onClick={saveAsImage}><FiDownload /></Button>
+          <Button onClick={onRetry}><FiX /></Button>
+        </ButtonWrapper>
+        <NavBarLogo> TYLE</NavBarLogo>
+        <p>{lyrics}</p>
+        <p>{year}/{month}/{date}</p>
         <ResultStats>
           <StatBox>정확도 {accuracy}%</StatBox>
           <StatBox>평균 {cpm}타</StatBox>
         </ResultStats>
-        <p>🎉 타자 연습 완료!</p>
-        <p>*정확도 100%시 기록 가능</p>
-        <br />
       </ModalBox>
     </Backdrop>,
     document.body
@@ -47,26 +68,27 @@ const ResultModal: React.FC<ResultModalProps> = ({
 };
 
 export default ResultModal;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 12px;
-  right: 20px;
-  font-size: 1.5rem;
-  color: #aaa;
+const ButtonWrapper = styled.div`
+  display:flex;
+  gap : 10px;
+  justify-content: right;
+  align-items: center;
+  color: #292929ff;
+`
+const Button = styled.button`
+  font-size: 1rem;
   cursor: pointer;
-  transition: color 0.2s;
+`
 
-  &:hover {
-    color: #fff;
-  }
+const NavBarLogo = styled.div`
+    font-family: Libertinus, Helvetica, sans-serif;
+    font-weight : bold;
 `;
-
 
 const Backdrop = styled.div`
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* 더 진하게 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,8 +97,9 @@ const Backdrop = styled.div`
 
 const ModalBox = styled.div`
 position: relative;
-  background: #ffffffff;
-  padding: 2rem;
+  background: #ffffff;
+  width : 310px;
+  padding: 1.3rem 2rem 2rem 2rem;
   border-radius: 4px;
   max-width: 380px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
@@ -111,8 +134,7 @@ const ResultStats = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin: 1.5rem 0 1.2rem 0;
-  justify-content: center;
+  justify-content: left;
 `;
 
 const StatBox = styled.div`

@@ -76,6 +76,7 @@ const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
       <Wrapper>
         {completed && (
           <QuoteResult
+            lyrics = {lyrics}
             accuracy={accuracy}
             cpm={cpm}
             onRetry={handleRetry}
