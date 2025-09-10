@@ -188,7 +188,8 @@ const ProgressBarFill = styled.div<{ progress: number }>`
 
 const Wrapper = styled.div`
   height : 370px;
-  min-width: var(--tpg-basic-width);
+  width: var(--tpg-basic-width);
+
 `;
 
 const CurrentLine = styled.p`

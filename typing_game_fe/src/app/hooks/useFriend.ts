@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/app/hooks/useAuth";
 
 interface Friend {
   id: number;

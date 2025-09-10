@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 
 export const useAuth = () => {
+  
   const [username, setUsername] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
