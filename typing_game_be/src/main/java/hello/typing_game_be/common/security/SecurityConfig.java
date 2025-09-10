@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/user").permitAll()   // 회원가입 등 POST만 허용
                 .requestMatchers("/user/**").authenticated()            // 그 외 /user 하위 경로는 인증 필요
                 .requestMatchers(HttpMethod.GET, "/long-text/**").permitAll()  // GET 요청만 허용
+                .requestMatchers(HttpMethod.GET, "/quote/today").permitAll() //오늘의 명언
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())  // 폼 로그인 비활성화

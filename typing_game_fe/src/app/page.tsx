@@ -4,25 +4,22 @@ import React from "react";
 import '../app/globals.css';
 import styled from "styled-components";
 
+import { useQuote } from "@/app/hooks/useQuote";
 import Keyboard from './_components/Keyboard';
 import keys from './_components/keyboard/keys'
 import TypingLocal from "./_components/TypingLocal";
 
 export default function Home() {
-  const lyricsList = {
-      author: "나태주",
-      title: "너를 사랑하는 나의 맘",
-      content: "너의 꾸밈없음과 꿈 많음을 사랑한다",
-  };
-
+  
+  const quote = useQuote();
 return (
   <Content>
     <Header>
       <Title>오늘의 글</Title>
-      <Title>{lyricsList.author}〈{lyricsList.title}〉</Title>
+      <Title>{quote.author}</Title>
     </Header>
     <MainWrapper>
-      <TypingLocal lyrics={lyricsList.content}/>
+      <TypingLocal lyrics={quote.content ?? ""}/>
     </MainWrapper>
     <Keyboard keys={keys} />
   </Content>
