@@ -1,50 +1,22 @@
-'use client';
-
-import React from "react";
-import '../app/globals.css';
-import styled from "styled-components";
-
-import { useQuote } from "@/app/hooks/useQuote";
-import Keyboard from './_components/Keyboard';
 import keys from './_components/keyboard/keys'
 import QuoteTyping from "./_components/QuoteTyping";
+import Keyboard from './_components/Keyboard';
 
-export default function Home() {
-  
-  const quote = useQuote();
+export default async function Home() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const res = await fetch(`${baseUrl}/quote/today`, {cache: "no-store"});
+  const quote = await res.json();
+
 return (
-  <Content>
-    <Header>
-      <Title>오늘의 글</Title>
-      <Title>{quote.author}</Title>
-    </Header>
-    <MainWrapper>
-      <QuoteTyping lyrics={quote.content ?? ""}/>
-    </MainWrapper>
-    <Keyboard keys={keys} />
-  </Content>
+    <div className="content">
+      <div className="header">
+        <h1 className="title">오늘의 글</h1>
+        <h1 className="title">{quote.author}</h1>
+      </div>
+      <div className="mainWrapper">
+        <QuoteTyping lyrics={quote.content ?? ""} />
+      </div>
+      <Keyboard keys={keys} />
+    </div>
   );
-};
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-size: var(--tpg-header-font-size);
-  padding : 0 2px ;
-`;
-
-
-const Title = styled.h1`
-  font-family: NunumHumanBold, Helvetica, sans-serif;
-  margin-bottom: 0.5rem;
-`;
-
-const MainWrapper = styled.div`
-  width: var(--tpg-basic-with);
-`;
+}

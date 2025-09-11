@@ -1,7 +1,6 @@
 'use client';
 
 import styled from "styled-components";
-import React, { useState, useRef, useEffect } from "react";
 
 const NavHeader: React.FC= () => {
 
