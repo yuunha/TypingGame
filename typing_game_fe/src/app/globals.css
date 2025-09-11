@@ -126,3 +126,36 @@ body {
   font-family: 'Montserrat';
   src: url('./styles/font/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
+
+/* layout */
+.mainWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 100%; */
+  background-color: var(--background);
+}
+
+/* page */
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: var(--tpg-header-font-size);
+  padding: 0 2px;
+}
+
+.title {
+  font-family: NunumHumanBold, Helvetica, sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.mainWrapper {
+  width: var(--tpg-basic-with);
+}

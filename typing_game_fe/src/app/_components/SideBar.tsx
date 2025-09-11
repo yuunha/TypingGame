@@ -132,7 +132,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         })}
       </div>
       <UploadToggleBtn onClick={() => setShowUpload(s => !s)}>
-        {showUpload ? 'x' : '+++++'}
+        {showUpload ? 'x' : '+add'}
       </UploadToggleBtn>
       {showUpload && (
         <UploadBox>
@@ -205,9 +205,6 @@ const ContentWrapper = styled.div`
     scrollbar-width: none;
     -ms-overflow-style: none;
 
-    @media (min-width: 1024px) {
-      display: none;
-    }
 
     a {
       display: block;
@@ -255,6 +252,7 @@ const UploadToggleBtn = styled.button`
   cursor:pointer;
   padding-left: 1rem;
   cursor: pointer;
+  font-size: 0.75rem;
   &:hover {
    color: var(--progress-fill);
   }

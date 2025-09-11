@@ -1,11 +1,10 @@
-// components/ResultModal.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
-import { FiDownload, FiX, fiX } from "react-icons/fi";
+import { FiDownload, FiX } from "react-icons/fi";
 
 
 interface ResultModalProps {
