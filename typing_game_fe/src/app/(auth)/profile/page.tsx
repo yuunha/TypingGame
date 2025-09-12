@@ -34,6 +34,7 @@ const Profile: React.FC = () => {
   const [textList, setTextList] = useState<LongText[]>([]);
   const [selectedPost, setSelectedPost] = useState<LongText | null>(null);
 
+  console.log(username)
 
   useEffect(() => {
     if (username) setLocalUsername(username);
@@ -191,8 +192,6 @@ const ProfileCard = styled.aside`
   margin-top : 40px;
 `
 
-const SearchContainer = styled.div`
-`
 
 const LogoContainer = styled.div`
   display:flex;

@@ -21,7 +21,7 @@ const SignupPage: React.FC = () => {
     try {
       await axios.post(
         `${baseUrl}/user`,
-        { username, loginId, password },
+        { username, loginId : id, password },
         { withCredentials: true }
       );
       router.push("/login");

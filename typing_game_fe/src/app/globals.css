@@ -52,7 +52,8 @@
   --color-correct-bg: rgba(58, 105, 134, 0.5);
   --color-wrong-bg: rgba(175, 88, 79, 0.493);
 
-
+  /* friend */
+  --cus-friend-delete: var(--color-wrong);
 
   --typing-line-sub: #6d6d6d;
 

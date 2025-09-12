@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import { useFriend } from "@/app/hooks/useFriend";
-import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus } from "react-icons/fi";
-import { d } from "hangul-js";
+import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus, FiUserMinus } from "react-icons/fi";
+
 
 interface Friend {
   id: number;
@@ -15,9 +15,8 @@ interface Friend {
 const FriendPage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<"list" | "add" | "sent" | "received">("list");
-  const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests } = useFriend();
   const [searchQuery, setSearchQuery] = useState("");
-  const [dfriends, dsetFriends] = useState<Friend[]>([]);
+  const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests } = useFriend();
 
   useEffect(() => {
     if (activeTab === "list") fetchFriends();
@@ -25,13 +24,9 @@ const FriendPage: React.FC = () => {
     else if (activeTab === "sent") fetchSentRequests();
     else if (activeTab === "received") fetchReceivedRequests();
 
-    dsetFriends([
-      { id: 1, username: "유저1" },
-      { id: 2, username: "유저2" },
-      { id: 3, username: "유저3" },
-    ]);
   }, [activeTab]);
 
+  
 
   return (
       <Content>
@@ -40,9 +35,9 @@ const FriendPage: React.FC = () => {
             <li onClick={() => setActiveTab("list")} className={activeTab === "list" ? "active" : ""}>
               <FiUsers /> 친구 목록
             </li>
-            <li onClick={() => setActiveTab("add")} className={activeTab === "add" ? "active" : ""}>
+            {/* <li onClick={() => setActiveTab("add")} className={activeTab === "add" ? "active" : ""}>
               <FiUserPlus /> 친구 추가
-            </li>
+            </li> */}
             <li onClick={() => setActiveTab("sent")} className={activeTab === "sent" ? "active" : ""}>
               <FiArrowUpCircle /> 보낸 요청
             </li>
@@ -56,11 +51,13 @@ const FriendPage: React.FC = () => {
           {activeTab === "list" && (
             <>
               <h2>친구 목록</h2>
-              {dfriends.length === 0 ? <p>친구가 없습니다.</p> : dfriends.map(f => (
+              {friends.length === 0 ? <p>친구가 없습니다.</p> : friends.map(f => (
               <FriendItem key={f.id}>
-                <UserProfileImg src='/b3.jpg'/>
-                <UserName>{f.username}</UserName>
-                <DeleteFriendBtn>x</DeleteFriendBtn>
+                <UserProfile> 
+                  <UserProfileImg src='/g72.jpg'/>
+                  {f.username}
+                </UserProfile>
+                <DeleteFriendBtn>삭제</DeleteFriendBtn>
               </FriendItem>
             ))}
             </>
@@ -76,7 +73,7 @@ const FriendPage: React.FC = () => {
               />
               <button onClick={() => handleSearch(searchQuery)}>검색</button>
               <ul>
-                {searchResults.map(user => (
+                {searchResults.length === 0 ? <></> : searchResults.map(user => (
                   <li key={user.id}>{user.username}</li>
                 ))}
               </ul>
@@ -150,19 +147,28 @@ const SubMenu = styled.ul`
 const FriendItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
+  margin-top: 15px;
 `;
 
 const UserProfileImg = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   object-fit: cover;
 `;
-const UserName = styled.div`
-`;
+
 const DeleteFriendBtn = styled.span`
   cursor:pointer;
+  background-color : var(--cus-friend-delete);
+  font-size : 0.8rem;
+  padding : 1px 3px;
+  border-radius : 5px;
+  color : white;
 `;
+
+const UserProfile = styled.div`
+  display: flex;
+  gap : 10px;
+  align-items: center;
+`

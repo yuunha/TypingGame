@@ -1,13 +1,13 @@
 server:
   address: 0.0.0.0
-  port : ${PORT}
+  port : 8080
 
 spring:
   # .env import
   #config:
     #import: optional:file:.env[.properties]
   profiles:
-    active: prod  # 기본은 dev 환경
+    active: test  # 기본은 dev 환경
 
   cloud:
     aws:
