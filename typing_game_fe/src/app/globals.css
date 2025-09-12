@@ -54,6 +54,7 @@
 
   /* friend */
   --cus-friend-delete: var(--color-wrong);
+  --cus-friend-accept: rgb(74, 120, 148);
 
   --typing-line-sub: #6d6d6d;
 

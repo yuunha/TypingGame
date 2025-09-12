@@ -11,7 +11,7 @@ return (
     <div className="content">
       <div className="header">
         <h1 className="title">오늘의 글</h1>
-        <h1 className="title">{quote.author}</h1>
+        <h1 className="title">{quote.author ?? ""}</h1>
       </div>
       <div className="mainWrapper">
         <QuoteTyping lyrics={quote.content ?? ""} />

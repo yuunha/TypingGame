@@ -57,7 +57,7 @@ const FriendPage: React.FC = () => {
                   <UserProfileImg src='/g72.jpg'/>
                   {f.username}
                 </UserProfile>
-                <DeleteFriendBtn>삭제</DeleteFriendBtn>
+                <FrDeleteBtn>삭제</FrDeleteBtn>
               </FriendItem>
             ))}
             </>
@@ -83,7 +83,15 @@ const FriendPage: React.FC = () => {
             <>
               <h2>보낸 요청</h2>
               {sentRequests.length === 0 ? <p>보낸 요청이 없습니다.</p> : sentRequests.map(r => (
-                <FriendItem key={r.id}>{r.username}</FriendItem>
+                <FriendItem key={r.receiverName}>
+                  <UserProfile> 
+                    <UserProfileImg src='/g72.jpg'/>
+                      {r.receiverName}
+                  </UserProfile>
+                  <FrBtnWrapper>
+                    <FrDeleteBtn>취소</FrDeleteBtn>
+                  </FrBtnWrapper>
+                </FriendItem>
               ))}
             </>
           )}
@@ -91,7 +99,16 @@ const FriendPage: React.FC = () => {
             <>
               <h2>받은 요청</h2>
               {receivedRequests.length === 0 ? <p>받은 요청이 없습니다.</p> : receivedRequests.map(r => (
-                <FriendItem key={r.id}>{r.username}</FriendItem>
+                <FriendItem key={r.requesterName}>
+                  <UserProfile> 
+                    <UserProfileImg src='/g72.jpg'/>
+                      {r.requesterName}
+                  </UserProfile>
+                  <FrBtnWrapper>
+                    <FrAcceptBtn>허용</FrAcceptBtn>
+                    <FrDeleteBtn>거부</FrDeleteBtn>
+                  </FrBtnWrapper>
+                </FriendItem>
               ))}
             </>
           )}
@@ -158,7 +175,12 @@ const UserProfileImg = styled.img`
   object-fit: cover;
 `;
 
-const DeleteFriendBtn = styled.span`
+const FrBtnWrapper = styled.div`
+  display: flex;
+  gap : 10px;
+`
+
+const FrDeleteBtn = styled.span`
   cursor:pointer;
   background-color : var(--cus-friend-delete);
   font-size : 0.8rem;
@@ -166,6 +188,16 @@ const DeleteFriendBtn = styled.span`
   border-radius : 5px;
   color : white;
 `;
+
+const FrAcceptBtn = styled.span`
+  cursor:pointer;
+  background-color : var(--cus-friend-accept);
+  font-size : 0.8rem;
+  padding : 1px 3px;
+  border-radius : 5px;
+  color : white;
+`;
+
 
 const UserProfile = styled.div`
   display: flex;
