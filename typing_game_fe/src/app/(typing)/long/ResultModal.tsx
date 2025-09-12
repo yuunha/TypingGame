@@ -4,10 +4,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
-
-interface ScoreItem {
-  score: number;
-}
+import { useScores } from "@/app/hooks/useScores";
 
 interface ResultModalProps {
   accuracy: number;
@@ -33,16 +30,17 @@ const ResultModal: React.FC<ResultModalProps> = ({
   isUserFile = false,
 }) => {
   const [mounted, setMounted] = useState(false);
-  const [score, setScore] = useState(0);
+
+  const { score, fetchScore} = useScores(longTextId, isUserFile);
+  
+
   useEffect(() => {
+    fetchScore();
     setMounted(true);
     return () => setMounted(false);
   }, []);
   const authHeader = typeof window !== "undefined" ? sessionStorage.getItem("authHeader") || "" : "";
   
-
-
-
 
 
   // 점수 기록하기
@@ -116,7 +114,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
         <RecordButton onClick={handleRecord}><p>📍 내 타수 기록하기</p></RecordButton>
         )}
         <p>*정확도 100%시 기록 가능</p>
-        <h2>이전 최고 기록 : {score} </h2>
+        <h2>이전 최고 기록 : {score}타 </h2>
         <br />
         <p>줄 수: {lineCount}줄</p>
         <p>글자 수: {correctChars} / {totalChars}자</p>
