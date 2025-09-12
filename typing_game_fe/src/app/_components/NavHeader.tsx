@@ -1,6 +1,7 @@
 'use client';
 
 import styled from "styled-components";
+import Link from "next/link"; 
 
 const NavHeader: React.FC= () => {
 
@@ -8,13 +9,13 @@ const NavHeader: React.FC= () => {
         <NavContainer>
             <NavBarInner>
                 <NavBarLogo> 
-                    <a href="/">TYLE</a>
+                    <Link href="/">TYLE</Link>
                 </NavBarLogo>
-                <NavBarMenu>
-                    <a href="/login">Account</a>
-                    <a href="/rank">Rank</a>
-                    <a href="/profile">Profile</a>
-                </NavBarMenu>
+                <div>
+                    <NavLink href="/login">Account</NavLink>
+                    <NavLink href="/rank">Rank</NavLink>
+                    <NavLink href="/profile">Profile</NavLink>
+                </div>
             </NavBarInner>
         </NavContainer>
     );
@@ -45,9 +46,7 @@ const NavBarLogo = styled.div`
     font-weight : bold;
 ;
 `
-const NavBarMenu = styled.div`
+const NavLink = styled(Link)`
     font-family: Montserrat, Helvetica, sans-serif;
-    a{
-    margin-left: 12px;
-    }
-`
+  margin-left: 12px;
+`;
