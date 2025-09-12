@@ -10,7 +10,6 @@ const LoginPage: React.FC = () => {
 
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
     
   return (
     <Content>
