@@ -1,0 +1,52 @@
+"use client";
+import { useState, useEffect } from "react";
+
+interface Friend {
+  id: number;
+  username: string;
+  profileImg?: string;
+}
+
+export const useFriendActions = () => {
+    const authHeader = sessionStorage.getItem("authHeader");
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    const rejectReceivedRequests = async (friendRequestId : number) => {
+        if (!authHeader) return;
+        try {
+        const res = await fetch(`${baseUrl}/friend-requests/${friendRequestId}`, {
+            method: "PATCH",
+            headers: { Authorization: authHeader, "Content-Type": "application/json",},
+            credentials: "include",
+            body: JSON.stringify({ status: "REJECT" }),
+        });
+        if (!res.ok) {
+            throw new Error(`서버 오류: ${res.status}`);
+        }
+        } catch (err) {
+        console.error("친구 요청 거부 실패", err);
+        }
+    };
+
+    const acceptReceivedRequests = async (friendRequestId : number) => {
+        if (!authHeader) return;
+        try {
+        const res = await fetch(`${baseUrl}/friend-requests/${friendRequestId}`, {
+            method: "PATCH",
+            headers: { Authorization: authHeader, "Content-Type": "application/json",},
+            credentials: "include",
+            body: JSON.stringify({ status: "ACCEPT" }),
+        });
+        if (!res.ok) {
+            throw new Error(`서버 오류: ${res.status}`);
+        }
+        } catch (err) {
+        console.error("친구 요청 거부 실패", err);
+        }
+    };
+
+  return {
+    acceptReceivedRequests,
+    rejectReceivedRequests,
+  };
+};

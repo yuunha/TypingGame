@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import { useFriend } from "@/app/hooks/useFriend";
+import { useFriendActions } from "@/app/hooks/useFriendActions";
 import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus, FiUserMinus } from "react-icons/fi";
 
 
@@ -17,6 +18,7 @@ const FriendPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"list" | "add" | "sent" | "received">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests } = useFriend();
+  const { rejectReceivedRequests } = useFriendActions();
 
   useEffect(() => {
     if (activeTab === "list") fetchFriends();
@@ -105,14 +107,14 @@ const FriendPage: React.FC = () => {
             <>
               <h2>받은 요청</h2>
               {receivedRequests.length === 0 ? <p>받은 요청이 없습니다.</p> : receivedRequests.map(r => (
-                <FriendItem key={r.requesterName}>
+                <FriendItem key={r.friendRequestId}>
                   <UserProfile> 
                     <UserProfileImg src='/g72.jpg'/>
                       {r.requesterName}
                   </UserProfile>
                   <FrBtnWrapper>
                     <FrAcceptBtn>허용</FrAcceptBtn>
-                    <FrDeleteBtn>거부</FrDeleteBtn>
+                    <FrDeleteBtn onClick={rejectReceivedRequests(r.friendRequestId)}>거부</FrDeleteBtn>
                   </FrBtnWrapper>
                 </FriendItem>
               ))}
