@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 interface Friend {
   id: number;
   username: string;
-  avatarUrl?: string;
+  profileImg?: string;
 }
 
 export const useFriend = () => {
@@ -34,14 +34,19 @@ export const useFriend = () => {
   //유저 검색
   const handleSearch = async (query: string) => {
     if (!authHeader) return;
-
     try {
-        const res = await fetch(`${baseUrl}/users/search?nickname=${encodeURIComponent(query)}`, {
+        const res = await fetch(`${baseUrl}/users?username=${query}&page=0&size=5`, {
         headers: { Authorization: authHeader },
         credentials: "include",
         });
         const data = await res.json();
-        setSearchResults(data);
+        console.log(data)
+        const friends: Friend[] = data.content.map((user:any)=>({
+          id: user.userId,
+          username: user.username,
+          profileImg: user.profileImageUrl ?? undefined,
+        }))
+        setSearchResults(friends);
     } catch (err) {
         console.error("유저 검색 실패", err);
     }

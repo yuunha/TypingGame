@@ -9,7 +9,7 @@ import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus, FiUserMinus } 
 interface Friend {
   id: number;
   username: string;
-  avatarUrl?: string;
+  profileImg?: string;
 }
 
 const FriendPage: React.FC = () => {
@@ -35,9 +35,9 @@ const FriendPage: React.FC = () => {
             <li onClick={() => setActiveTab("list")} className={activeTab === "list" ? "active" : ""}>
               <FiUsers /> 친구 목록
             </li>
-            {/* <li onClick={() => setActiveTab("add")} className={activeTab === "add" ? "active" : ""}>
+            <li onClick={() => setActiveTab("add")} className={activeTab === "add" ? "active" : ""}>
               <FiUserPlus /> 친구 추가
-            </li> */}
+            </li>
             <li onClick={() => setActiveTab("sent")} className={activeTab === "sent" ? "active" : ""}>
               <FiArrowUpCircle /> 보낸 요청
             </li>
@@ -73,8 +73,14 @@ const FriendPage: React.FC = () => {
               />
               <button onClick={() => handleSearch(searchQuery)}>검색</button>
               <ul>
-                {searchResults.length === 0 ? <></> : searchResults.map(user => (
-                  <li key={user.id}>{user.username}</li>
+                {searchResults.length === 0 ? <></> : searchResults.map(f => (
+                  <FriendItem key={f.id}>
+                    <UserProfile> 
+                      <UserProfileImg src='/g72.jpg'/>
+                      {f.username}
+                    </UserProfile>
+                    <FrAcceptBtn>추가</FrAcceptBtn>
+                  </FriendItem>
                 ))}
               </ul>
             </>
