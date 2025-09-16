@@ -74,7 +74,7 @@ public class FriendRequestService {
     public List<FriendRequestListResponse> getSentFriendRequests(Long userId) {
 
         //최근요청이 배열의 맨앞에
-        List<FriendRequest> list = friendRequestRepository.findByRequesterUserIdOrderByCreatedAtDesc(userId);
+        List<FriendRequest> list = friendRequestRepository.findByRequesterUserIdAndStatusOrderByCreatedAtDesc(userId,FriendRequestStatus.PENDING);
 
         return list.stream()
             .map(FriendRequestListResponse::fromEntity)
