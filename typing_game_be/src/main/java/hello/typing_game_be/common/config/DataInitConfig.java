@@ -14,6 +14,8 @@ import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
 import hello.typing_game_be.myLongText.entity.MyLongText;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
+import hello.typing_game_be.myLongTextScore.entity.MyLongTextScore;
+import hello.typing_game_be.myLongTextScore.repository.MyLongTextScoreRepository;
 import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
@@ -28,8 +30,10 @@ public class DataInitConfig {
     private final UserService userService;
     private final LongTextRepository longTextRepository;
     private final MyLongTextRepository myLongTextRepository;
+    private final MyLongTextScoreRepository myLongTextScoreRepository;
     private final UserRepository userRepository;
     private final FriendRequestRepository friendRequestRepository;
+
     String content1="동해물과 백두산이 마르고 닳도록\n"
         + "하느님이 보우하사 우리나라 만세\n"
         + "무궁화 삼천리 화려 강산\n"
@@ -37,17 +41,26 @@ public class DataInitConfig {
 
     String content2 =
         "여름 장이란 애시당초에 글러서, 해는 아직 중천에 있건만 장판은 벌써 쓸쓸하고 더운 햇발이 벌여놓은 전 휘장 밑으로 등줄기를 훅훅 볶는다."
-            + "마을 사람들은 거지반 돌아간 뒤요, 팔리지 못한 나뭇군패가 길거리에 궁싯거리고들 있으나 석윳병이나 받고 고깃마리나 사면 족할 이 축들을 바라고 언제까지든지 버티고 있을 법은 없다. "
-            + "춥춥스럽게 날아드는 파리떼도 장난군 각다귀들도 귀치않다."
-            + "얽둑배기요 왼손잡이인 드팀전의 허생원은 기어코 동업의 조선달에게 낚아보았다.";
+        + "마을 사람들은 거지반 돌아간 뒤요, 팔리지 못한 나뭇군패가 길거리에 궁싯거리고들 있으나 석윳병이나 받고 고깃마리나 사면 족할 이 축들을 바라고 언제까지든지 버티고 있을 법은 없다. "
+        + "춥춥스럽게 날아드는 파리떼도 장난군 각다귀들도 귀치않다."
+        + "얽둑배기요 왼손잡이인 드팀전의 허생원은 기어코 동업의 조선달에게 낚아보았다.";
     String content3 =
-        "제1조\n"
-        + "1. 대한민국은 민주공화국이다.\n"
-        + "2. 대한민국의 주권은 국민에게 있고, 모든 권력은 국민으로부터 나온다.\n";
+        "Yesterday all my troubles"
+        + "seemed so far away"
+        + "Now it looks as though they're here to stay"
+        + "Oh, I believe in yesterday"
+        + "Suddenly I'm not half the man I used to be"
+        + "There's a shadow hanging over me"
+        + "Oh, yesterday came suddenly";
+
     String content4 =
-        "제2조\n"
-            + "1. 대한민국의 국민이 되는 요건은 법률로 정한다.\n"
-            + "2. 국가는 법률이 정하는 바에 의하여 재외국민을 보호할 의무를 진다.\n";
+        "Who knows how long I've loved you"
+        + "You know I love you still"
+        + "Will I wait a lonely lifetime"
+        + "If you want me to, I will"
+        + "For if I ever saw you I didn't catch your name"
+        + "But it never really mattered I will always feel the same";
+
 
 
 
@@ -80,14 +93,33 @@ public class DataInitConfig {
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
 
-            createMyLongTextIfNotExists("헌법1조", content3, user);
-            createMyLongTextIfNotExists("헌법2조", content4, user);
+            createMyLongTextIfNotExists("Yesterday - 비틀즈", content3, user);
+            createMyLongTextIfNotExists("I Will - 비틀즈", content4, user);
 
         };
     }
 
     @Bean
     @Order(4)
+    CommandLineRunner initMyLongTextScore() {
+        return args -> {
+            User user = userRepository.findByLoginId("admin").orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+            );
+            MyLongText myLongText1 = myLongTextRepository.findByTitle("Yesterday - 비틀즈").orElseThrow(
+                () -> new BusinessException(ErrorCode.MY_LONG_TEXT_NOT_FOUND)
+            );
+            MyLongText myLongText2 = myLongTextRepository.findByTitle("I Will - 비틀즈").orElseThrow(
+                () -> new BusinessException(ErrorCode.MY_LONG_TEXT_NOT_FOUND)
+            );
+
+            createMyLongTextScore(myLongText1,user,200);
+            createMyLongTextScore(myLongText1,user,250);
+        };
+    }
+
+    @Bean
+    @Order(5)
     CommandLineRunner initFriendRequests() {
         return args -> {
             User user1 = userRepository.findByLoginId("admin").orElseThrow(
@@ -140,6 +172,16 @@ public class DataInitConfig {
                     .build()
             );
         }
+    }
+
+    private void createMyLongTextScore(MyLongText myLongText, User user, int score) { // int vs Integer
+        myLongTextScoreRepository.save(
+            MyLongTextScore.builder()
+                .score(score)
+                .myLongText(myLongText)
+                .user(user)
+                .build()
+        );
     }
 
     private void createFriendRequestIfNotExists(User user1, User user2, boolean isAccepted) {
