@@ -41,6 +41,7 @@ public class MyLongTextScore {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "my_long_text_id")
     private MyLongText myLongText;
 
     @Column(nullable = false)
