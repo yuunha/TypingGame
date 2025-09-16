@@ -73,6 +73,8 @@ public class DataInitConfig {
             createUserIfNotExists("admin_name", "admin", "12345");
             createUserIfNotExists("홍길동", "dong", "1111");
             createUserIfNotExists("홍길순", "soon", "2222");
+            createUserIfNotExists("홍길화", "hwa", "3333");
+
         };
     }
 
@@ -131,10 +133,16 @@ public class DataInitConfig {
             User user3 = userRepository.findByLoginId("soon").orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
+            User user4 = userRepository.findByLoginId("hwa").orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+            );
             //user1 - user2 친구 (accepted)
             createFriendRequestIfNotExists(user1,user2,true);
-            //user1 <- user3 친구 신청 (pending)
+            //user3 -> user1 친구 신청 (pending)
             createFriendRequestIfNotExists(user3,user1,false);
+            //user1 -> user4 친구 신청 (pending)
+            createFriendRequestIfNotExists(user1,user4,false);
+
         };
     }
 
@@ -192,15 +200,15 @@ public class DataInitConfig {
             if(isAccepted) {
                 friendRequestRepository.save(
                     FriendRequest.builder()
-                        .requester(user2)
-                        .receiver(user1)
+                        .requester(user1)
+                        .receiver(user2)
                         .status(FriendRequestStatus.ACCEPTED)
                         .build());
             }else {
                 friendRequestRepository.save(
                     FriendRequest.builder()
-                        .requester(user2)
-                        .receiver(user1)
+                        .requester(user1)
+                        .receiver(user2)
                         .status(FriendRequestStatus.PENDING)
                         .build());
             }
