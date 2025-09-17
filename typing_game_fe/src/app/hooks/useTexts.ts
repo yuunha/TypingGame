@@ -8,7 +8,6 @@ export const useTexts = (longTextId: number, isUserFile: boolean) => {
         const url = isUserFile
         ? `${baseUrl}/my-long-text/${longTextId}`
         : `${baseUrl}/long-text/${longTextId}`;
-        console.log(url)
         fetch(url, {
           headers: { Authorization: authHeader },
           credentials: "include",

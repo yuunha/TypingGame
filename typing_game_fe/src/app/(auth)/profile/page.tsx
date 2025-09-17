@@ -3,28 +3,13 @@ import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import styled from "styled-components";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth"
 import { useUserActions } from "@/app/hooks/useUserActions"
 import { LongText } from "../../types/long-text";
 import { FiUser, FiLogOut, FiTrash2, FiEdit } from "react-icons/fi";
 import { useLongTextWithScore } from "@/app/hooks/useLongTextWithScore";
-
-interface AllTextItem {
-  longTextId: number;
-  title: string;
-}
-
-interface MyTextItem {
-  myLongTextId: number;
-  title: string;
-}
-
-interface ScoreItem {
-  longScoreId: number;
-  score: number;
-}
+import Link from "next/link"; 
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -87,8 +72,9 @@ const Profile: React.FC = () => {
             <li onClick={handleLogout}>
               <FiLogOut /> 로그아웃
             </li>
-            <li onClick={handleUpdateProfile}>
-              <FiEdit /> 회원정보 수정
+            
+            <li>
+              <FiEdit /><Link href="/profile/edit">회원정보 수정</Link>
             </li>
             <li onClick={handleDeleteProfile}>
               <FiTrash2 /> 탈퇴
