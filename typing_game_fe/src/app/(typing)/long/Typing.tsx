@@ -17,6 +17,7 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
   
   const lyrics = useTexts(longTextId, isUserFile);
 
+  console.log(lyrics)
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);

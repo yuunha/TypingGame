@@ -9,6 +9,7 @@ import { useAuth } from "@/app/hooks/useAuth"
 import { useUserActions } from "@/app/hooks/useUserActions"
 import { LongText } from "../../types/long-text";
 import { FiUser, FiLogOut, FiTrash2, FiEdit } from "react-icons/fi";
+import { useLongTextWithScore } from "@/app/hooks/useLongTextWithScore";
 
 interface AllTextItem {
   longTextId: number;
@@ -34,8 +35,6 @@ const Profile: React.FC = () => {
   const [textList, setTextList] = useState<LongText[]>([]);
   const [selectedPost, setSelectedPost] = useState<LongText | null>(null);
 
-  console.log(username)
-
   useEffect(() => {
     if (username) setLocalUsername(username);
     // if (!isLoggedIn) router.push("/login");
@@ -53,7 +52,6 @@ const Profile: React.FC = () => {
       setUsername(localUsername);
       alert("회원정보가 수정되었습니다.");
     } catch (err) {
-      console.error(err);
       alert("수정 실패");
     }
   };
@@ -72,62 +70,7 @@ const Profile: React.FC = () => {
   };
 
 
-
-// 긴글 목록 불러오기
-useEffect(() => {
-    const authHeader = sessionStorage.getItem("authHeader");
-    if (!isLoggedIn || !authHeader) return;
-
-  const fetchLyrics = async () => {
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-      
-      const [allRes, myRes, scoreRes] = await Promise.all([
-        axios.get(`${baseUrl}/long-text`),
-        axios.get(`${baseUrl}/my-long-text`, {
-          headers: { Authorization: authHeader },
-          withCredentials: true,
-        }),
-        axios.get(`${baseUrl}/long-text/scores`, {
-          withCredentials: true,
-        }),
-      ]);
-
-      // any 타입 XX
-      const allText: LongText[] = allRes.data.data.map((item: AllTextItem) => ({
-        longTextId: item.longTextId,
-        title: item.title,
-        isUserFile: false,
-      }));
-
-      const myText: LongText[] = myRes.data.map((item: MyTextItem) => ({
-        longTextId: item.myLongTextId,
-        title: item.title,
-        isUserFile: true,
-      }));
-
-      const combined = [...allText, ...myText];
-
-      const scoreMap: Record<number, number> = {};
-
-      // TODO : myfile일때 어케할지
-      scoreRes.data.data.forEach((s: ScoreItem) => {
-        scoreMap[s.longScoreId] = s.score;
-      });
-      // 글 + 점수 합치기
-      const merged = combined.map(post => ({
-        ...post,
-        score: scoreMap[post.longTextId] ?? null,
-      }));
-
-      setTextList(merged);
-    } catch (err) {
-      console.error("점수 + 글 불러오기 실패", err);
-    }
-  };
-
-  fetchLyrics();
-}, [isLoggedIn]);
+  const longTexts = useLongTextWithScore();
 
   return (
     <Content>
@@ -154,7 +97,7 @@ useEffect(() => {
         </nav>
 
         <ScoreGrid>
-          {textList.map(post => (
+          {longTexts.map(post => (
             <div 
               key={`${post.isUserFile ? "my" : "all"}-${post.longTextId}`}
               title={`${post.title} (score: ${post.score ?? "없음"})`}

@@ -6,7 +6,8 @@ import Keyboard from "../../_components/Keyboard";
 import typingKeys from "../../_components/keyboard/typingKeys";
 import styled from "styled-components";
 import { useAuth } from "@/app/hooks/useAuth";
-import { useLongTexts, LongText } from "@/app/hooks/useLongTexts";
+import { LongText } from "@/app/types/long-text";
+import { useLongTexts } from "@/app/hooks/useLongTexts";
 
 const TypingPage: React.FC = () => {
   const { isLoggedIn } = useAuth();
@@ -20,7 +21,6 @@ const TypingPage: React.FC = () => {
   useEffect(() => {
     if (lyricsList.length > 0 && !selectedSong) setSelectedSong(lyricsList[0]);
   }, [lyricsList]);
-
 
   return (
     <Box>

@@ -1,11 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-
-export interface LongText {
-  longTextId: number;
-  title: string;
-  isUserFile?: boolean;
-}
+import { LongText } from "@/app/types/long-text";
 
 interface AllLyricsItem {
   longTextId: number;
@@ -59,7 +54,6 @@ export const useLongTexts = () => {
           title: item.title,
           isUserFile: true,
         }));
-
         setLyricsList([...allLyrics, ...myLyrics]);
       })
       .catch(error => {
