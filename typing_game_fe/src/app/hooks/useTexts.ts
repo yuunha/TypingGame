@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { splitByLength } from "../utils/splitByLength";
 
 export const useTexts = (longTextId: number, isUserFile: boolean) => {
   const [lyrics, setLyrics] = useState<string[]>([]);
@@ -13,7 +14,10 @@ export const useTexts = (longTextId: number, isUserFile: boolean) => {
           credentials: "include",
         })
         .then(res => res.json())
-        .then(data => setLyrics((data.content || "").split("\n")))
+        .then(data => {
+          const lines = splitByLength(data.content,43);
+          setLyrics((lines || ""))}
+        )
         .catch(err => console.error("가사 불러오기 실패", err));
     }, [longTextId, isUserFile]);
     return lyrics;
