@@ -1,11 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
-
-interface Friend {
-  id: number;
-  username: string;
-  profileImg?: string;
-}
 
 export const useFriendActions = () => {
     const authHeader = sessionStorage.getItem("authHeader");

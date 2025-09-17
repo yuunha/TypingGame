@@ -40,7 +40,7 @@ export const useFriend = () => {
         credentials: "include",
         });
         const data = await res.json();
-        console.log(data)
+        console.log('받은 데이터', data)
         const friends: Friend[] = data.content.map((user:any)=>({
           id: user.userId,
           username: user.username,
@@ -50,9 +50,22 @@ export const useFriend = () => {
     } catch (err) {
         console.error("유저 검색 실패", err);
     }
-    //TODO: 친구 신청 기능
-};
-
+  };
+  //친구요청
+  const sentFriendRequest = async (receiverId: number) => {
+    if (!authHeader) return;
+    try {
+        await fetch(`${baseUrl}/friend-requests`, {
+          method: "POST",
+          headers: { Authorization: authHeader, "Content-Type": "application/json",},
+          credentials: "include",
+          body: JSON.stringify({ receiverId }),
+        });
+        console.log(receiverId)
+    } catch (err) {
+        console.error("친구 요청 실패", err);
+    }
+  };
 
   const fetchSentRequests = async () => {
     if (!authHeader) return;
@@ -63,6 +76,7 @@ export const useFriend = () => {
       });
       const data = await res.json();
       setSentRequests(data);
+      console.log(data)
     } catch (err) {
       console.error("보낸 요청 조회 실패", err);
     }
@@ -92,5 +106,6 @@ export const useFriend = () => {
     handleSearch,
     fetchSentRequests,
     fetchReceivedRequests,
+    sentFriendRequest,
   };
 };

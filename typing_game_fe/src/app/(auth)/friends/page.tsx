@@ -7,17 +7,11 @@ import { useFriendActions } from "@/app/hooks/useFriendActions";
 import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus, FiUserMinus } from "react-icons/fi";
 
 
-interface Friend {
-  id: number;
-  username: string;
-  profileImg?: string;
-}
-
 const FriendPage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<"list" | "add" | "sent" | "received">("list");
   const [searchQuery, setSearchQuery] = useState("");
-  const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests } = useFriend();
+  const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests, sentFriendRequest } = useFriend();
   const { rejectReceivedRequests } = useFriendActions();
 
   useEffect(() => {
@@ -27,9 +21,7 @@ const FriendPage: React.FC = () => {
     else if (activeTab === "received") fetchReceivedRequests();
 
   }, [activeTab]);
-
   
-
   return (
       <Content>
         <nav>
@@ -81,7 +73,7 @@ const FriendPage: React.FC = () => {
                       <UserProfileImg src='/g72.jpg'/>
                       {f.username}
                     </UserProfile>
-                    <FrAcceptBtn>추가</FrAcceptBtn>
+                    <FrAcceptBtn onClick={() => sentFriendRequest(f.id)}>추가</FrAcceptBtn>
                   </FriendItem>
                 ))}
               </ul>
