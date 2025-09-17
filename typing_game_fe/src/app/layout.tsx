@@ -1,5 +1,5 @@
 import "./globals.css";
-import NavHeader from "./_components/NavHeader";
+import NavHeader from "@/app/_components/Header/NavHeader";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -92,7 +92,7 @@ const KeyboardWrapper = styled.div`
 
 
 
-const Key = styled.a<{
+const Key = styled.div<{
   $widthLevel?: number;
   $color?: 'blue' | 'red';
 }>`

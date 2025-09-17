@@ -1,0 +1,28 @@
+.navContainer {
+  width: 100%;
+  margin-bottom: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tpg-header-font-size);
+}
+
+.navBarInner {
+  width: var(--tpg-basic-width);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navBarLogo {
+  font-family: Libertinus, Helvetica, sans-serif;
+  font-weight : bold;
+}
+
+.navBarMenu {
+  font-family: Montserrat, Helvetica, sans-serif;
+}
+.link {
+  margin-left: 12px;
+}

@@ -20,7 +20,7 @@ const keys: Keys = [
     { code: "KeyS", label: ""},
     { code: "KeyD", label: "긴글", href: '/long' },
     { code: "KeyF", label: "게임", href: '/game' },
-    { code: "KeyJ", label: "랭킹", href: '/rank' },
+    { code: "KeyJ", label: "헌법", href: '/constitution' },
     { code: "KeyK", label: "" },
     { code: "KeyL", label: "" },
     { code: "Backspace", label: "Backspace⌫", widthLevel: 0 },
@@ -32,7 +32,7 @@ const keys: Keys = [
     { code: "KeyC", label: "" },
     { code: "KeyV", label: "" },
     { code: "Period", label: "" },
-    { code: "Slash", label: "회원㋛", href: '/profile' },
+    { code: "Slash", label: "" },
     { code: "Enter", label: "⏎ Enter", widthLevel: 0 },
   ],
   [

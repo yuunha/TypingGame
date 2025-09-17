@@ -112,21 +112,21 @@ body {
 
 @font-face {
   font-family: 'NunumHuman';
-  src: url('./styles/font/NanumHumanRegular.ttf') format('truetype');
+  src: url('@/app/styles/font/NanumHumanRegular.ttf') format('truetype');
 }
 @font-face {
   font-family: 'NunumHumanBold';
-  src: url('./styles/font/NanumHumanBold.ttf') format('truetype');
+  src: url('@/app/styles/font/NanumHumanBold.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Libertinus';
-  src: url('./styles/font/LibertinusKeyboard-Regular.ttf') format('truetype');
+  src: url('@/app/styles/font/LibertinusKeyboard-Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Montserrat';
-  src: url('./styles/font/Montserrat-VariableFont_wght.ttf') format('truetype');
+  src: url('@/app/styles/font/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
 
 /* layout */
