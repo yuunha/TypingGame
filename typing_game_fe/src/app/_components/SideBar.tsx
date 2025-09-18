@@ -1,23 +1,18 @@
 "use client";
 
 import styled from "styled-components";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useContext } from "react";
 import axios from "axios";
 import { LongText } from "../types/long-text";
+import { ItemContext } from "@/app/(typing)/long/page";
 
 interface SidebarProps {
   lyricsList: LongText[];
-  selectedSong: LongText | null;
-  onSelectSong: (song: LongText) => void;
   isLoggedIn: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  lyricsList,
-  selectedSong,
-  onSelectSong,
-  isLoggedIn,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({lyricsList, isLoggedIn}) => {
+  const { selectedText, setSelectedText } = useContext(ItemContext);
   const [showUpload, setShowUpload] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState("");
@@ -109,8 +104,8 @@ const Sidebar: React.FC<SidebarProps> = ({
           const title = song.title;
           const longTextId = song.longTextId;
           const isSelected =
-                selectedSong?.longTextId === longTextId &&
-                selectedSong?.title === title;
+                selectedText?.longTextId === longTextId &&
+                selectedText?.title === title;
           
           const isFirstUserFile = song.isUserFile && !lyricsList.slice(0, index).some(s => s.isUserFile);
           const isLastUserFile = song.isUserFile && !lyricsList.slice(index + 1).some(s => s.isUserFile);
@@ -120,11 +115,11 @@ const Sidebar: React.FC<SidebarProps> = ({
               {isFirstUserFile  && <Divider/>}
               <a
                 data-active={isSelected}
-                onClick={() => onSelectSong(song)}
+                onClick={() => setSelectedText(song)}
               >
                 {title}
               </a>
-              {(isLastUserFile && selectedSong?.isUserFile) && (
+              {(isLastUserFile && selectedText?.isUserFile) && (
                 <ButtonDelete onClick={() => handleDelete(song.longTextId)}>삭제하기</ButtonDelete>
               )}
             </React.Fragment>

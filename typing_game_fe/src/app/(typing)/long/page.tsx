@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import Sidebar from "../../_components/SideBar";
 import Typing from "./Typing";
 import Keyboard from "../../_components/Keyboard";
@@ -9,42 +9,50 @@ import { useAuth } from "@/app/hooks/useAuth";
 import { LongText } from "@/app/types/long-text";
 import { useLongTexts } from "@/app/hooks/useLongTexts";
 
+export const ItemContext = createContext<{
+  selectedText: LongText | null;
+  setSelectedText: React.Dispatch<React.SetStateAction<LongText | null>>;
+}>({
+  selectedText: null,
+  setSelectedText: () => {},
+});
+
+
 const TypingPage: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const lyricsList = useLongTexts();
-  const [selectedSong, setSelectedSong] = useState<LongText | null>(null);
+  const [selectedText, setSelectedText] = useState<LongText | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
 
-    // selectedSong이 이미 있으면 바뀌지 않도록
+  // selectedSong이 이미 있으면 바뀌지 않도록
   useEffect(() => {
-    if (lyricsList.length > 0 && !selectedSong) setSelectedSong(lyricsList[0]);
+    if (lyricsList.length > 0 && !selectedText) setSelectedText(lyricsList[0]);
   }, [lyricsList]);
 
   return (
+    <ItemContext.Provider value={{ selectedText, setSelectedText }}>
     <Box>
       {isSidebarOpen && (
         <SidebarWrapper>
           <Sidebar
             lyricsList={lyricsList}
-            selectedSong={selectedSong}
-            onSelectSong={setSelectedSong}
             isLoggedIn={isLoggedIn}
           />
         </SidebarWrapper>
       )}
       <Content>
-        {selectedSong ? (
+        {selectedText ? (
           <>
             <Header>
               <Title>긴글연습</Title>
-              <Title>〈{selectedSong.title}〉</Title>
+              <Title>〈{selectedText.title}〉</Title>
             </Header>
             <MainWrapper>
               <Typing
-                longTextId={selectedSong.longTextId ?? 0}
-                isUserFile={selectedSong.isUserFile ?? false}
+                longTextId={selectedText.longTextId ?? 0}
+                isUserFile={selectedText.isUserFile ?? false}
               />
             </MainWrapper>
           </>
@@ -66,6 +74,7 @@ const TypingPage: React.FC = () => {
         <Keyboard keys={typingKeys} onToggleSidebar={toggleSidebar} />
       </Content>
     </Box>
+    </ItemContext.Provider>
   );
 };
 
