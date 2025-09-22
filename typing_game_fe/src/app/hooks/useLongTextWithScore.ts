@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLongTexts } from "@/app/hooks/useLongTexts";
+import { LongText } from "@/app/types/long-text"
+
 
 export const useLongTextWithScore = () => {
   const lyricsList = useLongTexts();
-  const [longTextWithScore, setLongTextWithScore] = useState<any[]>([]);
+  const [longTextWithScore, setLongTextWithScore] = useState<LongText[]>([]);
   const authHeader = sessionStorage.getItem("authHeader");
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export const useLongTextWithScore = () => {
             const data = await res.json();
             return {
               ...item,
-              score: data.score ?? null, // ✅ score 붙이기
+              score: data.score ?? null,
             };
           } catch (err) {
             console.error("점수 조회 실패: ", err);
@@ -40,5 +42,5 @@ export const useLongTextWithScore = () => {
     fetchScore();
   }, [lyricsList, authHeader]);
 
-  return longTextWithScore; // ✅ 데이터만 리턴
+  return longTextWithScore;
 };

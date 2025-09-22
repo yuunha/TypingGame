@@ -8,9 +8,15 @@ interface Friend {
 }
 
 interface FriendRequest {
-  createdAt: Date;
+  createdAt: string;
   receiverName: number;
   requesterName: number;
+}
+
+interface UserResponse {
+  userId: number;
+  username: string;
+  profileImageUrl?: string | null;
 }
 
 export const useFriend = () => {
@@ -46,7 +52,7 @@ export const useFriend = () => {
         credentials: "include",
         });
         const data = await res.json();
-        const friends: Friend[] = data.content.map((user:any)=>({
+        const friends: Friend[] = data.content.map((user: UserResponse)=>({
           id: user.userId,
           username: user.username,
           profileImg: user.profileImageUrl ?? undefined,
