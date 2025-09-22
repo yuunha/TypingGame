@@ -8,14 +8,7 @@ import styled from "styled-components";
 import { useAuth } from "@/app/hooks/useAuth";
 import { LongText } from "@/app/types/long-text";
 import { useLongTexts } from "@/app/hooks/useLongTexts";
-
-export const ItemContext = createContext<{
-  selectedText: LongText | null;
-  setSelectedText: React.Dispatch<React.SetStateAction<LongText | null>>;
-}>({
-  selectedText: null,
-  setSelectedText: () => {},
-});
+import { ItemContext } from "./ItemContext";
 
 
 const TypingPage: React.FC = () => {
