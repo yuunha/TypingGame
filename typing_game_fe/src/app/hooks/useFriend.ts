@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface Friend {
   id: number;
@@ -7,12 +7,18 @@ interface Friend {
   profileImg?: string;
 }
 
+interface FriendRequest {
+  createdAt: Date;
+  receiverName: number;
+  requesterName: number;
+}
+
 export const useFriend = () => {
   const authHeader = sessionStorage.getItem("authHeader");
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [friends, setFriends] = useState<Friend[]>([]);
-  const [sentRequests, setSentRequests] = useState<any[]>([]);
-  const [receivedRequests, setReceivedRequests] = useState<any[]>([]);
+  const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
+  const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>([]);
 
   const [searchResults, setSearchResults] = useState<Friend[]>([]);
 
@@ -40,7 +46,6 @@ export const useFriend = () => {
         credentials: "include",
         });
         const data = await res.json();
-        console.log('받은 데이터', data)
         const friends: Friend[] = data.content.map((user:any)=>({
           id: user.userId,
           username: user.username,
@@ -61,7 +66,6 @@ export const useFriend = () => {
           credentials: "include",
           body: JSON.stringify({ receiverId }),
         });
-        console.log(receiverId)
     } catch (err) {
         console.error("친구 요청 실패", err);
     }
@@ -76,7 +80,6 @@ export const useFriend = () => {
       });
       const data = await res.json();
       setSentRequests(data);
-      console.log(data)
     } catch (err) {
       console.error("보낸 요청 조회 실패", err);
     }
@@ -91,7 +94,6 @@ export const useFriend = () => {
       });
       const data = await res.json();
       setReceivedRequests(data);
-      console.log(data)
     } catch (err) {
       console.error("받은 요청 조회 실패", err);
     }

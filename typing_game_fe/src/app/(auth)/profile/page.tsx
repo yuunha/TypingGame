@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth"
 import { useUserActions } from "@/app/hooks/useUserActions"
-import { LongText } from "../../types/long-text";
+import { LongText } from "@/app/types/long-text";
 import { FiUser, FiLogOut, FiTrash2, FiEdit } from "react-icons/fi";
 import { useLongTextWithScore } from "@/app/hooks/useLongTextWithScore";
 import Link from "next/link"; 

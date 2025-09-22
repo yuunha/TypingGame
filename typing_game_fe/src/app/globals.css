@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+
+@font-face {
+  font-family: 'NanumHuman';
+  src: url('/font/NanumHumanRegular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'NanumHumanBold';
+  src: url('/font/NanumHumanBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Libertinus';
+  src: url('/font/LibertinusKeyboard-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/font/Montserrat-VariableFont_wght.ttf') format('truetype');
+}
+
 :root {
   --background : #F8F8F8;
   --foreground: #171717;
@@ -110,24 +128,6 @@ body {
 }
 
 
-@font-face {
-  font-family: 'NunumHuman';
-  src: url('/typing_game_fe/public/font/NanumHumanRegular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'NunumHumanBold';
-  src: url('/typing_game_fe/public/font/NanumHumanBold.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Libertinus';
-  src: url('/typing_game_fe/publicfont/LibertinusKeyboard-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/typing_game_fe/public/font/Montserrat-VariableFont_wght.ttf') format('truetype');
-}
 
 /* layout */
 .mainWrapper {

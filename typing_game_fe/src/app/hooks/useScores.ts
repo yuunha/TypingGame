@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
   
 // 특정 긴글의 점수목록 조회

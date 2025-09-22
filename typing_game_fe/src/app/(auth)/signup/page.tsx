@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
-import { useAuth } from "@/app/hooks/useAuth";
 import axios from "axios";
 
 const SignupPage: React.FC = () => {

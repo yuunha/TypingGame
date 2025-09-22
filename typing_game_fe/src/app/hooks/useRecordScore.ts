@@ -1,4 +1,3 @@
-import axios from "axios";
 
 // 점수 기록하기
 

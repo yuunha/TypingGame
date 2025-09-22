@@ -34,7 +34,7 @@ export const useFriendActions = () => {
             throw new Error(`서버 오류: ${res.status}`);
         }
         } catch (err) {
-        console.error("친구 요청 거부 실패", err);
+        console.error("친구 요청 허용 실패", err);
         }
     };
 

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useFriend } from "@/app/hooks/useFriend";
 import { useFriendActions } from "@/app/hooks/useFriendActions";
-import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus, FiUserMinus } from "react-icons/fi";
+import { FiUsers, FiArrowUpCircle, FiArrowDownCircle, FiUserPlus } from "react-icons/fi";
 
 
 const FriendPage: React.FC = () => {
