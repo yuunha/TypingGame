@@ -112,21 +112,21 @@ body {
 
 @font-face {
   font-family: 'NunumHuman';
-  src: url('@/app/styles/font/NanumHumanRegular.ttf') format('truetype');
+  src: url('/typing_game_fe/public/font/NanumHumanRegular.ttf') format('truetype');
 }
 @font-face {
   font-family: 'NunumHumanBold';
-  src: url('@/app/styles/font/NanumHumanBold.ttf') format('truetype');
+  src: url('/typing_game_fe/public/font/NanumHumanBold.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Libertinus';
-  src: url('@/app/styles/font/LibertinusKeyboard-Regular.ttf') format('truetype');
+  src: url('/typing_game_fe/publicfont/LibertinusKeyboard-Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Montserrat';
-  src: url('@/app/styles/font/Montserrat-VariableFont_wght.ttf') format('truetype');
+  src: url('/typing_game_fe/public/font/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
 
 /* layout */
