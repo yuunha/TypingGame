@@ -8,6 +8,7 @@ interface Friend {
 }
 
 interface FriendRequest {
+  friendRequestId: number;
   createdAt: string;
   receiverName: number;
   requesterName: number;
