@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useLongTexts } from "@/app/hooks/useLongTexts";
 import { LongText } from "@/app/types/long-text"

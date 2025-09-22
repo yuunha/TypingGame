@@ -1,3 +1,5 @@
+"use client";
+
 export const useUserActions = () => {
     //회원정보 수정
     const updateProfile = async (userId: string, username: string) => {
