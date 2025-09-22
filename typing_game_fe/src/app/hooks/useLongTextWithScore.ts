@@ -8,7 +8,11 @@ import { LongText } from "@/app/types/long-text"
 export const useLongTextWithScore = () => {
   const lyricsList = useLongTexts();
   const [longTextWithScore, setLongTextWithScore] = useState<LongText[]>([]);
-  const authHeader = sessionStorage.getItem("authHeader");
+  const [authHeader, setAuthHeader] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAuthHeader(sessionStorage.getItem("authHeader"));
+  }, []);
 
   useEffect(() => {
     if (!lyricsList || lyricsList.length === 0) return;

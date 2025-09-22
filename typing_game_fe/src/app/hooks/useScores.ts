@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
   
 // 특정 긴글의 점수목록 조회
 export function useScores(longTextId:number, isUserFile:boolean){
-    const authHeader = sessionStorage.getItem("authHeader");
+    const [authHeader, setAuthHeader] = useState<string | null>(null);
+
+    useEffect(() => {
+        setAuthHeader(sessionStorage.getItem("authHeader"));
+    }, []);
     const [score, setScore] = useState(0);
 
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;

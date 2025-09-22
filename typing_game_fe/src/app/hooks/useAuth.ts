@@ -28,7 +28,10 @@ export const useAuth = () => {
       setUsername(data.username);
       setUserId(data.userId)
     })
-    .catch((error)=> console.error(error))
+    .catch((error)=>{
+      console.error(error);
+      setIsLoggedIn(false);
+    });
   }, []);
 
   const promptLogin = async () => {

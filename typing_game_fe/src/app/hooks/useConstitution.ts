@@ -1,10 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Constitution } from '@/app/types/constitution'
 import { ConsProgress } from '@/app/types/cons-progress'
 
 export const useConstitution = () => {
-  const authHeader = sessionStorage.getItem("authHeader");
+  const [authHeader, setAuthHeader] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAuthHeader(sessionStorage.getItem("authHeader"));
+  }, []);
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [constitution, setConstitution] = useState<Constitution | null>(null);
   const [consProgress, setConsProgress] = useState<ConsProgress | null>(null);

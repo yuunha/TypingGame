@@ -5,8 +5,8 @@ import { splitByLength } from "../utils/splitByLength";
 
 export const useTexts = (longTextId: number, isUserFile: boolean) => {
   const [lyrics, setLyrics] = useState<string[]>([]);
-    const authHeader = sessionStorage.getItem("authHeader");
     useEffect(() => {
+        const authHeader = sessionStorage.getItem("authHeader");
         if (!authHeader) return;
         const baseUrl = process.env.NEXT_PUBLIC_API_URL;
         const url = isUserFile
