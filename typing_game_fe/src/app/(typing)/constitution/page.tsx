@@ -8,12 +8,21 @@ import { useConstitution } from "@/app/hooks/useConstitution";
 import Typing from "./Typing"
 
 const ConstitutionTyping: React.FC = () => {
-  const {constitution, fetchConstitution} = useConstitution();
+
+  const { consProgress, fetchConsNumber, constitution, fetchConstitution, saveProgress } = useConstitution();
   const [selectedCons, setSelectedCons] = useState<Constitution | null>(null);
 
   useEffect(() => {
-    fetchConstitution(0);
+    fetchConsNumber();
   }, []);
+
+  useEffect(() => {
+    if (typeof consProgress?.articleIndex === "number") {
+      fetchConstitution(consProgress.articleIndex);
+    }
+  }, [consProgress]);
+
+
   useEffect(() => {
     setSelectedCons(constitution);
   }, [constitution]);
@@ -28,6 +37,9 @@ const ConstitutionTyping: React.FC = () => {
             <MainWrapper>
               <Typing
                 content={selectedCons?.content ?? ""}
+                articleIndex={selectedCons?.articleIndex ?? 0}
+                lastPosition={consProgress?.lastPosition ?? 0}
+                saveProgress={saveProgress}
               />
             </MainWrapper>
         <Keyboard keys={typingKeys}/>

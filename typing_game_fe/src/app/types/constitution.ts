@@ -1,6 +1,6 @@
 export interface Constitution {
   articleIndex: number;
-  articleNumber: string;
+  articleNumber: number;
   chapter: string;
   content: string;
   section: string | null;
