@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Friend {
   id: number;
@@ -22,7 +22,11 @@ interface UserResponse {
 }
 
 export const useFriend = () => {
-  const authHeader = sessionStorage.getItem("authHeader");
+  const [authHeader, setAuthHeader] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAuthHeader(sessionStorage.getItem("authHeader"));
+  }, []);
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [friends, setFriends] = useState<Friend[]>([]);
   const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);

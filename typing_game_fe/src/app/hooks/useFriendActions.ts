@@ -1,7 +1,12 @@
 "use client";
+import { useState, useEffect } from "react";
 
 export const useFriendActions = () => {
-    const authHeader = sessionStorage.getItem("authHeader");
+    const [authHeader, setAuthHeader] = useState<string | null>(null);
+
+    useEffect(() => {
+        setAuthHeader(sessionStorage.getItem("authHeader"));
+    }, []);
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const rejectReceivedRequests = async (friendRequestId : number) => {
