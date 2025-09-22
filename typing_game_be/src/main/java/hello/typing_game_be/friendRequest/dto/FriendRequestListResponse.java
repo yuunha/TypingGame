@@ -13,12 +13,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FriendRequestListResponse {
+    private Long friendRequestId;
     private String requesterName;
     private String receiverName;
     private LocalDateTime createdAt;
 
     public static FriendRequestListResponse fromEntity(FriendRequest fr) {
         return new FriendRequestListResponse(
+            fr.getFriendRequestId(),
             fr.getRequester().getNickname(),
             fr.getReceiver().getNickname(),
             fr.getCreatedAt()
