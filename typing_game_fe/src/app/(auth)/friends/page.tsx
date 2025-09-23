@@ -11,7 +11,7 @@ const FriendPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"list" | "add" | "sent" | "received">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests, sentFriendRequest } = useFriend();
-  const { rejectReceivedRequests } = useFriendActions();
+  const { handleReceivedRequests } = useFriendActions();
 
   useEffect(() => {
     if (activeTab === "list") fetchFriends();
@@ -82,8 +82,7 @@ const FriendPage: React.FC = () => {
             <>
               <h2>보낸 요청</h2>
               {sentRequests.length === 0 ? <p>보낸 요청이 없습니다.</p> : sentRequests.map(r => (
-                <FriendItem key={r.receiverName}>
-                {/* r.friendRequestId */}
+                <FriendItem key={r.friendRequestId}>
                   <UserProfile> 
                     <UserProfileImg src='/g72.jpg'/>
                       {r.receiverName}
@@ -99,15 +98,14 @@ const FriendPage: React.FC = () => {
             <>
               <h2>받은 요청</h2>
               {receivedRequests.length === 0 ? <p>받은 요청이 없습니다.</p> : receivedRequests.map(r => (
-                <FriendItem key={r.receiverName}> 
-                {/* r.friendRequestId */}
+                <FriendItem key={r.friendRequestId}> 
                   <UserProfile> 
                     <UserProfileImg src='/g72.jpg'/>
                       {r.requesterName}
                   </UserProfile>
                   <FrBtnWrapper>
-                    <FrAcceptBtn>허용</FrAcceptBtn>
-                    {/* <FrDeleteBtn onClick={rejectReceivedRequests(r.friendRequestId)}>거부</FrDeleteBtn> */}
+                    <FrAcceptBtn onClick={() => handleReceivedRequests(r.friendRequestId, "ACCEPT")}>허용</FrAcceptBtn>
+                    <FrDeleteBtn onClick={() => handleReceivedRequests(r.friendRequestId, "DECLINE")}>거부</FrDeleteBtn>
                   </FrBtnWrapper>
                 </FriendItem>
               ))}

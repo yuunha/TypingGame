@@ -91,7 +91,6 @@ export const useFriend = () => {
       });
       const data = await res.json();
       setSentRequests(data);
-      
     } catch (err) {
       console.error("보낸 요청 조회 실패", err);
     }
