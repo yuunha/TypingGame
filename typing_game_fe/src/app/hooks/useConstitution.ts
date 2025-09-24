@@ -5,37 +5,42 @@ import { ConsProgress } from '@/app/types/cons-progress'
 
 export const useConstitution = () => {
   const [authHeader, setAuthHeader] = useState<string | null>(null);
-
-  useEffect(() => {
-    setAuthHeader(sessionStorage.getItem("authHeader"));
-  }, []);
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [constitution, setConstitution] = useState<Constitution | null>(null);
   const [consProgress, setConsProgress] = useState<ConsProgress | null>(null);
 
-  const fetchConsNumber = async () => {
-  if (!authHeader) return;
-  try {
-      const res = await fetch(`${baseUrl}/constitution/progress`, {
-      headers: { Authorization: authHeader },
-      credentials: "include",
-      });
-      const data = await res.json();
+  useEffect(() => {
+    const header = sessionStorage.getItem("authHeader");
+    if (header) setAuthHeader(header);
+  }, []);
 
-      if (res.ok) {
-        setConsProgress(data);
-      } else {
-        console.warn("초기화", data);
-        setConsProgress({ articleIndex: 0, lastPosition: 0 });
-      }
-    } catch (err) {
+
+  useEffect(() => {
+    if (!authHeader) return;
+
+    const fetchConsNumber = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/constitution/progress`, {
+          headers: { Authorization: authHeader },
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setConsProgress(data);
+        } else {
+          setConsProgress({ articleIndex: 0, lastPosition: 0 });
+        }
+      } catch (err) {
         console.error("유저 헌법 진행상황 조회 실패", err);
         setConsProgress({ articleIndex: 0, lastPosition: 0 });
-    }
-  };
+      }
+    };
+
+    fetchConsNumber();
+  }, [authHeader, baseUrl]);
   
   const fetchConstitution = async (articleIndex : number) => {
-      if (!authHeader) return;
+    if(!authHeader) throw new Error("Not authHeader");
       try {
         const res = await fetch(`${baseUrl}/constitution/${articleIndex}`, {
             headers: { Authorization: authHeader },
@@ -49,7 +54,7 @@ export const useConstitution = () => {
   };
 
   const saveProgress = async (articleIndex: number, lastPosition: number) => {
-    if (!authHeader) return;
+    if(!authHeader) throw new Error("Not authHeader");
     try {
       const res = await fetch(`${baseUrl}/constitution/progress`, {
         method: "POST",
@@ -72,6 +77,6 @@ export const useConstitution = () => {
     }
   };
 
-  return { consProgress, fetchConsNumber, constitution, fetchConstitution, saveProgress };
+  return { consProgress, constitution, fetchConstitution, saveProgress };
 
 };

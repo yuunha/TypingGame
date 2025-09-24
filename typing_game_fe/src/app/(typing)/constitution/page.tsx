@@ -9,11 +9,12 @@ import Typing from "./Typing"
 
 const ConstitutionTyping: React.FC = () => {
 
-  const { consProgress, fetchConsNumber, constitution, fetchConstitution, saveProgress } = useConstitution();
+  const { consProgress, constitution, fetchConstitution, saveProgress } = useConstitution();
   const [selectedCons, setSelectedCons] = useState<Constitution | null>(null);
 
   useEffect(() => {
-    fetchConsNumber();
+    if (consProgress === null) return;
+    useConstitution();
   }, []);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const ConstitutionTyping: React.FC = () => {
   useEffect(() => {
     setSelectedCons(constitution);
   }, [constitution]);
-  
+
   return (
     <Box>
       <Content>
@@ -57,11 +58,6 @@ const Box = styled.div`
   overflow: hidden;
 `;
 
-const SidebarWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-`;
 
 const Content = styled.div`
   display: flex;
@@ -83,21 +79,4 @@ const Title = styled.h1`
 
 const MainWrapper = styled.div`
   width: var(--tpg-basic-width);
-`;
-
-const EmptyMessage = styled.h2`
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  min-height: 300px;
-`;
-
-const SubMessage = styled.p`
-  font-size: 0.9rem;
-  color: #666;
-`;
-
-const ProgressBarContainer = styled.div`
-  height: 2px;
-  background-color: var(--progress-bg);
-  margin-bottom: 1.5rem;
 `;

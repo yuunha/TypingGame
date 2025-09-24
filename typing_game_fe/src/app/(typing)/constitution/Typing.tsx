@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
-import ResultModal from "./ResultModal";
+import ResultModal from "@/app/_components/QuoteResult";
 import { splitByLength } from "@/app/utils/splitByLength";
 
 interface TypingProps {
@@ -216,7 +216,7 @@ const Typing: React.FC<TypingProps> = ({ content, articleIndex, lastPosition, sa
 export default Typing;
 
 const TypingLine = styled.div`
-  min-height: 300px;
+  min-height: 280px;
 `;
 
 const ProgressBarContainer = styled.div`
@@ -263,10 +263,6 @@ const Input = styled.input`
 
 // TypingLocal과 다른 부분
 const InfoBox = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 3rem;
-  font-size: 1.125rem;
 `;
 
 const SubLine = styled.div`

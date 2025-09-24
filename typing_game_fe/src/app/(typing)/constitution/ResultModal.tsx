@@ -106,7 +106,7 @@ position: relative;
   border-radius: 4px;
   max-width: 380px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.1s ease-out;
 
   h2 {
     margin-top: 0.8rem;

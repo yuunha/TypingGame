@@ -4,14 +4,19 @@ import { useState, useEffect } from "react";
 import { splitByLength } from "../utils/splitByLength";
 
 export const useTexts = (longTextId: number, isUserFile: boolean) => {
-  console.log(longTextId, isUserFile)
   const [lyrics, setLyrics] = useState<string[]>([]);
     useEffect(() => {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL;
         const url = isUserFile
         ? `${baseUrl}/my-long-text/${longTextId}`
         : `${baseUrl}/long-text/${longTextId}`;
+        const authHeader = sessionStorage.getItem("authHeader");
+        const headers: HeadersInit = {};
+        if (isUserFile && authHeader) {
+          headers["Authorization"] = authHeader;
+        }
         fetch(url, {
+          headers,
           credentials: "include",
         })
         .then(res => res.json())

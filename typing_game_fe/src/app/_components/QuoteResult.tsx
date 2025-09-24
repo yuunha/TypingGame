@@ -8,7 +8,7 @@ import { FiDownload, FiX } from "react-icons/fi";
 
 
 interface ResultModalProps {
-  lyrics: string;
+  lyrics: string | string[];
   accuracy: number;
   cpm: number;
   onRetry: () => void;
@@ -22,29 +22,25 @@ const ResultModal: React.FC<ResultModalProps> = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const today = new Date();   
-  const year = today.getFullYear();
-  const month = today.getMonth() + 1; 
-  const date = today.getDate(); 
+  const [year, month, date] = [today.getFullYear(), today.getMonth() + 1, today.getDate()];
+
 
   const saveAsImage = async () => {
     const element = document.getElementById("result");
     if (!element) return;
-    const canvas = await html2canvas(element, {
-      backgroundColor: "#fff",
-      scale: 2, 
-    });
+    
+    const canvas = await html2canvas(element, {scale: 2,});
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
     link.download = "result.png";
     link.click();
   };
 
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+  useEffect(() => setMounted(true), []);
   
   if (!mounted) return null;
+
+  const lines = Array.isArray(lyrics) ? lyrics : [lyrics];
 
   return ReactDOM.createPortal(
     <Backdrop>
@@ -53,8 +49,8 @@ const ResultModal: React.FC<ResultModalProps> = ({
           <Button onClick={saveAsImage}><FiDownload /></Button>
           <Button onClick={onRetry}><FiX /></Button>
         </ButtonWrapper>
-        <NavBarLogo> TYLE</NavBarLogo>
-        <p>{lyrics}</p>
+        <NavBarLogo>TYLE</NavBarLogo>
+        <div>{lines.map((line, idx) => <p key={idx}>{line}</p>)}</div>
         <p>{year}/{month}/{date}</p>
         <ResultStats>
           <StatBox>정확도 {accuracy}%</StatBox>
@@ -102,7 +98,7 @@ position: relative;
   border-radius: 4px;
   max-width: 380px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.1s ease-out;
 
   h2 {
     margin-top: 0.8rem;
@@ -113,7 +109,6 @@ position: relative;
 
   p {
     font-size: 0.9rem;
-    // color: #bbb;
     margin: 0.3rem 0;
   }
 
