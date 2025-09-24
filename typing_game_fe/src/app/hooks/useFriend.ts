@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 interface Friend {
-  id: number;
+  userId: number;
   username: string;
   profileImg?: string;
 }
@@ -57,6 +57,7 @@ export const useFriend = () => {
         credentials: "include",
         });
         const data = await res.json();
+        console.log(data)
         const friends: Friend[] = data.content.map((user: UserResponse)=>({
           id: user.userId,
           username: user.username,

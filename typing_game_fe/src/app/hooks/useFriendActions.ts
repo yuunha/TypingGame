@@ -29,7 +29,24 @@ export const useFriendActions = () => {
         }
     };
 
+    const deleteFriend = async (friendRequestId : number) => {
+        if (!authHeader) return;
+        try {
+        const res = await fetch(`${baseUrl}/friends/${friendRequestId}`, {
+            method: "DELETE",
+            headers: { Authorization: authHeader, "Content-Type": "application/json",},
+            credentials: "include",
+        });
+        if (!res.ok) {
+            throw new Error(`서버 오류: ${res.status}`);
+        }
+        } catch (err) {
+            console.error("친구 삭제 실패", err);
+        }
+    };
+
   return {
     handleReceivedRequests,
+    deleteFriend,
   };
 };

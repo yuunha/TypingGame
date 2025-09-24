@@ -195,7 +195,7 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
 export default Typing;
 
 const TypingLine = styled.div`
-  min-height: 300px;
+  min-height: 280px;
 `;
 
 const ProgressBarContainer = styled.div`
@@ -242,10 +242,6 @@ const Input = styled.input`
 
 // TypingLocal과 다른 부분
 const InfoBox = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 3rem;
-  font-size: 1.125rem;
 `;
 
 const SubLine = styled.div`

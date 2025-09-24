@@ -11,7 +11,7 @@ const FriendPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"list" | "add" | "sent" | "received">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const { friends, searchResults, sentRequests, receivedRequests, fetchFriends, handleSearch, fetchSentRequests, fetchReceivedRequests, sentFriendRequest } = useFriend();
-  const { handleReceivedRequests } = useFriendActions();
+  const { deleteFriend, handleReceivedRequests } = useFriendActions();
 
   useEffect(() => {
     if (activeTab === "list") fetchFriends();
@@ -20,7 +20,6 @@ const FriendPage: React.FC = () => {
     else if (activeTab === "received") fetchReceivedRequests();
 
   }, [activeTab]);
-  
   return (
       <Content>
         <nav>
@@ -45,12 +44,12 @@ const FriendPage: React.FC = () => {
             <>
               <h2>친구 목록</h2>
               {friends.length === 0 ? <p>친구가 없습니다.</p> : friends.map(f => (
-              <FriendItem key={f.id}>
+              <FriendItem key={f.userId}>
                 <UserProfile> 
                   <UserProfileImg src='/g72.jpg'/>
                   {f.username}
                 </UserProfile>
-                <FrDeleteBtn>삭제</FrDeleteBtn>
+                {/* <FrDeleteBtn onClick={()=> deleteFriend(f.requestId)}>삭제</FrDeleteBtn> */}
               </FriendItem>
             ))}
             </>
@@ -67,12 +66,12 @@ const FriendPage: React.FC = () => {
               <button onClick={() => handleSearch(searchQuery)}>검색</button>
               <ul>
                 {searchResults.length === 0 ? <></> : searchResults.map(f => (
-                  <FriendItem key={f.id}>
+                  <FriendItem key={f.userId}>
                     <UserProfile> 
                       <UserProfileImg src='/g72.jpg'/>
                       {f.username}
                     </UserProfile>
-                    <FrAcceptBtn onClick={() => sentFriendRequest(f.id)}>추가</FrAcceptBtn>
+                    <FrAcceptBtn onClick={() => sentFriendRequest(f.userId)}>추가</FrAcceptBtn>
                   </FriendItem>
                 ))}
               </ul>

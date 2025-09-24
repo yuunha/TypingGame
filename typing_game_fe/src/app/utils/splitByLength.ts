@@ -1,5 +1,8 @@
 export const splitByLength = (text: string, maxLength: number): string[] => {
-  const rawLines = text.split("\n");
+  const rawLines = text
+    .split(/\n|(?<=다\.)/g)
+    .map(line => line.replace(/\r/g, "").trim())
+    .filter(line => line.length > 0);
   const result: string[] = [];
 
   rawLines.forEach(line => {
