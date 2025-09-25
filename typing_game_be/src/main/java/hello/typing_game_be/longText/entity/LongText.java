@@ -25,6 +25,6 @@ public class LongText {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT")
     private  String content;
 }
