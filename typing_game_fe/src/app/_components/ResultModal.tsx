@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
-import html2canvas from "html2canvas";
 import { FiDownload, FiX } from "react-icons/fi";
 
 
@@ -20,15 +19,14 @@ const ResultModal: React.FC<ResultModalProps> = ({
   cpm,
   onRetry,
 }) => {
-  const [mounted, setMounted] = useState(false);
   const today = new Date();   
-  const [year, month, date] = [today.getFullYear(), today.getMonth() + 1, today.getDate()];
-
+  const date = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
 
   const saveAsImage = async () => {
     const element = document.getElementById("result");
     if (!element) return;
     
+    const html2canvas = (await import('html2canvas')).default;
     const canvas = await html2canvas(element, {scale: 2,});
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
@@ -36,22 +34,17 @@ const ResultModal: React.FC<ResultModalProps> = ({
     link.click();
   };
 
-  useEffect(() => setMounted(true), []);
-  
-  if (!mounted) return null;
-
-  const lines = Array.isArray(lyrics) ? lyrics : [lyrics];
 
   return ReactDOM.createPortal(
     <Backdrop>
       <ModalBox id="result">
         <ButtonWrapper>
-          <Button onClick={saveAsImage}><FiDownload /></Button>
-          <Button onClick={onRetry}><FiX /></Button>
+          <IconButton onClick={saveAsImage}><FiDownload /></IconButton>
+          <IconButton onClick={onRetry}><FiX /></IconButton>
         </ButtonWrapper>
         <NavBarLogo>TYLE</NavBarLogo>
-        <div>{lines.map((line, idx) => <p key={idx}>{line}</p>)}</div>
-        <p>{year}/{month}/{date}</p>
+        <div>{lyrics}</div>
+        <p>{date}</p>
         <ResultStats>
           <StatBox>정확도 {accuracy}%</StatBox>
           <StatBox>평균 {cpm}타</StatBox>
@@ -63,14 +56,15 @@ const ResultModal: React.FC<ResultModalProps> = ({
 };
 
 export default ResultModal;
+
 const ButtonWrapper = styled.div`
   display:flex;
   gap : 10px;
   justify-content: right;
   align-items: center;
-  color: #292929ff;
+  color: #292929;
 `
-const Button = styled.button`
+const IconButton = styled.button`
   font-size: 1rem;
   cursor: pointer;
 `
@@ -91,7 +85,7 @@ const Backdrop = styled.div`
 `;
 
 const ModalBox = styled.div`
-position: relative;
+  position: relative;
   background: #ffffff;
   width : 310px;
   padding: 1.3rem 2rem 2rem 2rem;
@@ -99,13 +93,6 @@ position: relative;
   max-width: 380px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
   animation: fadeIn 0.1s ease-out;
-
-  h2 {
-    margin-top: 0.8rem;
-    margin-bottom: 0.3rem;
-    font-size: 1rem;
-    font-weight: 600;
-  }
 
   p {
     font-size: 0.9rem;
@@ -135,4 +122,3 @@ const StatBox = styled.div`
   font-size: 0.85rem;
   font-weight: 500;
 `;
-

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
-import QuoteResult from "./QuoteResult";
+import ResultModal from "./ResultModal";
 
 interface TypingLocalProps {
   lyrics: string;
@@ -75,7 +75,7 @@ const TypingLocal: React.FC<TypingLocalProps> = ({ lyrics }) => {
     <>
       <Wrapper>
         {completed && (
-          <QuoteResult
+          <ResultModal
             lyrics = {lyrics}
             accuracy={accuracy}
             cpm={cpm}
