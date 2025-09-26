@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLongTexts } from "@/app/hooks/useLongTexts";
-import { LongText } from "@/app/types/long-text"
+import { useLongTexts } from "@/features/typing/long/hooks/useLongTexts";
+import { LongText } from "@/types/long-text"
 
 
 export const useLongTextWithScore = () => {

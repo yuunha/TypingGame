@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
-import { useScores } from "@/app/hooks/useScores";
+import { useScores } from "@/features/typing/long/hooks/useScores";
 
 interface ResultModalProps {
   accuracy: number;

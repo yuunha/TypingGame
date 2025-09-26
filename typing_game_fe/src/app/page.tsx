@@ -1,6 +1,6 @@
-import keys from './_components/keyboard/key/keys'
-import QuoteTyping from "./_components/QuoteTyping";
-import Keyboard from './_components/keyboard/Keyboard';
+import keys from '@/features/keyboard/keys'
+import QuoteTyping from "@/components/QuoteTyping";
+import Keyboard from '@/features/keyboard/Keyboard';
 
 export default async function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { LongText } from "@/app/types/long-text";
+import { LongText } from "@/types/long-text";
 
 interface AllLyricsItem {
   longTextId: number;

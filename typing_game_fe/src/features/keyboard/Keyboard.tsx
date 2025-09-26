@@ -1,6 +1,6 @@
 import React from "react";
 import '@/app/globals.css';
-import KeyboardClient from "./KeyboardClient";
+import KeyboardClient from "@/features/keyboard/KeyboardClient";
 import { Keys } from '../../types/key-item';
 
 interface KeyboardProps {

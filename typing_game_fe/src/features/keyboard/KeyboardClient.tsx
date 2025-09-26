@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
-import { Keys } from "@/app/types/key-item";
+import { Keys } from "@/types/key-item";
 
 interface KeyboardProps {
   keys: Keys;

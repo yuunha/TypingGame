@@ -1,4 +1,4 @@
-import { Keys } from '../../../types/key-item';
+import { Keys } from '../../types/key-item';
 
 
 const keys: Keys = [

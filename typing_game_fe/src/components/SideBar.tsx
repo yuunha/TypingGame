@@ -3,8 +3,8 @@
 import styled from "styled-components";
 import React, { useState, useRef, useContext } from "react";
 import axios from "axios";
-import { LongText } from "@/app/types/long-text";
-import { ItemContext } from "@/app/(typing)/long/ItemContext";
+import { LongText } from "@/types/long-text";
+import { ItemContext } from "@/features/typing/long/components/ItemContext";
 
 interface SidebarProps {
   lyricsList: LongText[];

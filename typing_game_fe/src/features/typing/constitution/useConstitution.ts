@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Constitution } from '@/app/types/constitution'
-import { ConsProgress } from '@/app/types/cons-progress'
+import { Constitution } from '@/types/constitution'
+import { ConsProgress } from '@/types/cons-progress'
 
 export const useConstitution = () => {
   const [authHeader, setAuthHeader] = useState<string | null>(null);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { splitByLength } from "../utils/splitByLength";
+import { splitByLength } from "@/utils/splitByLength";
 
 export const useTexts = (longTextId: number, isUserFile: boolean) => {
   const [lyrics, setLyrics] = useState<string[]>([]);

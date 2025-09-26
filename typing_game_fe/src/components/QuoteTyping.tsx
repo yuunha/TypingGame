@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
-import ResultModal from "./ResultModal";
+import ResultModal from "@/components/ResultModal";
 
 interface TypingLocalProps {
   lyrics: string;

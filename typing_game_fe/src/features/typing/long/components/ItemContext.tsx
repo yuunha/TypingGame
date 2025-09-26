@@ -1,6 +1,6 @@
 "use client";
 import { createContext } from "react";
-import { LongText } from "@/app/types/long-text";
+import { LongText } from "@/types/long-text";
 
 export const ItemContext = createContext<{
   selectedText: LongText | null;

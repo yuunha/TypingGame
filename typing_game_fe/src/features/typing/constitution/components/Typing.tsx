@@ -3,49 +3,73 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
-import ResultModal from "./ResultModal";
-import { useTexts } from "../../hooks/useTexts";
-
+import ResultModal from "@/app/(typing)/constitution/ResultModal";
+import { splitByLength } from "@/utils/splitByLength";
 
 interface TypingProps {
-  longTextId: number;
-  isUserFile: boolean;
+  content: string;
+  articleIndex: number;
+  lastPosition: number;
+  saveProgress: (articleIndex: number, lastPosition: number) => void;
 }
 
+const Typing: React.FC<TypingProps> = ({ content, articleIndex, lastPosition, saveProgress }) => {
+  // useMemo?
+  const lines = splitByLength(content, 43);
 
-const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
-  
-  const lyrics = useTexts(longTextId, isUserFile);
+  // useMemo?
+  const initialLineIndex = (() => {
+    let accumulated = 0;
+    for (let i = 0; i < lines.length; i++) {
+      accumulated += lines[i].length;
+      if (accumulated > lastPosition) {
+        return i;
+      }
+    }
+    return lines.length - 1;
+  })();
 
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [inputValue, setInputValue] = useState("");
+  // 상태를 하나의 객체로
+  // const [state, setState] = useState({
+  //   currentLineIndex: initialLineIndex,
+  //   inputValue: "",
+  //   correctChars: lastPosition,
+  //   totalChars: lastPosition,
+  //   startTime: null as number | null,
+  //   elapsedTime: 0,
+  //   completed: false,
+  //   cpm: 0
+  // });
+
+  const [currentLineIndex, setCurrentLineIndex] = useState<number>(initialLineIndex);
+  const [inputValue, setInputValue] = useState<string>(""); // 항상 빈 문자열
+  const [correctChars, setCorrectChars] = useState<number>(lastPosition);
+  const [totalChars, setTotalChars] = useState<number>(lastPosition);
+
+  const currentLine = lines[currentLineIndex];
+  const nextLines = lines.slice(currentLineIndex + 1, currentLineIndex + 3);
+
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completed, setCompleted] = useState(false);
+
   const [cpm, setCpm] = useState(0);
-  const [correctChars, setCorrectChars] = useState(0);
-  const [totalChars, setTotalChars] = useState(0);
 
-  const currentLine = lyrics[currentLineIndex];
-  const nextLines = lyrics.slice(currentLineIndex + 1, currentLineIndex + 3);
 
-  
   const totalTypedChars = () => {
-    // 이전 줄까지 자모 분리 후 평탄화해서 길이 구하기
     const pastChars = Hangul
-      .disassemble(lyrics.slice(0, currentLineIndex).join(""), true)
+      .disassemble(lines.slice(0, currentLineIndex).join(""), true)
       .flat().length;
 
-    // 현재 입력값 자모 분리 후 길이
     const currentInputChars = Hangul
       .disassemble(inputValue, true)
       .flat().length;
     return pastChars + currentInputChars;
   };
 
-  // 입력 이벤트
+  // useCallback?
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-
+  
     if (startTime === null) {
       setStartTime(Date.now());
     }
@@ -55,7 +79,7 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
         if (startTime !== null) {
           const timeTaken = Date.now() - startTime;
           setElapsedTime(prev => prev + timeTaken);
-          setStartTime(null); // 다음 줄부터 다시 시작
+          setStartTime(null);
         }
 
         let correct = 0;
@@ -68,32 +92,21 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
         setCorrectChars(prev => prev + correct);
         setTotalChars(prev => prev + currentLine.length);
 
-
-        if (currentLineIndex < lyrics.length - 1) {
+        if (currentLineIndex < lines.length - 1) {
           setCurrentLineIndex(prev => prev + 1);
           setInputValue("");
+          const lastPos = totalTypedChars();
+          saveProgress(articleIndex, lastPos);
         } else {
           setCompleted(true);
+          saveProgress(articleIndex+1, 0);
         }
+
       }
     }
   };
 
-  // 다시하기 버튼
-  const handleRetry = () => {
-    setCompleted(false);
-    setCurrentLineIndex(0);
-    setInputValue("");
-    setStartTime(null);
-    setElapsedTime(0);
-    setCpm(0);
-    setCorrectChars(0);
-    setTotalChars(0);
-  }
-
-  // 실시간 CPM 계산
   useEffect(() => {
-    
     if (startTime === null || completed) return;
 
     const interval = setInterval(() => {
@@ -106,6 +119,16 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
 
     return () => clearInterval(interval);
   }, [startTime, inputValue, currentLineIndex, elapsedTime, completed]);
+    
+  // useCallback?
+  const handleRetry = () => {
+    setInputValue("");
+    setCompleted(false);
+    setCpm(0);
+    setCorrectChars(lastPosition);
+    setTotalChars(lastPosition);
+    setCurrentLineIndex(initialLineIndex);
+  };
 
   useEffect(() => {
     setCurrentLineIndex(0);
@@ -116,26 +139,26 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
     setCpm(0);
     setCorrectChars(0);
     setTotalChars(0);
-  }, [lyrics]);
+  }, []);
+
+  useEffect(() => {
+    handleRetry();
+  }, [content]);
 
   const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
   const totalLyricsChars = Hangul
-    .disassemble(lyrics.join(""), true)
+    .disassemble(lines.join(""), true)
     .flat().length;
+
   return (
     <>
       <Wrapper>
         {completed && (
           <ResultModal
+            lyrics = {content.split('\n')}
             accuracy={accuracy}
             cpm={cpm}
-            elapsedTime={elapsedTime}
-            totalChars={totalChars}
-            correctChars={correctChars}
-            lineCount={lyrics.length}
             onRetry={handleRetry}
-            longTextId = {longTextId}
-            isUserFile = {isUserFile}
           />
         )}
         <ProgressBarContainer>
@@ -154,11 +177,10 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
               } else {
                 color = typedChar === char ? "var(--color-correct)" : "var(--color-wrong)";
                 if (typedChar !== char) {
-                  textDecoration = 'underline'; // 틀린 경우 밑줄
+                  textDecoration = 'underline';
                 }
               }
             }
-            
             return (
               <CharSpan key={i} style={{ color, textDecoration }}>
                 {char}
@@ -187,7 +209,6 @@ const Typing: React.FC<TypingProps> = ({ longTextId, isUserFile }) => {
           <p>평균 {cpm} 타</p>
         </InfoBox>
       </Wrapper>
-    
     </>
   );
 };

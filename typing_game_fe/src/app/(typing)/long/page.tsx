@@ -1,14 +1,14 @@
 "use client";
 import React, { useState, useEffect, createContext } from "react";
-import Sidebar from "../../_components/SideBar";
-import Typing from "./Typing";
-import Keyboard from "../../_components/keyboard/Keyboard";
-import typingKeys from "../../_components/keyboard/key/typingKeys";
+import Sidebar from "../../../components/SideBar";
+import Typing from "../../../features/typing/long/components/Typing";
+import Keyboard from "../../../features/keyboard/Keyboard";
+import typingKeys from "../../../features/keyboard/typingKeys";
 import styled from "styled-components";
-import { useAuth } from "@/app/hooks/useAuth";
-import { LongText } from "@/app/types/long-text";
-import { useLongTexts } from "@/app/hooks/useLongTexts";
-import { ItemContext } from "./ItemContext";
+import { useAuth } from "@/hooks/useAuth";
+import { LongText } from "@/types/long-text";
+import { useLongTexts } from "@/features/typing/long/hooks/useLongTexts";
+import { ItemContext } from "../../../features/typing/long/components/ItemContext";
 
 
 const TypingPage: React.FC = () => {
