@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Hangul from "hangul-js";
-import ResultModal from "@/app/(typing)/constitution/ResultModal";
+import ResultModal from "./ResultModal";
 import { splitByLength } from "@/utils/splitByLength";
 
 interface TypingProps {

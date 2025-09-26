@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
-import ProfileEditMenu from "../../../../features/auth/profile/components/ProfileEditMenu";
+import ProfileEditMenu from "@/features/auth/profile/components/ProfileEditMenu";
 
 export default function ProfileEdit() {
   const { username } = useAuth();
