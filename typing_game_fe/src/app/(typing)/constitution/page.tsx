@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Keyboard from "../../_components/Keyboard";
-import typingKeys from "../../_components/keyboard/typingKeys";
+import Keyboard from "../../_components/keyboard/Keyboard";
+import typingKeys from "../../_components/keyboard/key/typingKeys";
 import styled from "styled-components";
 import { Constitution } from '@/app/types/constitution'
 import { useConstitution } from "@/app/hooks/useConstitution";

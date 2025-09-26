@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import typingKeys from "../../_components/keyboard/typingKeys";
+import typingKeys from "../../_components/keyboard/key/typingKeys";
 import styled from "styled-components";
-import Keyboard from "../../_components/Keyboard";
+import Keyboard from "../../_components/keyboard/Keyboard";
 
 //TODO : words 받아오기, 난이도별 설정
 const WORDS = [

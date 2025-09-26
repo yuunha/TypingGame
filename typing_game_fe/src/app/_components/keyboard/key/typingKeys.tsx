@@ -1,4 +1,4 @@
-import { Keys } from '../../types/key-item';
+import { Keys } from '../../../types/key-item';
 
 const typingKeys: Keys = [
   [
@@ -18,7 +18,7 @@ const typingKeys: Keys = [
     { code: "KeyA", label: "ㅁ" },
     { code: "KeyS", label: "ㄴ" },
     { code: "KeyD", label: "ㅇ" },
-    { code: "KeyF", label: "ㄹ✧" },
+    { code: "KeyF", label: "ㄹ" },
     { code: "KeyJ", label: "ㅓ" },
     { code: "KeyK", label: "ㅏ" },
     { code: "KeyL", label: "ㅣ" },

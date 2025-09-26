@@ -1,67 +1,55 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import styled from "styled-components";
-import Link from 'next/link';
-import '../globals.css';
-import { Keys } from '../types/key-item';
+import { Keys } from "@/app/types/key-item";
 
 interface KeyboardProps {
   keys: Keys;
   onToggleSidebar?: () => void;
 }
 
-
-const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+export default function KeyboardClient({ keys, onToggleSidebar }: KeyboardProps) {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   const toggleTheme = () => {
-    const next = theme === 'light' ? 'dark' : 'light';
+    const next = theme === "light" ? "dark" : "light";
     setTheme(next);
-    document.documentElement.setAttribute('data-theme', next);
+    document.documentElement.setAttribute("data-theme", next);
   };
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const key = document.querySelector(`.key--${e.code}`);
-      if (key) key.classList.add("pressed");
-    };
+      const handleKeyDown = (e: KeyboardEvent) => {
+        const key = document.querySelector(`.key--${e.code}`);
+        if (key) key.classList.add("pressed");
+      };
+  
+      const handleKeyUp = (e: KeyboardEvent) => {
+        const key = document.querySelector(`.key--${e.code}`);
+        if (key) key.classList.remove("pressed");
+      };
+  
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("keyup", handleKeyUp);
+  
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+        document.removeEventListener("keyup", handleKeyUp);
+      };
+    }, []);
 
-    const handleKeyUp = (e: KeyboardEvent) => {
-      const key = document.querySelector(`.key--${e.code}`);
-      if (key) key.classList.remove("pressed");
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
   return (
     <KeyboardFrame>
       {keys.map((row, rowIndex) => (
         <KeyboardWrapper key={rowIndex}>
           {row.map(({ code, label, color, widthLevel, href }) => {
             const handleClick = () => {
-                if (code === "CapsLock") { onToggleSidebar?.()}
-                if (code === "Backspace") { toggleTheme();}
+              if (code === "CapsLock") onToggleSidebar?.();
+              if (code === "Backspace") toggleTheme();
             };
-            return href ? (
-              <Link href={href} key={code} passHref>
-                <Key 
-                  key={code}
-                  className={`key--${code}`}
-                  $color={color}
-                  $widthLevel={widthLevel}
-                  onClick={handleClick}  
-                >
-                  <KeyCap $color={color}>{label}</KeyCap>
-                </Key>
-              </Link>
-            ) : (
+
+            const keyElement = (
               <Key
                 key={code}
                 className={`key--${code}`}
@@ -69,25 +57,30 @@ const Keyboard: React.FC<KeyboardProps> = ({ keys, onToggleSidebar }) => {
                 $widthLevel={widthLevel}
                 onClick={handleClick}
               >
-                <KeyCap $color={color}>{label}</KeyCap>
+                <KeyCap>{label}</KeyCap>
               </Key>
             );
-        })}
+
+            return href ? (
+              <Link href={href} key={code} passHref>
+                {keyElement}
+              </Link>
+            ) : (
+              keyElement
+            );
+          })}
         </KeyboardWrapper>
       ))}
     </KeyboardFrame>
   );
-};
+}
 
-export default Keyboard;
 const KeyboardFrame = styled.div`
   width:100%;
 `;
 const KeyboardWrapper = styled.div`
   display:flex;
   width:100%;
-  // background-color: var(--keyboard-row-bg);
-  // box-shadow: 0 0 2px;
 `;
 
 
@@ -139,9 +132,7 @@ const Key = styled.div<{
     }
 `;
 
-const KeyCap = styled.div<{
-  $color?: 'blue' | 'red';
-}>`
+const KeyCap = styled.div`
   width: 99%;
   height: 90%;
   padding: 6px;

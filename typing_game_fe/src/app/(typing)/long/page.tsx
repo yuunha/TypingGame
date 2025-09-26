@@ -2,8 +2,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import Sidebar from "../../_components/SideBar";
 import Typing from "./Typing";
-import Keyboard from "../../_components/Keyboard";
-import typingKeys from "../../_components/keyboard/typingKeys";
+import Keyboard from "../../_components/keyboard/Keyboard";
+import typingKeys from "../../_components/keyboard/key/typingKeys";
 import styled from "styled-components";
 import { useAuth } from "@/app/hooks/useAuth";
 import { LongText } from "@/app/types/long-text";
