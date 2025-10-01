@@ -34,19 +34,21 @@ public class User {
     @Column(unique = true, nullable = false, length = 20)
     private String nickname;
 
-    @Column(unique = true, nullable = false, length = 20)
-    private String loginId;
-
-    @Column(nullable = false, length = 100)
-    private String password;
-
     @Column(name = "profile_image_key")
     private String profileImageKey; // S3 key만 저장
+
+    @Column(name = "provider_id",unique = true, nullable = false)
+    private String providerId; //카카오에서 발급하는 고유 사용자 id
+
+    private String provider; // kakao, google 등 소셜 로그인 제공자
 
     // 유저가 작성한 긴 글 점수들
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LongTextScore> longTextScores = new ArrayList<>();
-    //유저가 longscore를 조회해야 한다면 여기서 연결해야함.
 
+    // 커스텀 생성자
+    public User(String providerId) {
+        this.providerId = providerId;
+    }
 }

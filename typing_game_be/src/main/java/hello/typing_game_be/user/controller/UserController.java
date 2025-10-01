@@ -3,6 +3,7 @@ package hello.typing_game_be.user.controller;
 
 import java.io.IOException;
 
+import hello.typing_game_be.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,32 +42,16 @@ public class UserController {
 
     private final UserService userService;
 
-    @Operation( summary = "회원가입", responses = {
-        @ApiResponse(responseCode = "201", description = "회원가입 성공"),
-        @ApiResponse(responseCode = "409", description = "loginId 중복 또는 username 중복")
-    })
-    @PostMapping("/user")
-    public ResponseEntity<Long> register(@Valid @RequestBody UserCreateRequest request) {
-        Long userId = userService.register(request);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(userId);
-    }
-    // @PostMapping("/login")
-    // public ResponseEntity<String> login(@Valid @RequestBody UserRequest request) {
-    //     userService.login(request);
-    //     return ResponseEntity.status(HttpStatus.OK).build();
-    // }
-
-    @Operation( summary = "회원정보(이름) 수정", responses = {
-        @ApiResponse(responseCode = "200", description = "회원정보(이름) 수정 성공"),
-        @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
-    })
-    @PutMapping("/user/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateRequest request
-    ) {
-        userService.update(id,request.getUsername());
-        return ResponseEntity.ok().build();
-    }
+//    @Operation( summary = "회원정보(닉네임) 수정", responses = {
+//        @ApiResponse(responseCode = "200", description = "회원정보(이름) 수정 성공"),
+//        @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+//    })
+//    @PutMapping("/user/{id}")
+//    public ResponseEntity<Void> update(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateRequest request
+//    ) {
+//        userService.update(id,request.getUsername());
+//        return ResponseEntity.ok().build();
+//    }
 
 
     @Operation( summary = "회원정보 조회", responses = {
@@ -75,9 +60,10 @@ public class UserController {
     })
     @GetMapping("/user")
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        String loginId = userDetails.getUsername(); // 현재 로그인 사용자 ID
-        UserResponse userResponse = userService.getUserByLoginId(loginId);
-        return ResponseEntity.ok(userResponse);
+        User user = userDetails.getUser();
+        return ResponseEntity.ok(
+                new UserResponse(user.getUserId(),user.getNickname(),user.getProfileImageKey())
+        );
     }
 
 
@@ -87,13 +73,13 @@ public class UserController {
     })
     @DeleteMapping("/user")
     public ResponseEntity<String> deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        String loginId = userDetails.getUsername();
-        userService.deleteUserByLoginId(loginId);
+        Long userId = userDetails.getUserId();
+        userService.deleteUserByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
-    @Operation( summary = "username으로 유저 검색", description = "GET /users?username=홍길&page=0&size=5", responses = {
+    @Operation( summary = "nickname으로 유저 검색", description = "GET /users?username=홍길&page=0&size=5", responses = {
             @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
     })
@@ -116,7 +102,7 @@ public class UserController {
     public ResponseEntity<UserProfileResponse> uploadFile(
         @RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws IOException {
-            String key = userService.uploadProfileImage(file, userDetails.getUsername()); // username = loginId
+            String key = userService.uploadProfileImage(file, userDetails.getUserId()); // username = loginId
             return ResponseEntity.ok(new UserProfileResponse(key));
     }
 
@@ -125,7 +111,7 @@ public class UserController {
     })
     @DeleteMapping("/user/profile")
     public ResponseEntity<Void> deleteFile(@AuthenticationPrincipal CustomUserDetails userDetails){
-        userService.deleteProfileImage(userDetails.getUsername()); // username = loginId
+        userService.deleteProfileImage(userDetails.getUserId()); // username = loginId
         return ResponseEntity.ok().build();
     }
 

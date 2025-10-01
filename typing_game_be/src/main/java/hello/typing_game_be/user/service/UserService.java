@@ -27,88 +27,46 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
     private final S3Template s3Template;
 
-    //회원가입
-    @Transactional
-    public Long register(UserCreateRequest request) {
-
-        // loginId 중복 검증
-        if (userRepository.existsByLoginId(request.getLoginId())) { //중복 유저 검증
-            throw new BusinessException(ErrorCode.DUPLICATE_LOGINID);
-        }
-
-        // username 중복 검증
-        if (userRepository.existsByNickname(request.getUsername())) {
-            throw new BusinessException(ErrorCode.DUPLICATE_USERNAME);
-        }
-
-        User user = User.builder()
-            .nickname(request.getUsername())
-            .loginId(request.getLoginId())
-            .password(passwordEncoder.encode(request.getPassword())) // 인코딩
-            .build();
-        userRepository.save(user);
-
-        return user.getUserId();
-    }
-
-    // public void login(UserRequest request) {
-    //     // System.out.println("loginId: " + request.getLoginId()+"password"+request.getPassword());
-    //     // System.out.println("존재여부"+userRepository.existsByLoginId(request.getLoginId()));
-    //     // userRepository.findByLoginId(request.getLoginId()).ifPresent(u -> {
-    //     //     System.out.println("DB 저장된 password = " + u.getPassword());
-    //     //     System.out.println("matches 결과 = " + passwordEncoder.matches(request.getPassword(), u.getPassword()));
-    //     // });
-    //
-    //     // 1. 아이디 존재 여부 확인
-    //     User user = userRepository.findByLoginId(request.getLoginId())
-    //         .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-    //
-    //     // 2. 비밀번호 일치 여부 확인
-    //     if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-    //         throw new BusinessException(ErrorCode.INVALID_PASSWORD);
-    //     }
-    // }
-    @Transactional
-    public void update(Long userId, String name) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        user.setNickname(name);
-    }
+//    @Transactional
+//    public void update(Long userId, String name) {
+//        User user = userRepository.findById(userId)
+//            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+//        user.setNickname(name);
+//    }
 
     /**
      * 유저 정보 조회 + 서명된 URL 생성
      */
-    public UserResponse getUserByLoginId(String loginId) {
-        User user = userRepository.findByLoginId(loginId)
-            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        String profileImageUrl = null;
-        if (user.getProfileImageKey() != null) {
-            // 서명된 URL 생성, 만료 60분
-            profileImageUrl = s3Template.createSignedGetURL(bucket, user.getProfileImageKey(), Duration.ofMinutes(30)).toString();;
-        }
-
-        return UserResponse.builder()
-            .userId(user.getUserId())
-            .username(user.getNickname())
-            .loginId(user.getLoginId())
-            .profileImageUrl(profileImageUrl)
-            .build();
-    }
+//    public UserResponse getUserByLoginId(String loginId) {
+//        User user = userRepository.findByLoginId(loginId)
+//            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+//
+//        String profileImageUrl = null;
+//        if (user.getProfileImageKey() != null) {
+//            // 서명된 URL 생성, 만료 60분
+//            profileImageUrl = s3Template.createSignedGetURL(bucket, user.getProfileImageKey(), Duration.ofMinutes(30)).toString();;
+//        }
+//
+//        return UserResponse.builder()
+//            .userId(user.getUserId())
+//            .username(user.getNickname())
+//            .loginId(user.getLoginId())
+//            .profileImageUrl(profileImageUrl)
+//            .build();
+//    }
 
     @Transactional
-    public void deleteUserByLoginId(String loginId) {
-        if(!userRepository.existsByLoginId(loginId)){
+    public void deleteUserByUserId(Long userId) {
+        if(!userRepository.existsById(userId)){
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }else{
-            userRepository.deleteByLoginId(loginId);
+            userRepository.deleteByUserId(userId);
         }
     }
 
@@ -131,9 +89,8 @@ public class UserService {
             }
 
             return UserResponse.builder()
-                .username(user.getNickname())
-                .loginId(user.getLoginId())
-                .profileImageUrl(profileImageUrl)
+                .nickname(user.getNickname())
+                .profileImageKey(profileImageUrl)
                 .build();
         });
     }
@@ -141,15 +98,15 @@ public class UserService {
 
     // 프로필 업로드
     @Transactional
-    public String uploadProfileImage(MultipartFile file, String loginId) throws IOException {
+    public String uploadProfileImage(MultipartFile file, Long userId) throws IOException {
 
         //유저 조회
-        User user = userRepository.findByLoginId(loginId)
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         // 기존 프로필 이미지가 있다면 삭제
         if(user.getProfileImageKey() != null){
-            deleteProfileImage(loginId);
+            deleteProfileImage(userId);
         }
 
         // 파일 확장자 추출
@@ -160,7 +117,7 @@ public class UserService {
         }
 
         // S3 key 설정 (username 기준, 확장자 포함)
-        String key = "profile/" + loginId + extension;
+        String key = "profile/" + userId + extension;
 
         // ObjectMetadata 설정
         ObjectMetadata metadata = ObjectMetadata.builder()
@@ -180,8 +137,8 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteProfileImage(String loginId) {
-        User user = userRepository.findByLoginId(loginId)
+    public void deleteProfileImage(Long userId) {
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         //s3 객체 삭제

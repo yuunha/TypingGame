@@ -9,7 +9,6 @@ import lombok.Getter;
 @Builder
 public class UserResponse {
     private Long userId;
-    private String loginId;
-    private String username;
-    private String profileImageUrl;
+    private String nickname;
+    private String profileImageKey;
 }
