@@ -22,12 +22,12 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
-@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    private final CustomUserDetailsService userDetailsService;
-
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -41,29 +41,21 @@ public class SecurityConfig {
                 .requestMatchers("/user/**").authenticated()            // 그 외 /user 하위 경로는 인증 필요
                 .requestMatchers(HttpMethod.GET, "/long-text/**").permitAll()  // GET 요청만 허용
                 .requestMatchers(HttpMethod.GET, "/quote/today").permitAll() //오늘의 명언
+                 // 홈페이지와 회원가입은 모든 사용자 접근 허용
+                //.requestMatchers("/", "/signup", "/login").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())  // 폼 로그인 비활성화
-            .httpBasic(Customizer.withDefaults()) //HTTP Basic 인증 활성화
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())); // 적용
+            //.httpBasic(Customizer.withDefaults()) //HTTP Basic 인증 활성화
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 적용
+            //oauth2 로그인 설정
+            .oauth2Login(oauth2 -> oauth2
+                    .userInfoEndpoint(userInfo -> userInfo
+                            .userService(customOAuth2UserService) // 구현한 CustomOAuth2UserService 연결
+                    )
+                    .defaultSuccessUrl("/home", true) // 로그인 성공 후 리다이렉트
+            );
         return http.build();
-    }
-    @Bean //인증관리자(AuthenticationManager)를 Bean으로 등록
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
-        //UserDetailsService와 PasswordEncoder 등록
-        //인증을 시도하면 → UserDetailsService에서 유저를 찾고 → PasswordEncoder로 비밀번호 검증
-        builder.userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder());
-
-        return builder.build();
-    }
-    //사용자 정보를 로드하는 서비스 지정, 비밀번호 비교 시 사용할 인코더 지정
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

@@ -2,42 +2,55 @@ package hello.typing_game_be.common.security;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import hello.typing_game_be.user.entity.User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class CustomUserDetails implements UserDetails {
+// CustomUserDetails - OAuth2User 구현
+public class CustomUserDetails implements OAuth2User {
+
     private final User user;
+    private final Map<String, Object> attributes;
 
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(User user, Map<String, Object> attributes) {
         this.user = user;
+        this.attributes = attributes;
     }
 
-    // 필요한 경우 사용자 id, 닉네임 등 getter 제공
-    public Long getUserId() {
-        return user.getUserId();
+    // User 엔티티 접근용
+    public User getUser() {
+        return user;
     }
 
-    public String getNickname() {
-        return user.getNickname();
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // 권한 없음
+        // 권한 없음 - 빈 리스트 반환
+        return Collections.emptyList();
     }
 
     @Override
-    public String getPassword() {
-        return user.getPassword();
+    public String getName() {
+        // 카카오 고유 ID 반환
+        return user.getProviderId();
     }
 
-    @Override
+    public Long getUserId() {
+        // 카카오 고유 ID 반환
+        return user.getUserId();
+    }
+
     public String getUsername() {
-        return user.getLoginId();
+        // 카카오 고유 ID 반환
+        return user.getNickname();
     }
 
-    // 나머지 메서드도 적절히 구현
 }
