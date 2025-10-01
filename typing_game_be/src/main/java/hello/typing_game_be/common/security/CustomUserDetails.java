@@ -53,4 +53,9 @@ public class CustomUserDetails implements OAuth2User {
         return user.getNickname();
     }
 
+    public String getProfileImageKey() {
+        // 카카오 고유 ID 반환
+        return user.getProfileImageKey();
+    }
+
 }

@@ -70,68 +70,68 @@ public class UserControllerTest {
 
         return user.getUserId();
     }
-    @Test
-    void 회원가입_성공() throws Exception {
-        UserCreateRequest request = new UserCreateRequest(username, loginId, password);
+//    @Test
+//    void 회원가입_성공() throws Exception {
+//        UserCreateRequest request = new UserCreateRequest(username, loginId, password);
+//
+//        // when & then
+//        mockMvc.perform(post("/user")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(request)))
+//            .andExpect(status().isCreated());
+//
+//        //유저 조회 -> 이름, 비번 검증
+//        User savedUser = userRepository.findByLoginId(loginId).orElse(null);
+//        assertThat(savedUser.getNickname()).isEqualTo(username);
+//        assertThat(passwordEncoder.matches(password, savedUser.getPassword())).isTrue();
+//    }
 
-        // when & then
-        mockMvc.perform(post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated());
-
-        //유저 조회 -> 이름, 비번 검증
-        User savedUser = userRepository.findByLoginId(loginId).orElse(null);
-        assertThat(savedUser.getNickname()).isEqualTo(username);
-        assertThat(passwordEncoder.matches(password, savedUser.getPassword())).isTrue();
-    }
-
-    @Test
-    void 회원가입_실패_필수필드미입력() throws Exception {
-
-        UserCreateRequest request = new UserCreateRequest(username, "", password);
-
-        // when & then
-        // @Valid 유효성 검증 실패
-        mockMvc.perform(post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.loginId").value("아이디는 필수입니다."));
-    }
-    @Test
-    void 회원가입_실패_loginId중복() throws Exception {
-
-        //given
-        //유저1 등록
-        registerUser(username, loginId, password);
-
-        // when & then
-        UserCreateRequest request = new UserCreateRequest("aaa", loginId, "111");
-
-        //유저2(loginId중복) 등록 시도
-        mockMvc.perform(post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isConflict());
-    }
-    @Test
-    void 회원가입_실패_username중복() throws Exception {
-
-        //given
-        //유저1 등록
-        registerUser(username, loginId, password);
-
-        // when & then
-        UserCreateRequest request = new UserCreateRequest(username, "bbbb","111");
-
-        mockMvc.perform(post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isConflict())
-            .andExpect(jsonPath("$.message").value("이미 존재하는 username입니다."));
-
-    }
+//    @Test
+//    void 회원가입_실패_필수필드미입력() throws Exception {
+//
+//        UserCreateRequest request = new UserCreateRequest(username, "", password);
+//
+//        // when & then
+//        // @Valid 유효성 검증 실패
+//        mockMvc.perform(post("/user")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(request)))
+//            .andExpect(status().isBadRequest())
+//            .andExpect(jsonPath("$.loginId").value("아이디는 필수입니다."));
+//    }
+//    @Test
+//    void 회원가입_실패_loginId중복() throws Exception {
+//
+//        //given
+//        //유저1 등록
+//        registerUser(username, loginId, password);
+//
+//        // when & then
+//        UserCreateRequest request = new UserCreateRequest("aaa", loginId, "111");
+//
+//        //유저2(loginId중복) 등록 시도
+//        mockMvc.perform(post("/user")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(request)))
+//            .andExpect(status().isConflict());
+//    }
+//    @Test
+//    void 회원가입_실패_username중복() throws Exception {
+//
+//        //given
+//        //유저1 등록
+//        registerUser(username, loginId, password);
+//
+//        // when & then
+//        UserCreateRequest request = new UserCreateRequest(username, "bbbb","111");
+//
+//        mockMvc.perform(post("/user")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(request)))
+//            .andExpect(status().isConflict())
+//            .andExpect(jsonPath("$.message").value("이미 존재하는 username입니다."));
+//
+//    }
     @Test
     void 회원조회_성공() throws Exception {
         //given

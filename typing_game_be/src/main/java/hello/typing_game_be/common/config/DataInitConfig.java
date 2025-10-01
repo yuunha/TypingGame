@@ -115,10 +115,10 @@ public class DataInitConfig {
     @Order(1)
     CommandLineRunner initUsers() {
         return args -> {
-            createUserIfNotExists("admin_name", "admin", "12345");
-            createUserIfNotExists("홍길동", "dong", "1111");
-            createUserIfNotExists("홍길순", "soon", "2222");
-            createUserIfNotExists("홍길화", "hwa", "3333");
+            createUserIfNotExists("admin", "11111");
+            createUserIfNotExists("dong", "22222");
+            createUserIfNotExists("soon", "33333");
+            createUserIfNotExists("hwa", "44444");
 
         };
     }
@@ -137,7 +137,7 @@ public class DataInitConfig {
     @Order(3)
     CommandLineRunner initMyLongTexts() {
         return args -> {
-            User user = userRepository.findByLoginId("admin").orElseThrow(
+            User user = userRepository.findByNickname("admin").orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
 
@@ -151,7 +151,7 @@ public class DataInitConfig {
     @Order(4)
     CommandLineRunner initMyLongTextScore() {
         return args -> {
-            User user = userRepository.findByLoginId("admin").orElseThrow(
+            User user = userRepository.findByNickname("admin").orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
             MyLongText myLongText1 = myLongTextRepository.findByTitle("Yesterday - 비틀즈").orElseThrow(
@@ -170,16 +170,16 @@ public class DataInitConfig {
     @Order(5)
     CommandLineRunner initFriendRequests() {
         return args -> {
-            User user1 = userRepository.findByLoginId("admin").orElseThrow(
+            User user1 = userRepository.findByNickname("admin").orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
-            User user2 = userRepository.findByLoginId("dong").orElseThrow(
+            User user2 = userRepository.findByNickname("dong").orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
-            User user3 = userRepository.findByLoginId("soon").orElseThrow(
+            User user3 = userRepository.findByNickname("soon").orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
-            User user4 = userRepository.findByLoginId("hwa").orElseThrow(
+            User user4 = userRepository.findByNickname("hwa").orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
             );
             //user1 - user2 친구 (accepted)
@@ -195,14 +195,15 @@ public class DataInitConfig {
 
 
 
-    private void createUserIfNotExists(String username, String loginId, String password) {
-        if (!userRepository.existsByLoginId(loginId)) {
-            UserCreateRequest request = UserCreateRequest.builder()
-                .username(username)
-                .loginId(loginId)
-                .password(password)
-                .build();
-            userService.register(request);
+    private void createUserIfNotExists(String nickname, String providerId) {
+        if (!userRepository.existsByNickname(nickname)) {
+            userRepository.save(
+                User.builder()
+                    .nickname(nickname)
+                    .provider("kakao")
+                    .providerId(providerId)
+                    .build()
+            );
         }
     }
     private void createLongTextIfNotExists(String title, String content) {
