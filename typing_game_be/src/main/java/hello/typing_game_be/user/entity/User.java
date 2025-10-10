@@ -31,7 +31,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
 
-    @Column(unique = true, nullable = false, length = 20)
+    @Column(unique = true, length = 20)
     private String nickname;
 
     @Column(name = "profile_image_key")

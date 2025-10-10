@@ -33,16 +33,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> properties = oAuth2User.getAttribute("properties");
 
         //String email = kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
-        String nickname = properties != null ? (String) properties.get("nickname") : null;
+        //String nickname = properties != null ? (String) properties.get("nickname") : null;
 
         // DB에 사용자 조회 -> 있으면 기존 사용자 사용, 없으면 새 사용자 등록
+//        User user = userRepository.findByProviderId(providerId)
+//                .orElseGet(() -> {
+//                    User newUser = new User(providerId);
+//                    newUser.setProvider(provider);
+//                    return userRepository.save(newUser);
+//                });
+
         User user = userRepository.findByProviderId(providerId)
-                .orElseGet(() -> {
-                    User newUser = new User(providerId);
-                    newUser.setProvider(provider);
-                    newUser.setNickname(nickname);
-                    return userRepository.save(newUser);
-                });
+                .orElse(null); // 존재하면 가져오고, 없으면 null 반환
 
         // CustomUserDetails 반환
         return new CustomUserDetails(user, oAuth2User.getAttributes());

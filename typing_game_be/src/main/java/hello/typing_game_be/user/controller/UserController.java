@@ -3,6 +3,7 @@ package hello.typing_game_be.user.controller;
 
 import java.io.IOException;
 
+import hello.typing_game_be.user.dto.*;
 import hello.typing_game_be.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,10 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import hello.typing_game_be.common.security.CustomUserDetails;
-import hello.typing_game_be.user.dto.UserCreateRequest;
-import hello.typing_game_be.user.dto.UserProfileResponse;
-import hello.typing_game_be.user.dto.UserResponse;
-import hello.typing_game_be.user.dto.UserUpdateRequest;
 
 import hello.typing_game_be.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,6 +50,18 @@ public class UserController {
 //        return ResponseEntity.ok().build();
 //    }
 
+        @Operation( summary = "닉네임 추가 저장(회원가입)", responses = {
+                @ApiResponse(responseCode = "200", description = "닉네임 저장 성공(회원가입 성공)"),
+                @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+        })
+        @GetMapping("/user")
+        public ResponseEntity<UserResponse> registerNickname(
+                @AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody NicknameRequest request
+        ) {
+            User user = userDetails.getUser();
+            userService.registerNickname(user.getUserId(),request.getNickname());
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
 
     @Operation( summary = "회원정보 조회", responses = {
         @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),

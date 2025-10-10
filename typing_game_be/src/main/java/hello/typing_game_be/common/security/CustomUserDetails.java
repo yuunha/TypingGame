@@ -37,6 +37,7 @@ public class CustomUserDetails implements OAuth2User {
         return Collections.emptyList();
     }
 
+    //TODO: 수정 필요
     @Override
     public String getName() {
         // 카카오 고유 ID 반환

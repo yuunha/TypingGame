@@ -24,9 +24,12 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService
+    ,CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
         this.customOAuth2UserService = customOAuth2UserService;
+        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
 
     @Bean
@@ -53,7 +56,7 @@ public class SecurityConfig {
                     .userInfoEndpoint(userInfo -> userInfo
                             .userService(customOAuth2UserService) // 구현한 CustomOAuth2UserService 연결
                     )
-                    .defaultSuccessUrl("/home", true) // 로그인 성공 후 리다이렉트
+                    .successHandler(customOAuth2SuccessHandler) // 로그인 성공 시 직접 제어
             );
         return http.build();
     }

@@ -62,6 +62,13 @@ public class UserService {
 //    }
 
     @Transactional
+    public void registerNickname(Long userId,String nickname){
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        user.setNickname(nickname);
+    }
+
+    @Transactional
     public void deleteUserByUserId(Long userId) {
         if(!userRepository.existsById(userId)){
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
