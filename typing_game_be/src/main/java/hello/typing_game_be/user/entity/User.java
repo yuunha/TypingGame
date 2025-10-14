@@ -1,23 +1,20 @@
 package hello.typing_game_be.user.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import hello.typing_game_be.longTextScore.entity.LongTextScore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Builder //allArgsConstructor 필요
@@ -26,6 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //외부에서 기본 생성자 막기
 @AllArgsConstructor
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,10 +40,18 @@ public class User {
 
     private String provider; // kakao, google 등 소셜 로그인 제공자
 
+    // --- 생성/수정 시간 ---
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
     // 유저가 작성한 긴 글 점수들
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LongTextScore> longTextScores = new ArrayList<>();
+
 
     // 커스텀 생성자
     public User(String providerId) {
