@@ -26,6 +26,7 @@ const SignupPage: React.FC = () => {
       router.push("/login");
     } catch (err) {
       setMessage("회원가입 실패: 서버 에러");
+      console.log(err)
     }
   };
 

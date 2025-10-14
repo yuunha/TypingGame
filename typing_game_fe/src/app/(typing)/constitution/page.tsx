@@ -13,11 +13,6 @@ const ConstitutionTyping: React.FC = () => {
   const [selectedCons, setSelectedCons] = useState<Constitution | null>(null);
 
   useEffect(() => {
-    if (consProgress === null) return;
-    useConstitution();
-  }, []);
-
-  useEffect(() => {
     if (typeof consProgress?.articleIndex === "number") {
       fetchConstitution(consProgress.articleIndex);
     }
