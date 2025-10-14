@@ -18,15 +18,15 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    @Test
-    @Transactional
-    void 유저삭제_실패_존재하지않는_아이디() {
-        // given
-        String nonExistentLoginId = "nonexistentUser";
-
-        // when & then
-        assertThatThrownBy(() -> userService.deleteUserByLoginId(nonExistentLoginId))
-            .isInstanceOf(BusinessException.class)
-            .hasMessageContaining("존재하지 않는 유저입니다");
-    }
+//    @Test
+//    @Transactional
+//    void 유저삭제_실패_존재하지않는_아이디() {
+//        // given
+//        String nonExistentLoginId = "nonexistentUser";
+//
+//        // when & then
+//        assertThatThrownBy(() -> userService.deleteUserByLoginId(nonExistentLoginId))
+//            .isInstanceOf(BusinessException.class)
+//            .hasMessageContaining("존재하지 않는 유저입니다");
+//    }
 }

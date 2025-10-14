@@ -63,6 +63,10 @@ public class UserService {
 
     @Transactional
     public void registerNickname(Long userId,String nickname){
+        // 중복 체크
+        if (userRepository.existsByNickname(nickname)) {
+            throw new BusinessException(ErrorCode.DUPLICATE_NICKNAME);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new BusinessException(ErrorCode.USER_NOT_FOUND));
         user.setNickname(nickname);

@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import hello.typing_game_be.common.security.CustomUserDetails;
+import hello.typing_game_be.user.dto.NicknameRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,14 +32,16 @@ import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
 
+import java.util.Map;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private UserService userService;
+    //@Autowired
+    //private UserService userService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -44,8 +50,7 @@ public class UserControllerTest {
     private MyLongTextRepository myLongTextRepository;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
 
     @BeforeEach
     void beforeEach() {
@@ -53,167 +58,127 @@ public class UserControllerTest {
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
     }
+
     @AfterEach
     void afterEach() {
         userRepository.deleteAll();
     }
 
-    String username = "홍길동";
-    String loginId = "testid";
-    String password = "1234";
+    Authentication registerUser(String nickname, String providerId, String provider) {
+        User user = userRepository.save(User.builder()
+                .nickname(nickname)
+                .providerId(providerId)
+                .provider(provider)
+                .build()
+        );
+        // CustomUserDetails 생성
+        CustomUserDetails customUser = new CustomUserDetails(user, Map.of());
 
-    long registerUser(String username, String loginId, String password) throws Exception {
-        UserCreateRequest request = new UserCreateRequest(username, loginId, password);
+        // Authentication 객체 생성
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                customUser, null, customUser.getAuthorities()
+        );
 
-        userService.register(request);
-        User user = userRepository.findByLoginId(loginId).orElseThrow();
-
-        return user.getUserId();
+        return auth;
     }
-//    @Test
-//    void 회원가입_성공() throws Exception {
-//        UserCreateRequest request = new UserCreateRequest(username, loginId, password);
-//
-//        // when & then
-//        mockMvc.perform(post("/user")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(request)))
-//            .andExpect(status().isCreated());
-//
-//        //유저 조회 -> 이름, 비번 검증
-//        User savedUser = userRepository.findByLoginId(loginId).orElse(null);
-//        assertThat(savedUser.getNickname()).isEqualTo(username);
-//        assertThat(passwordEncoder.matches(password, savedUser.getPassword())).isTrue();
-//    }
 
-//    @Test
-//    void 회원가입_실패_필수필드미입력() throws Exception {
-//
-//        UserCreateRequest request = new UserCreateRequest(username, "", password);
-//
-//        // when & then
-//        // @Valid 유효성 검증 실패
-//        mockMvc.perform(post("/user")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(request)))
-//            .andExpect(status().isBadRequest())
-//            .andExpect(jsonPath("$.loginId").value("아이디는 필수입니다."));
-//    }
-//    @Test
-//    void 회원가입_실패_loginId중복() throws Exception {
-//
-//        //given
-//        //유저1 등록
-//        registerUser(username, loginId, password);
-//
-//        // when & then
-//        UserCreateRequest request = new UserCreateRequest("aaa", loginId, "111");
-//
-//        //유저2(loginId중복) 등록 시도
-//        mockMvc.perform(post("/user")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(request)))
-//            .andExpect(status().isConflict());
-//    }
-//    @Test
-//    void 회원가입_실패_username중복() throws Exception {
-//
-//        //given
-//        //유저1 등록
-//        registerUser(username, loginId, password);
-//
-//        // when & then
-//        UserCreateRequest request = new UserCreateRequest(username, "bbbb","111");
-//
-//        mockMvc.perform(post("/user")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(request)))
-//            .andExpect(status().isConflict())
-//            .andExpect(jsonPath("$.message").value("이미 존재하는 username입니다."));
-//
-//    }
+    @Test
+    void 닉네임등록_실패_닉네임중복() throws Exception {
+        // given
+        // 기존 유저 등록
+        registerUser("홍길동", "12345", "KAKAO");
+
+        // 새로운 유저 생성
+        Authentication auth = registerUser("임꺽정", "67890", "KAKAO");
+
+        // request 객체 생성
+        NicknameRequest request = new NicknameRequest();
+        request.setNickname("홍길동");
+
+        mockMvc.perform(post("/users/nickname")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) // Object → JSON
+                        .with(authentication(auth)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("이미 존재하는 nickname입니다."));
+    }
+
     @Test
     void 회원조회_성공() throws Exception {
-        //given
-        //유저1 등록
-        registerUser(username, loginId, password);
+        // given: User 엔티티 저장
+        Authentication auth = registerUser("홍길동", "12345", "KAKAO");
 
         // when & then
-        mockMvc.perform(get("/user")
-                .with(httpBasic(loginId, password)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.loginId").value(loginId))
-            .andExpect(jsonPath("$.username").value(username));
-    }
-    @Test
-    void 회원수정_성공() throws Exception {
-
-        //given
-        //유저1 등록
-        long userId = registerUser(username, loginId, password);
-
-        //유저 이름 수정 요청
-        UserUpdateRequest updateRequest = new UserUpdateRequest("abc");
-
-        mockMvc.perform(put("/user/"+userId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(updateRequest))
-                .with(httpBasic(loginId, password))) // Basic 인증 시뮬레이션
-            .andExpect(status().isOk());
-
-        // 수정한 이름 검증
-        User updatedUser = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        assertEquals("abc", updatedUser.getNickname());
+        mockMvc.perform(get("/users/me")
+                        .with(authentication(auth))) // Principal 세팅
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nickname").value("홍길동"));
     }
 
+    //인증 관련 예외
     @Test
-    void 회원수정_실패_존재하지않는ID() throws Exception {
-
-        //given
-        //유저1 등록
-        registerUser(username, loginId, password);
-
-        UserUpdateRequest updateRequest = new UserUpdateRequest("변경된 이름");
-
-        mockMvc.perform(put("/user/"+100)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateRequest))
-                .with(httpBasic(loginId, password))) // Basic 인증 시뮬레이션
-            .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.message").value("존재하지 않는 유저입니다."));
+    void 회원조회_실패_인증없음() throws Exception {
+        mockMvc.perform(get("/users/me"))
+                .andExpect(status().is3xxRedirection()); // OAuth2 로그인 리다이렉트
+                // is3xxRedirection() : HTTP 상태 코드 300~399
     }
 
     @Test
     void 회원삭제_성공() throws Exception {
         //given
-        //유저1 등록
-        registerUser(username, loginId, password);
+        Authentication auth = registerUser("홍길동", "12345", "KAKAO");
 
         //유저 삭제 요청
-        mockMvc.perform(delete("/user")
-                .with(httpBasic(loginId, password))) // Basic 인증 시뮬레이션
-            .andExpect(status().isOk());
+        mockMvc.perform(delete("/users/me")
+                        .with(authentication(auth))) // Principal 세팅
+                .andExpect(status().isOk());
 
-        //DB에 해당 유저의 loginId가 존재하는지 검증
-        boolean exists = userRepository.existsByLoginId(loginId);
+        //DB에 유저가 삭제되었는지 확인
+        boolean exists = userRepository.existsByNickname("홍길동");
         assertThat(exists).isFalse();
-
     }
+
+    //인증 관련 예외
+    @Test
+    void 회원삭제_실패_인증없음() throws Exception {
+        mockMvc.perform(delete("/users/me"))
+                .andExpect(status().is3xxRedirection()); // 인증 실패
+    }
+
+    @Test
+    void 회원삭제_실패_존재하지않는유저() throws Exception {
+        Authentication auth = registerUser("홍길동", "12345", "KAKAO");
+
+        // 먼저 삭제
+        mockMvc.perform(delete("/users/me").with(authentication(auth)))
+                .andExpect(status().isOk());
+
+        // 다시 삭제 시도
+        mockMvc.perform(delete("/users/me").with(authentication(auth)))
+                .andExpect(status().isNotFound());
+    }
+
     @Test
     void 회원검색_성공() throws Exception {
-        //given
-        //유저1,2 등록
-        registerUser("홍길동", loginId, password);
-        registerUser("홍길순", "bbbb", password);
+        //given: 유저1,2 등록
+        Authentication auth1 = registerUser("홍길동", "11111", "KAKAO");
+        Authentication auth2 = registerUser("홍길순", "22222", "KAKAO");
 
         // "홍길"로 부분 검색 시 결과 2개(loginId 일치여부 검증)
-        mockMvc.perform(get("/users?username=홍길&page=0&size=5")
-                .with(httpBasic(loginId, password))) // Basic 인증 시뮬레이션
+        mockMvc.perform(get("/users/search?nickname=홍길&page=0&size=5")
+                        .with(authentication(auth1))) // Principal 세팅
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].loginId").value(loginId))
-            .andExpect(jsonPath("$.content[1].loginId").value("bbbb"));
+            .andExpect(jsonPath("$.content[0].nickname").value("홍길동"))
+            .andExpect(jsonPath("$.content[1].nickname").value("홍길순"));
+    }
+
+    @Test
+    void 회원검색_실패_파라미터누락() throws Exception {
+        Authentication auth = registerUser("홍길동", "12345", "KAKAO");
+
+        mockMvc.perform(get("/users/search").with(authentication(auth)))
+                .andExpect(status().isBadRequest());
     }
 
 }

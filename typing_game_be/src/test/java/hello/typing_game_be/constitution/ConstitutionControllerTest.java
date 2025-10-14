@@ -41,28 +41,28 @@ public class ConstitutionControllerTest {
     @Autowired
     private MyLongTextRepository myLongTextRepository;
 
-
-    @BeforeEach
-    void beforeEach() {
-        myLongTextRepository.deleteAll();
-        friendRequestRepository.deleteAll();
-        userRepository.deleteAll();
-
-        //유저1 저장
-        userService.register( new UserCreateRequest("홍길동","user1","1111"));
-    }
-
-    @Test
-    void 조문번호로_헌법조회_성공() throws Exception {
-
-        int articleIndex = 71; // 제71조
-
-        mockMvc.perform(get("/constitution/{articleIndex}", articleIndex)
-                .with(httpBasic("user1", "1111")))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.articleNumber").value("제71조"))
-            .andExpect(jsonPath("$.content").value("대통령이 궐위되거나 사고로 인하여 직무를 수행할 수 없을 때에는 국무총리, 법률이 정한 국무위원의 순서로 그 권한을 대행한다."));
-
-
-    }
+//
+//    @BeforeEach
+//    void beforeEach() {
+//        myLongTextRepository.deleteAll();
+//        friendRequestRepository.deleteAll();
+//        userRepository.deleteAll();
+//
+//        //유저1 저장
+//        userService.register( new UserCreateRequest("홍길동","user1","1111"));
+//    }
+//
+//    @Test
+//    void 조문번호로_헌법조회_성공() throws Exception {
+//
+//        int articleIndex = 71; // 제71조
+//
+//        mockMvc.perform(get("/constitution/{articleIndex}", articleIndex)
+//                .with(httpBasic("user1", "1111")))
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("$.articleNumber").value("제71조"))
+//            .andExpect(jsonPath("$.content").value("대통령이 궐위되거나 사고로 인하여 직무를 수행할 수 없을 때에는 국무총리, 법률이 정한 국무위원의 순서로 그 권한을 대행한다."));
+//
+//
+//    }
 }

@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserListResponse {
     private Long userId;
-    private String username;
+    private String nickname;
     public static UserListResponse fromEntity(User user) {
         return new UserListResponse(user.getUserId(), user.getNickname());
     }

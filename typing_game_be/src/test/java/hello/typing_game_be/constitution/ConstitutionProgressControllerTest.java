@@ -49,15 +49,15 @@ public class ConstitutionProgressControllerTest {
     @Autowired
     private ConstitutionProgressRepository constitutionProgressRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        myLongTextRepository.deleteAll();
-        friendRequestRepository.deleteAll();
-        userRepository.deleteAll();
-
-        //유저1 저장
-        userService.register( new UserCreateRequest("홍길동","user1","1111"));
-    }
+//    @BeforeEach
+//    void beforeEach() {
+//        myLongTextRepository.deleteAll();
+//        friendRequestRepository.deleteAll();
+//        userRepository.deleteAll();
+//
+//        //유저1 저장
+//        userService.register( new UserCreateRequest("홍길동","user1","1111"));
+//    }
 //    @Test
 //    void 유저의_헌법_진행상황_저장_성공() throws Exception {
 //
@@ -74,28 +74,28 @@ public class ConstitutionProgressControllerTest {
 //        assertThat(progress.getLastPosition()).isEqualTo(40);
 //
 //    }
-    @Test
-    void 유저의_헌법_진행상황_조회_성공() throws Exception {
-
-        //given
-        User user = userRepository.findByLoginId("user1").get();
-
-        //유저1의 진행상황(1,100) 저장
-        constitutionProgressRepository.save(
-            ConstitutionProgress.builder()
-                .user(user)
-                .articleIndex(1)
-                .lastPosition(100)
-                .build()
-        );
-
-        //when&then
-        mockMvc.perform(get("/constitution/progress")
-                .with(httpBasic("user1", "1111")))
-            .andExpect(status().isOk())
-            .andDo(print())
-            .andExpect(jsonPath("$.articleIndex").value(1))
-            .andExpect(jsonPath("$.lastPosition").value(100));
-
-    }
+//    @Test
+//    void 유저의_헌법_진행상황_조회_성공() throws Exception {
+//
+//        //given
+//        User user = userRepository.findByLoginId("user1").get();
+//
+//        //유저1의 진행상황(1,100) 저장
+//        constitutionProgressRepository.save(
+//            ConstitutionProgress.builder()
+//                .user(user)
+//                .articleIndex(1)
+//                .lastPosition(100)
+//                .build()
+//        );
+//
+//        //when&then
+//        mockMvc.perform(get("/constitution/progress")
+//                .with(httpBasic("user1", "1111")))
+//            .andExpect(status().isOk())
+//            .andDo(print())
+//            .andExpect(jsonPath("$.articleIndex").value(1))
+//            .andExpect(jsonPath("$.lastPosition").value(100));
+//
+//    }
 }

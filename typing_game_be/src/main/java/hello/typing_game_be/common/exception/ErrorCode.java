@@ -8,9 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
     //user
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER-001", "존재하지 않는 유저입니다."),
-    DUPLICATE_LOGINID(HttpStatus.CONFLICT, "USER-002", "이미 존재하는 아아디입니다."),
-    DUPLICATE_USERNAME(HttpStatus.CONFLICT, "USER-003", "이미 존재하는 username입니다."),
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"USER-003", "비밀번호가 일치하지 않습니다."),
+    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "USER-002", "이미 존재하는 nickname입니다."),
 
     //long-text
     LONG_TEXT_NOT_FOUND(HttpStatus.NOT_FOUND,"LONG-TEXT-001","존재하지 않는 긴글입니다."),

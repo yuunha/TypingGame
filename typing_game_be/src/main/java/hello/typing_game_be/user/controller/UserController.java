@@ -50,24 +50,24 @@ public class UserController {
 //        return ResponseEntity.ok().build();
 //    }
 
-        @Operation( summary = "닉네임 추가 저장(회원가입)", responses = {
-                @ApiResponse(responseCode = "200", description = "닉네임 저장 성공(회원가입 성공)"),
-                @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
-        })
-        @GetMapping("/user")
-        public ResponseEntity<UserResponse> registerNickname(
-                @AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody NicknameRequest request
-        ) {
-            User user = userDetails.getUser();
-            userService.registerNickname(user.getUserId(),request.getNickname());
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
+    @Operation( summary = "닉네임 추가 저장(회원가입)", responses = {
+            @ApiResponse(responseCode = "200", description = "닉네임 저장 성공(회원가입 성공)"),
+            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+    })
+    @PostMapping("/users/nickname")
+    public ResponseEntity<UserResponse> registerNickname(
+            @AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody NicknameRequest request
+    ) {
+        User user = userDetails.getUser();
+        userService.registerNickname(user.getUserId(),request.getNickname());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @Operation( summary = "회원정보 조회", responses = {
         @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),
         @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
     })
-    @GetMapping("/user")
+    @GetMapping("/users/me")
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
         User user = userDetails.getUser();
         return ResponseEntity.ok(
@@ -80,7 +80,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "회원 삭제 성공"),
         @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
     })
-    @DeleteMapping("/user")
+    @DeleteMapping("/users/me")
     public ResponseEntity<String> deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserId();
         userService.deleteUserByUserId(userId);
@@ -92,14 +92,14 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
     })
-    @GetMapping("/users")
+    @GetMapping("/users/search")
     public ResponseEntity<Page<UserResponse>> searchUsers(
-        @RequestParam String username,
+        @RequestParam String nickname,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("nickname").ascending());
-        Page<UserResponse> users = userService.searchUsersByNickname(username,pageable);
+        Page<UserResponse> users = userService.searchUsersByNickname(nickname,pageable);
         return ResponseEntity.ok(users);
     }
 
@@ -107,7 +107,7 @@ public class UserController {
     @Operation( summary = "프로필 사진 업로드", description = "content-type : multipart/form-data, 속성이름 : file ", responses = {
             @ApiResponse(responseCode = "200", description = "파일 업로드 성공, 사진 url 반환 ")
     })
-    @PostMapping("/user/profile")
+    @PostMapping("/users/profile")
     public ResponseEntity<UserProfileResponse> uploadFile(
         @RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws IOException {
@@ -118,7 +118,7 @@ public class UserController {
     @Operation( summary = "프로필 사진 삭제", responses = {
         @ApiResponse(responseCode = "200", description = "파일 삭제 성공")
     })
-    @DeleteMapping("/user/profile")
+    @DeleteMapping("/users/profile")
     public ResponseEntity<Void> deleteFile(@AuthenticationPrincipal CustomUserDetails userDetails){
         userService.deleteProfileImage(userDetails.getUserId()); // username = loginId
         return ResponseEntity.ok().build();
