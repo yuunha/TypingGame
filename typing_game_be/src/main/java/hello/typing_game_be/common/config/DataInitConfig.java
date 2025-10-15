@@ -16,7 +16,6 @@ import hello.typing_game_be.myLongText.entity.MyLongText;
 import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.myLongTextScore.entity.MyLongTextScore;
 import hello.typing_game_be.myLongTextScore.repository.MyLongTextScoreRepository;
-import hello.typing_game_be.user.dto.UserCreateRequest;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
