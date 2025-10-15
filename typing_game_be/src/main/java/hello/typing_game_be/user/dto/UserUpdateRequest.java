@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserUpdateRequest {
-    @NotBlank(message = "이름을 입력해 주세요.")
-    @Size(max = 9, message = "이름은 최대 9자까지 가능합니다.")
-    private String username;
+    @NotBlank(message = "닉네임을 입력해 주세요.")
+    @Size(max = 9, message = "닉네임은 최대 9자까지 가능합니다.")
+    private String nickname;
 }

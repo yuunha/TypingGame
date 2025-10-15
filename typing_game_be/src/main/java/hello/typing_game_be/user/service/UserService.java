@@ -8,7 +8,6 @@ import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +17,6 @@ import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.user.dto.UserResponse;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
-import hello.typing_game_be.user.dto.UserCreateRequest;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
@@ -33,33 +31,35 @@ public class UserService {
 
     private final S3Template s3Template;
 
-//    @Transactional
-//    public void update(Long userId, String name) {
-//        User user = userRepository.findById(userId)
-//            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-//        user.setNickname(name);
-//    }
+    @Transactional
+    public void update(Long userId, String name) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        user.setNickname(name);
+    }
 
     /**
      * 유저 정보 조회 + 서명된 URL 생성
      */
-//    public UserResponse getUserByLoginId(String loginId) {
-//        User user = userRepository.findByLoginId(loginId)
-//            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-//
-//        String profileImageUrl = null;
-//        if (user.getProfileImageKey() != null) {
-//            // 서명된 URL 생성, 만료 60분
-//            profileImageUrl = s3Template.createSignedGetURL(bucket, user.getProfileImageKey(), Duration.ofMinutes(30)).toString();;
-//        }
-//
-//        return UserResponse.builder()
-//            .userId(user.getUserId())
-//            .username(user.getNickname())
-//            .loginId(user.getLoginId())
-//            .profileImageUrl(profileImageUrl)
-//            .build();
-//    }
+    @Transactional(readOnly = true)
+    public UserResponse getUserByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        String profileImageUrl = null;
+        if (user.getProfileImageKey() != null) {
+            // 서명된 URL 생성, 만료 60분
+            profileImageUrl = s3Template.createSignedGetURL(bucket, user.getProfileImageKey(), Duration.ofMinutes(30)).toString();;
+        }
+
+        return UserResponse.builder()
+            .userId(user.getUserId())
+            .username(user.getNickname())
+            .profileImageUrl(profileImageUrl)
+            .createdAt(user.getCreatedAt())
+            .updatedAt(user.getUpdatedAt())
+            .build();
+    }
 
     @Transactional
     public void registerNickname(Long userId,String nickname){
@@ -81,6 +81,7 @@ public class UserService {
         }
     }
 
+    //TODO: 리팩토링 필요
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> {
             System.out.println("해당 userId " + userId+ "가 존재하지 않습니다.");
@@ -142,7 +143,6 @@ public class UserService {
 
         // DB에 S3 key 저장
         user.setProfileImageKey(key);
-        userRepository.save(user);
 
         return key; // 필요시 key 반환
     }
@@ -157,6 +157,5 @@ public class UserService {
 
         //user객체의 profileImageKey 제거
         user.setProfileImageKey(null);
-        userRepository.save(user);
     }
 }

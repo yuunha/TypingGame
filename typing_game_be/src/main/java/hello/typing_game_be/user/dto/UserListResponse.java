@@ -9,7 +9,8 @@ import lombok.Getter;
 public class UserListResponse {
     private Long userId;
     private String nickname;
+    private String profileImageUrl;
     public static UserListResponse fromEntity(User user) {
-        return new UserListResponse(user.getUserId(), user.getNickname());
+        return new UserListResponse(user.getUserId(), user.getNickname(),user.getProfileImageKey());
     }
 }
