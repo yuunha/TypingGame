@@ -54,7 +54,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @Operation( summary = "회원정보 조회", responses = {
+    @Operation( summary = "본인의 회원정보 조회", responses = {
         @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),
         @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
     })
@@ -63,6 +63,19 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         UserResponse response = userService.getUserByUserId(userDetails.getUser().getUserId());
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation( summary = "공개프로필 조회", responses = {
+            @ApiResponse(responseCode = "200", description = "회원정보 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
+    })
+    @GetMapping("/users/{id}")
+    public ResponseEntity<PublicUserResponse> getUser(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long id
+            ) {
+        PublicUserResponse response = userService.getPublicProfileByUserId(id);
         return ResponseEntity.ok(response);
     }
 
@@ -75,7 +88,7 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody UserUpdateRequest request
     ) {
-        userService.update(id,request.getNickname());
+        userService.update(userDetails.getUserId(),request.getNickname());
         return ResponseEntity.ok().build();
     }
 

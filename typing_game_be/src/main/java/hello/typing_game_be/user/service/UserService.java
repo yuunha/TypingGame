@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.time.Duration;
 
 
+import hello.typing_game_be.user.dto.PublicUserResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,11 +55,30 @@ public class UserService {
 
         return UserResponse.builder()
             .userId(user.getUserId())
-            .username(user.getNickname())
+            .nickname(user.getNickname())
             .profileImageUrl(profileImageUrl)
             .createdAt(user.getCreatedAt())
             .updatedAt(user.getUpdatedAt())
             .build();
+    }
+
+    @Transactional(readOnly = true)
+    public PublicUserResponse getPublicProfileByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        String profileImageUrl = null;
+        if (user.getProfileImageKey() != null) {
+            profileImageUrl = s3Template
+                    .createSignedGetURL(bucket, user.getProfileImageKey(), Duration.ofMinutes(30))
+                    .toString();
+        }
+
+        return PublicUserResponse.builder():
+                .userId(user.getUserId())
+                .nickname(user.getNickname())
+                .profileImageUrl(profileImageUrl)
+                .build();
     }
 
     @Transactional
@@ -102,7 +122,7 @@ public class UserService {
 
             return UserResponse.builder()
                 .nickname(user.getNickname())
-                .profileImageKey(profileImageUrl)
+                .profileImageUrl(profileImageUrl)
                 .build();
         });
     }
