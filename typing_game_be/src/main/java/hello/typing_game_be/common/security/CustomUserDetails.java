@@ -11,7 +11,7 @@ import hello.typing_game_be.user.entity.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 // CustomUserDetails - OAuth2User 구현
-public class CustomUserDetails implements OAuth2User {
+public class CustomUserDetails implements OAuth2User,UserDetails  {
 
     private final User user;
     private final Map<String, Object> attributes;
@@ -50,15 +50,31 @@ public class CustomUserDetails implements OAuth2User {
 //        // 카카오 고유 ID 반환
 //        return user.getProviderId();
 //    }
-
-    public String getUsername() {
-        // 카카오 고유 ID 반환
-        return user.getNickname();
-    }
+//
+//    public String getUsername() {
+//        // 카카오 고유 ID 반환
+//        return user.getNickname();
+//    }
 
     public String getProfileImageKey() {
         // 카카오 고유 ID 반환
         return user.getProfileImageKey();
     }
 
+
+    @Override
+    public String getUsername() {
+        return user.getNickname();
+    }
+
+    @Override
+    public String getPassword() { return null; }
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+    @Override
+    public boolean isEnabled() { return true; }
 }

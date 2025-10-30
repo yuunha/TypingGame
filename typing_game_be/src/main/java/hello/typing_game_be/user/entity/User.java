@@ -47,6 +47,10 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public boolean isProfileComplete() {
+        return this.nickname != null && !this.nickname.isBlank();
+    }
+
     // 유저가 작성한 긴 글 점수들
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

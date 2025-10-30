@@ -50,7 +50,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
             // 새로 저장한 User를 CustomUserDetails에 반영 (필요시)
             // userDetails.setUser(newUser); // 선택사항
 
-            getRedirectStrategy().sendRedirect(request, response, "/signup-info");
+            getRedirectStrategy().sendRedirect(request, response, "/signup/nickname");
         }
     }
 }
