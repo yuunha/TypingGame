@@ -36,7 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (REST API)
+            //.csrf(csrf -> csrf.disable()) // CSRF 비활성화 (REST API)
             .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 콘솔 허용
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll() // H2 콘솔과 인증 관련 API는 인증 없이 허용
