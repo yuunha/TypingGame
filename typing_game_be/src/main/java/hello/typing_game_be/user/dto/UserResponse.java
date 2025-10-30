@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class UserResponse {
     private Long userId;
     private String nickname;
-    private String profileImageKey;
+    private String profileImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
