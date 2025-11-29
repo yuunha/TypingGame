@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
-import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.user.entity.User;
 
 @Repository
@@ -25,10 +24,7 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
 
     //최근요청이 배열의 맨앞에
     //보낸 요청 목록(요청한 userid + 요청상태(pending) )
-    List<FriendRequest> findByRequesterUserIdAndStatusOrderByCreatedAtDesc(
-        Long userId,
-        FriendRequestStatus status
-    );
+    List<FriendRequest> findByRequesterUserIdOrderByCreatedAtDesc(Long userId);
 
     List<FriendRequest> findByReceiverUserIdOrderByCreatedAtDesc(Long userId);
 }

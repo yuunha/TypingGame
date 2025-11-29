@@ -1,4 +1,4 @@
-package hello.typing_game_be.friendRequest.service;
+package hello.typing_game_be.friend.service;
 
 import java.util.List;
 
@@ -8,10 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
-import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 import hello.typing_game_be.user.dto.UserListResponse;
-import hello.typing_game_be.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -45,10 +43,10 @@ public class FriendService {
             throw new BusinessException(ErrorCode.FORBIDDEN_REQUEST); // 403 Forbidden
         }
 
-        // 상태가 ACCEPTED인지 확인
-        if (!FriendRequestStatus.ACCEPTED.equals(fr.getStatus())) {
-            throw new BusinessException(ErrorCode.INVALID_ACTION,"삭제가 불가능합니다."); // PENDING이면 삭제 불가
-        }
+        // // 상태가 ACCEPTED인지 확인
+        // if (!FriendRequestStatus.ACCEPTED.equals(fr.getStatus())) {
+        //     throw new BusinessException(ErrorCode.INVALID_ACTION,"삭제가 불가능합니다."); // PENDING이면 삭제 불가
+        // }
 
         // 삭제
         friendRequestRepository.delete(fr);

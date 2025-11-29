@@ -47,19 +47,7 @@ public class FriendRequest {
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
-    @Enumerated(EnumType.STRING) // DB에 문자열로 저장
-    private FriendRequestStatus status;
-
     @CreatedDate
     private LocalDateTime createdAt;
-
-    // 상태 변경용 메서드
-    public FriendRequest accept() {
-        return FriendRequest.builder()
-            .requester(this.requester)
-            .receiver(this.receiver)
-            .status(FriendRequestStatus.ACCEPTED)
-            .build();
-    }
 
 }

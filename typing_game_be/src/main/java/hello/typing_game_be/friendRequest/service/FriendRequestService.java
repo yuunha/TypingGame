@@ -41,7 +41,6 @@ public class FriendRequestService {
         FriendRequest fr = FriendRequest.builder()
             .requester(requester)
             .receiver(receiver)
-            .status(FriendRequestStatus.PENDING)
             .build();
         friendRequestRepository.save(fr);
 
@@ -74,7 +73,7 @@ public class FriendRequestService {
     public List<FriendRequestListResponse> getSentFriendRequests(Long userId) {
 
         //최근요청이 배열의 맨앞에
-        List<FriendRequest> list = friendRequestRepository.findByRequesterUserIdAndStatusOrderByCreatedAtDesc(userId,FriendRequestStatus.PENDING);
+        List<FriendRequest> list = friendRequestRepository.findByRequesterUserIdOrderByCreatedAtDesc(userId);
 
         return list.stream()
             .map(FriendRequestListResponse::fromEntity)
