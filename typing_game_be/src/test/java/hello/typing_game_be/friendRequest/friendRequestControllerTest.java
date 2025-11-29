@@ -1,6 +1,5 @@
 package hello.typing_game_be.friendRequest;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,7 +25,6 @@ import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.friendRequest.dto.FriendRequestCreateRequest;
 import hello.typing_game_be.friendRequest.entity.FriendRequest;
-import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
 import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
 // import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.entity.User;
@@ -104,8 +102,6 @@ public class friendRequestControllerTest {
        //then
        assertEquals(userA.getUserId(), fr.getRequester().getUserId());
        assertEquals(userB.getUserId(), fr.getReceiver().getUserId());
-       assertEquals(FriendRequestStatus.PENDING, fr.getStatus());
-
    }
 
     @Test
@@ -124,7 +120,6 @@ public class friendRequestControllerTest {
             FriendRequest.builder()
                 .requester(userA)
                 .receiver(userB)
-                .status(FriendRequestStatus.PENDING)
                 .build()
         );
 
