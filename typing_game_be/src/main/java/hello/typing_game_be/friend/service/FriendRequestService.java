@@ -68,6 +68,13 @@ public class FriendRequestService {
         }
     }
 
+    //친구 요청 삭제
+    public void deleteRequest(FriendRequest friendRequest){
+        // FriendRequest fr = friendRequestRepository.findByRequesterUserIdAndReceiverUserId(requesterId,receiverId)
+        //     .orElseThrow(()->new BusinessException(ErrorCode.FRIEND_REQEUST_NOT_FOUND));
+        friendRequestRepository.delete(friendRequest);
+    }
+
     //보낸 친구요청 조회
     public List<FriendRequestListResponse> getSentFriendRequests(Long userId) {
 
@@ -89,5 +96,10 @@ public class FriendRequestService {
         return list.stream()
             .map(FriendRequestListResponse::fromEntity)
             .collect(Collectors.toList());
+    }
+
+    public FriendRequest findById(Long friendRequestId) {
+        return friendRequestRepository.findById(friendRequestId)
+            .orElseThrow(()->new BusinessException(ErrorCode.FRIEND_REQEUST_NOT_FOUND));
     }
 }

@@ -5,14 +5,35 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import hello.typing_game_be.friend.entity.Friend;
 import hello.typing_game_be.friend.repository.FriendRepository;
 import hello.typing_game_be.user.dto.UserListResponse;
+import hello.typing_game_be.user.entity.User;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class FriendService {
     private final FriendRepository friendRepository;
+
+    public void addFriend(User requester, User receiver){
+        User userA;
+        User userB;
+        //id 작은 user를 userA필드에 저장
+        if(requester.getUserId() <= receiver.getUserId()){
+            userA=requester;
+            userB=receiver;
+        }else{
+            userA=receiver;
+            userB=requester;
+        }
+
+        FriendRepository.save(Friend.builder()
+            .userA(userA)
+            .userB(userB)
+            .build()
+        );
+    }
 
     @Transactional(readOnly = true)
     public List<UserListResponse> getFriends(Long userId) {

@@ -18,6 +18,7 @@ import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.friend.dto.FriendRequestCreateRequest;
 import hello.typing_game_be.friend.dto.FriendRequestListResponse;
 import hello.typing_game_be.friend.dto.FriendRequestUpdateRequest;
+import hello.typing_game_be.friend.service.FriendManagementService;
 import hello.typing_game_be.friend.service.FriendRequestService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/friend-requests")
 public class FriendRequestController {
     private final FriendRequestService friendRequestService;
+    private final FriendManagementService friendManagementService;
+
 
     // 친구 요청 생성
     @PostMapping
@@ -48,7 +51,7 @@ public class FriendRequestController {
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @RequestBody FriendRequestUpdateRequest request
     ) {
-        friendRequestService.respondToFriendRequest(
+        friendManagementService.respondFriendRequest(
             friendRequestId,
             userDetails.getUserId(),
             request.getAction()

@@ -1,4 +1,4 @@
-package hello.typing_game_be.friendRequest;
+package hello.typing_game_be.friend;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,9 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.common.security.CustomUserDetails;
-import hello.typing_game_be.friendRequest.dto.FriendRequestCreateRequest;
-import hello.typing_game_be.friendRequest.entity.FriendRequest;
-import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
+import hello.typing_game_be.friend.dto.FriendRequestCreateRequest;
+import hello.typing_game_be.friend.entity.FriendRequest;
+import hello.typing_game_be.friend.repository.FriendRequestRepository;
 // import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
