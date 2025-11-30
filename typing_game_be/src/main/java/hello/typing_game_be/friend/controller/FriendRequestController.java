@@ -1,4 +1,4 @@
-package hello.typing_game_be.friendRequest.controller;
+package hello.typing_game_be.friend.controller;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hello.typing_game_be.common.security.CustomUserDetails;
-import hello.typing_game_be.friendRequest.dto.FriendRequestCreateRequest;
-import hello.typing_game_be.friendRequest.dto.FriendRequestListResponse;
-import hello.typing_game_be.friendRequest.dto.FriendRequestUpdateRequest;
-import hello.typing_game_be.friendRequest.service.FriendRequestService;
+import hello.typing_game_be.friend.dto.FriendRequestCreateRequest;
+import hello.typing_game_be.friend.dto.FriendRequestListResponse;
+import hello.typing_game_be.friend.dto.FriendRequestUpdateRequest;
+import hello.typing_game_be.friend.service.FriendRequestService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

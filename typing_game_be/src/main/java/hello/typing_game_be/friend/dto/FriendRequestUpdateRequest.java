@@ -1,4 +1,4 @@
-package hello.typing_game_be.friendRequest.dto;
+package hello.typing_game_be.friend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

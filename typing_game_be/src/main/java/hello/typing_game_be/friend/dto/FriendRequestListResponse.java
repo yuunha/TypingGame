@@ -1,8 +1,8 @@
-package hello.typing_game_be.friendRequest.dto;
+package hello.typing_game_be.friend.dto;
 
 import java.time.LocalDateTime;
 
-import hello.typing_game_be.friendRequest.entity.FriendRequest;
+import hello.typing_game_be.friend.entity.FriendRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

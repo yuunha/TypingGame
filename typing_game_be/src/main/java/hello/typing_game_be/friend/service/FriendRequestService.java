@@ -1,4 +1,4 @@
-package hello.typing_game_be.friendRequest.service;
+package hello.typing_game_be.friend.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,10 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
-import hello.typing_game_be.friendRequest.dto.FriendRequestListResponse;
-import hello.typing_game_be.friendRequest.entity.FriendRequest;
-import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
-import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
+import hello.typing_game_be.friend.dto.FriendRequestListResponse;
+import hello.typing_game_be.friend.entity.FriendRequest;
+import hello.typing_game_be.friend.repository.FriendRequestRepository;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
