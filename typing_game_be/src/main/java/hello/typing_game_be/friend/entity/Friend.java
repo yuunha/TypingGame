@@ -32,11 +32,11 @@ public class Friend {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long friendId;
 
-    @ManyToOne(fetch = FetchType.LAZY)   // 요청 보낸 사람
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User userA;
 
-    @ManyToOne(fetch = FetchType.LAZY)   // 요청 보낸 사람
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User userB;
 
