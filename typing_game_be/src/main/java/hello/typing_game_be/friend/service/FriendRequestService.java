@@ -46,27 +46,6 @@ public class FriendRequestService {
         return fr.getFriendRequestId();
     }
 
-    // 친구 요청에 대한 수락/거부
-    @Transactional
-    public void respondToFriendRequest(Long friendRequestId, Long userId, String action) {
-        FriendRequest fr = friendRequestRepository.findById(friendRequestId)
-            .orElseThrow(() -> new BusinessException(ErrorCode.FRIEND_REQEUST_NOT_FOUND));
-
-        // 요청 수신자가 맞는지 확인
-        if (!fr.getReceiver().getUserId().equals(userId)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_REQUEST); // 403 Forbidden
-        }
-        // action 처리
-        if ("ACCEPT".equalsIgnoreCase(action)) {
-            // 수락: 상태 변경
-            fr.accept(); // status를 accep로 변경
-        } else if ("DECLINE".equalsIgnoreCase(action)) {
-            // 거부: 레코드 삭제
-            friendRequestRepository.delete(fr);
-        } else {
-            throw new BusinessException(ErrorCode.INVALID_ACTION);
-        }
-    }
 
     //친구 요청 삭제
     public void deleteRequest(FriendRequest friendRequest){

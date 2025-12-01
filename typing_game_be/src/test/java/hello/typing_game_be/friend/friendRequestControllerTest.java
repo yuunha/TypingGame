@@ -1,11 +1,13 @@
 package hello.typing_game_be.friend;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,10 @@ import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
 import hello.typing_game_be.common.security.CustomUserDetails;
 import hello.typing_game_be.friend.dto.FriendRequestCreateRequest;
+import hello.typing_game_be.friend.dto.FriendRequestUpdateRequest;
+import hello.typing_game_be.friend.entity.Friend;
 import hello.typing_game_be.friend.entity.FriendRequest;
+import hello.typing_game_be.friend.repository.FriendRepository;
 import hello.typing_game_be.friend.repository.FriendRequestRepository;
 // import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.entity.User;
@@ -45,6 +50,8 @@ public class friendRequestControllerTest {
    private UserRepository userRepository;
    @Autowired
    private FriendRequestRepository friendRequestRepository;
+   @Autowired
+   private FriendRepository friendRepository;
    @Autowired
    private ObjectMapper objectMapper;
 
@@ -144,42 +151,63 @@ public class friendRequestControllerTest {
 
     }
 
+    @Test
+    void 친구요청_수락() throws Exception {
 
-//
-//    @Test
-//    void 친구요청_수락_성공() throws Exception {
-//        //given
-//        //유저1 -> 유저2 친구 신청
-//        User user1 = userRepository.findById(user1Id).orElseThrow();
-//        User user2 = userRepository.findById(user2Id).orElseThrow();
-//        friendRequestRepository.save(
-//            FriendRequest.builder()
-//                .requester(user1)
-//                .receiver(user2)
-//                .status(FriendRequestStatus.PENDING)
-//                .build()
-//        );
-//
-//        //when&then
-//        //친구신청 조회
-//        FriendRequest fr = friendRequestRepository.findByRequesterUserIdAndReceiverUserId(user1Id,user2Id).orElseThrow();
-//        FriendRequestUpdateRequest updateRequest = new FriendRequestUpdateRequest("ACCEPT");
-//
-//        //유저2가 유저1의 친구 신청 수락
-//        mockMvc.perform(patch("/friend-requests/{friendRequestId}",fr.getFriendRequestId())
-//                .with(httpBasic("user2", "2222" ))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(updateRequest)))
-//            .andExpect(status().isOk());
-//
-//        //DB에서 friend reqeust의 status가 accept로 바뀌었는지 확인
-//        FriendRequest fr_ = friendRequestRepository.findByRequesterUserIdAndReceiverUserId(user1Id,user2Id).orElseThrow();
-//        //then
-//        assertEquals(user1Id, fr_.getRequester().getUserId());
-//        assertEquals(user2Id, fr_.getReceiver().getUserId());
-//        assertEquals(FriendRequestStatus.PENDING, fr.getStatus());
-//    }
-//
+        // 상황 : user A -> user B 친구 요청
+        // userB가 친구 요청을 수락
+
+        // given
+        // user A,B 엔티티 생성
+        registerUser("userA", "11111", "KAKAO");
+        Authentication auth_B = registerUser("userB", "22222", "KAKAO");
+        User user1 = userRepository.findByNickname("userA").orElseThrow(()->new BusinessException(
+            ErrorCode.USER_NOT_FOUND));
+        User user2 = userRepository.findByNickname("userB").orElseThrow(()->new BusinessException(
+            ErrorCode.USER_NOT_FOUND));
+
+        //친구 요청 생성(userA->userB)
+        FriendRequest friendRequest = friendRequestRepository.save(
+          FriendRequest.builder()
+              .requester(user1)
+              .receiver(user2)
+              .build()
+        );
+
+        //친구요청 수락 DTO
+        FriendRequestUpdateRequest request = new FriendRequestUpdateRequest("ACCEPT");
+
+        // when & then
+        // userB가 친구요청 수락
+        mockMvc.perform(patch("/friend-requests/{friendRequestId}", friendRequest.getFriendRequestId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .with(authentication(auth_B)))
+            .andExpect(status().isOk());
+
+        // --- DB 검증 ---
+
+        // 1) friend_request 삭제 확인
+        Optional<FriendRequest> deletedFr =
+            friendRequestRepository.findByRequesterUserIdAndReceiverUserId(
+                user1.getUserId(), user2.getUserId());
+
+        assertTrue(deletedFr.isEmpty(), "친구 요청이 삭제되어야 합니다.");
+
+        // 최소 userId를 userA로, 큰 userId를 userB로 저장
+        long userAId = Math.min(user1.getUserId(), user2.getUserId());
+        long userBId = Math.max(user1.getUserId(), user2.getUserId());
+
+        // 2) friend 생성 확인
+        Friend friend = friendRepository.findByUserAUserIdAndUserBUserId(userAId, userBId)
+            .orElseThrow(() -> new AssertionError("친구 관계가 생성되지 않았습니다."));
+
+        // 정확하게 저장됐는지 검증
+        assertEquals(userAId, friend.getUserA().getUserId());
+        assertEquals(userBId, friend.getUserB().getUserId());
+
+    }
+
 //    @Test
 //    void 보낸친구요청목록_조회_성공() throws Exception {
 //        //given
