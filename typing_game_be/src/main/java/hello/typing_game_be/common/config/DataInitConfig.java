@@ -7,9 +7,9 @@ import org.springframework.core.annotation.Order;
 
 import hello.typing_game_be.common.exception.BusinessException;
 import hello.typing_game_be.common.exception.ErrorCode;
-import hello.typing_game_be.friendRequest.entity.FriendRequest;
-import hello.typing_game_be.friendRequest.entity.FriendRequestStatus;
-import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
+
+import hello.typing_game_be.friend.entity.FriendRequest;
+import hello.typing_game_be.friend.repository.FriendRequestRepository;
 import hello.typing_game_be.longText.entity.LongText;
 import hello.typing_game_be.longText.repository.LongTextRepository;
 import hello.typing_game_be.myLongText.entity.MyLongText;
@@ -248,14 +248,12 @@ public class DataInitConfig {
                     FriendRequest.builder()
                         .requester(user1)
                         .receiver(user2)
-                        .status(FriendRequestStatus.ACCEPTED)
                         .build());
             }else {
                 friendRequestRepository.save(
                     FriendRequest.builder()
                         .requester(user1)
                         .receiver(user2)
-                        .status(FriendRequestStatus.PENDING)
                         .build());
             }
 
