@@ -23,7 +23,7 @@ public class FriendController {
 
     private final FriendService friendService;
 
-    // 친구 목록 조회
+    //친구 목록 조회
     @GetMapping
     public ResponseEntity<List<UserListResponse>> getFriends(
         @AuthenticationPrincipal CustomUserDetails userDetails
@@ -32,13 +32,13 @@ public class FriendController {
         List<UserListResponse> friends = friendService.getFriends(userId);
         return ResponseEntity.ok(friends);
     }
-    // 친구 삭제 (수락된 친구 요청 삭제)
-    @DeleteMapping("/{friendRequestId}")
+    // 친구 삭제
+    @DeleteMapping("/{friendId}")
     public ResponseEntity<Void> deleteFriend(
-        @PathVariable Long friendRequestId,
+        @PathVariable Long friendId,
         @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        friendService.deleteFriend(friendRequestId, userDetails.getUserId());
+        friendService.deleteFriend(friendId, userDetails.getUserId());
         return ResponseEntity.noContent().build();
     }
 }
