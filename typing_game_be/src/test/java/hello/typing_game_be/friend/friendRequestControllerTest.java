@@ -208,74 +208,59 @@ public class friendRequestControllerTest {
 
     }
 
-//    @Test
-//    void 보낸친구요청목록_조회_성공() throws Exception {
-//        //given
-//        User user1 = userRepository.findById(user1Id).orElseThrow();
-//        User user2 = userRepository.findById(user2Id).orElseThrow();
-//        User user3 = userRepository.findById(user3Id).orElseThrow();
-//
-//        //유저1 -> 유저2 친구 신청
-//        friendRequestRepository.save(
-//            FriendRequest.builder()
-//                .requester(user1)
-//                .receiver(user2)
-//                .status(FriendRequestStatus.PENDING)
-//                .build()
-//        );
-//        //유저1 -> 유저3 친구 신청
-//        friendRequestRepository.save(
-//            FriendRequest.builder()
-//                .requester(user1)
-//                .receiver(user3)
-//                .status(FriendRequestStatus.PENDING)
-//                .build()
-//        );
-//
-//        //유저1의 친구요청목록 조회
-//        mockMvc.perform(get("/friend-requests/sent")
-//                .with(httpBasic("user1", "1111" )))
-//            .andExpect(status().isOk())
-//            .andExpect(jsonPath("$.length()").value(2))
-//            .andExpect(jsonPath("$[0].receiverName").value(user3.getNickname()))
-//            .andExpect(jsonPath("$[1].receiverName").value(user2.getNickname()));
-//
-//    }
-//
-//    @Test
-//    void 받은친구요청목록_조회_성공() throws Exception {
-//        //given
-//
-//        User user1 = userRepository.findById(user1Id).orElseThrow();
-//        User user2 = userRepository.findById(user2Id).orElseThrow();
-//        User user3 = userRepository.findById(user3Id).orElseThrow();
-//
-//        //유저2 -> 유저1 친구 신청
-//        friendRequestRepository.save(
-//            FriendRequest.builder()
-//                .requester(user2)
-//                .receiver(user1)
-//                .status(FriendRequestStatus.PENDING)
-//                .build()
-//        );
-//        //유저3 -> 유저1 친구 신청
-//        friendRequestRepository.save(
-//            FriendRequest.builder()
-//                .requester(user3)
-//                .receiver(user1)
-//                .status(FriendRequestStatus.PENDING)
-//                .build()
-//        );
-//
-//        //유저1의 친구요청목록 조회
-//        mockMvc.perform(get("/friend-requests/received")
-//                .with(httpBasic("user1", "1111" )))
-//            .andExpect(status().isOk())
-//            .andExpect(jsonPath("$.length()").value(2))
-//            .andExpect(jsonPath("$[0].requesterName").value(user3.getNickname()))
-//            .andExpect(jsonPath("$[1].requesterName").value(user2.getNickname()));
-//
-//    }
+   @Test
+   void 보낸친구요청목록_조회_성공() throws Exception {
+       // given
+       // user A,B 엔티티 생성
+       Authentication auth_A = registerUser("userA", "11111", "KAKAO");
+       registerUser("userB", "22222", "KAKAO");
+       User userA = userRepository.findByNickname("userA").orElseThrow(()->new BusinessException(
+           ErrorCode.USER_NOT_FOUND));
+       User userB= userRepository.findByNickname("userB").orElseThrow(()->new BusinessException(
+           ErrorCode.USER_NOT_FOUND));
+
+       //유저A -> 유저B 친구 신청
+       friendRequestRepository.save(
+           FriendRequest.builder()
+               .requester(userA)
+               .receiver(userB)
+               .build()
+       );
+
+       //유저A의 친구요청목록 조회
+       mockMvc.perform(get("/friend-requests/sent")
+               .with(authentication(auth_A)))
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$[0].receiverName").value(userB.getNickname()));
+   }
+
+   @Test
+   void 받은친구요청목록_조회_성공() throws Exception {
+       // given
+       // user A,B 엔티티 생성
+       Authentication auth_A = registerUser("userA", "11111", "KAKAO");
+       registerUser("userB", "22222", "KAKAO");
+       User userA = userRepository.findByNickname("userA").orElseThrow(()->new BusinessException(
+           ErrorCode.USER_NOT_FOUND));
+       User userB= userRepository.findByNickname("userB").orElseThrow(()->new BusinessException(
+           ErrorCode.USER_NOT_FOUND));
+
+       //유저B -> 유저A 친구 신청
+       friendRequestRepository.save(
+           FriendRequest.builder()
+               .requester(userB)
+               .receiver(userA)
+               .build()
+       );
+
+
+       //유저A의 친구요청목록 조회
+       mockMvc.perform(get("/friend-requests/received")
+               .with(authentication(auth_A)))
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$[0].requesterName").value(userB.getNickname()));
+
+   }
 
 
 }
