@@ -21,6 +21,9 @@ public enum ErrorCode {
     INVALID_ACTION(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-002","유효하지 않은 action입니다." ),
     FRIEND_REQUEST_ALREADY_SENT(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-003","이미 보낸 친구 요청이 존재합니다."),
     FRIEND_REQUEST_ALREADY_RECEIVED(HttpStatus.BAD_REQUEST,"FRIEND-REQEUST-004", "상대방이 이미 친구 요청을 보냈습니다."),
+    //friend
+    FRIEND_NOT_FOUND(HttpStatus.NOT_FOUND,"FRIEND-001","존재하지 않는 친구관계입니다." ),
+
     //quote
     QUOTE_NOT_FOUND(HttpStatus.NOT_FOUND,"QUOTE-001","존재하지 않는 명언입니다."),
     //constitution
