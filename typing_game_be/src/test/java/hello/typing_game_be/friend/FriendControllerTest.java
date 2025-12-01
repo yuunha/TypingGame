@@ -56,6 +56,7 @@ public class FriendControllerTest {
 
    @BeforeEach
    void beforeEach() {
+       friendRepository.deleteAll();
        friendRequestRepository.deleteAll();
        userRepository.deleteAll();
    }

@@ -3,6 +3,7 @@ package hello.typing_game_be.common.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 
 import hello.typing_game_be.common.exception.BusinessException;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 //@Profile({"local", "dev"})
+@Profile("!test")
 @RequiredArgsConstructor
 public class DataInitConfig {
 

@@ -32,7 +32,7 @@ import hello.typing_game_be.friend.entity.Friend;
 import hello.typing_game_be.friend.entity.FriendRequest;
 import hello.typing_game_be.friend.repository.FriendRepository;
 import hello.typing_game_be.friend.repository.FriendRequestRepository;
-// import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
+import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 import hello.typing_game_be.user.service.UserService;
@@ -54,10 +54,14 @@ public class friendRequestControllerTest {
    @Autowired
    private FriendRepository friendRepository;
    @Autowired
+   private MyLongTextRepository myLongTextRepository;
+   @Autowired
    private ObjectMapper objectMapper;
 
    @BeforeEach
    void beforeEach() {
+       myLongTextRepository.deleteAll();
+       friendRepository.deleteAll();
        friendRequestRepository.deleteAll();
        userRepository.deleteAll();
    }
