@@ -74,7 +74,7 @@ public class UserService {
                     .toString();
         }
 
-        return PublicUserResponse.builder():
+        return PublicUserResponse.builder()
                 .userId(user.getUserId())
                 .nickname(user.getNickname())
                 .profileImageUrl(profileImageUrl)

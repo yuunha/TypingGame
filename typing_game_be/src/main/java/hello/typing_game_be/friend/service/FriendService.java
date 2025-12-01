@@ -27,16 +27,15 @@ public class FriendService {
             userA=receiver;
             userB=requester;
         }
-
-        FriendRepository.save(Friend.builder()
+        friendRepository.save(Friend.builder()
             .userA(userA)
             .userB(userB)
             .build()
         );
     }
 
-    @Transactional(readOnly = true)
-    public List<UserListResponse> getFriends(Long userId) {
+    //@Transactional(readOnly = true)
+    //public List<UserListResponse> getFriends(Long userId) {
         // // userId 기준으로 친구 관계 조회 (ACCEPTED 상태)
         // List<FriendRequest> friendRequests = friendRequestRepository.findAcceptedFriends(userId);
         //
@@ -50,7 +49,7 @@ public class FriendService {
         //         }
         //     })
         //     .toList();
-    }
+    //}
     @Transactional
     public void deleteFriend(Long friendRequestId, Long userId) {
         // FriendRequest fr = friendRequestRepository.findById(friendRequestId)
