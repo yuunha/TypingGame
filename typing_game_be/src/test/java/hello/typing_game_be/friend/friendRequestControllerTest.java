@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +58,8 @@ public class friendRequestControllerTest {
 
    @BeforeEach
    void beforeEach() {
-       // 테스트 DB 초기화 (flush 생략 가능)
-       userRepository.deleteAll();
        friendRequestRepository.deleteAll();
+       userRepository.deleteAll();
    }
 
     Authentication registerUser(String nickname, String providerId, String provider) {
