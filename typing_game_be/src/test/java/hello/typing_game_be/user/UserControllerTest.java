@@ -22,8 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hello.typing_game_be.friendRequest.repository.FriendRequestRepository;
-import hello.typing_game_be.myLongText.repository.MyLongTextRepository;
+import hello.typing_game_be.friend.repository.FriendRequestRepository;
 import hello.typing_game_be.user.entity.User;
 import hello.typing_game_be.user.repository.UserRepository;
 
@@ -35,21 +34,16 @@ import java.util.Map;
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    //@Autowired
-    //private UserService userService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private FriendRequestRepository friendRequestRepository;
-    @Autowired
-    private MyLongTextRepository myLongTextRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
 
     @BeforeEach
     void beforeEach() {
-        myLongTextRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
     }
