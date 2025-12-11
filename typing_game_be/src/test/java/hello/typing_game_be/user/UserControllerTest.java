@@ -48,11 +48,6 @@ public class UserControllerTest {
         userRepository.deleteAll();
     }
 
-    @AfterEach
-    void afterEach() {
-        userRepository.deleteAll();
-    }
-
     Authentication registerUser(String nickname, String providerId, String provider) {
         User user = userRepository.save(User.builder()
                 .nickname(nickname)
