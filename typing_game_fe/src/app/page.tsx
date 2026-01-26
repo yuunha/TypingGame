@@ -15,6 +15,7 @@ export default async function Home() {
   try {
     const res = await fetch(`${baseUrl}/quote/today`, {
       cache: "no-store", //revalidate는 빌드시 서버와 연결 필요
+      signal: AbortSignal.timeout(5000)
     });
 
     if (!res.ok) throw new Error("Fetch failed");
@@ -26,7 +27,7 @@ export default async function Home() {
     };
     // TODO: 콘솔 확인 후 안정성 패치
   } catch (e) {
-
+    // console.error("서버연결실패:", e.message);
   }
 
 return (
