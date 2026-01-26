@@ -14,7 +14,7 @@ export default async function Home() {
 
   try {
     const res = await fetch(`${baseUrl}/quote/today`, {
-      next: { revalidate: 60 * 60 * 24 },
+      cache: "no-store", //revalidate는 빌드시 서버와 연결 필요
     });
 
     if (!res.ok) throw new Error("Fetch failed");
