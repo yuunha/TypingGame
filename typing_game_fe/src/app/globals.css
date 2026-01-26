@@ -153,7 +153,3 @@ body {
   font-family: NunumHumanBold, Helvetica, sans-serif;
   margin-bottom: 0.5rem;
 }
-
-.mainWrapper {
-  width: var(--tpg-basic-width);
-}

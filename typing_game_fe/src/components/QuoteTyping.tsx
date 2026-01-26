@@ -168,4 +168,5 @@ const Input = styled.input`
   width: 100%;
   outline: none;
   user-select: none;  // 드래그 선택 막기
+  background:inherit;
 `;

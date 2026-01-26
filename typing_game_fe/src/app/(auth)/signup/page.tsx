@@ -90,13 +90,14 @@ const InputBox = styled.div`
 `
 
 const Input = styled.input`
-    padding: 6px;
-    width:100%;
-    border:none;
-    outline:none;
-    &:not(:last-child) {
-        border-bottom: 0.1rem solid #dadada7a;
-    }
+  background:inherit;
+  padding: 6px;
+  width:100%;
+  border:none;
+  outline:none;
+  &:not(:last-child) {
+      border-bottom: 0.1rem solid #dadada7a;
+  }
 `
 const SubmitButton = styled.button`
   margin-top: 20px;
