@@ -19,7 +19,11 @@ export default async function Home() {
 
     if (!res.ok) throw new Error("Fetch failed");
 
-    quote = await res.json();
+    const data = await res.json();
+    quote = {
+      author: data?.author ?? FALLBACK_QUOTE.author,
+      content: data?.content ?? FALLBACK_QUOTE.content,
+    };
     // TODO: 콘솔 확인 후 안정성 패치
   } catch (e) {
 
